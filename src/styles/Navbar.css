@@ -1,0 +1,114 @@
+nav {
+    width: 96%;
+    height: auto;
+    margin: 0 auto;
+}
+
+.options-div {
+    width: 100%;
+    background-color: #222627;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+.options-div>div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.options-div>select {
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 8px;
+    color: white;
+    font-size: 13px;
+}
+
+.options-div>select>option {
+    background-color: #22262f;
+    border: 1px solid #ccc;
+}
+
+.options-div>div>select {
+    border: 1px solid #ccc;
+    padding: 8px;
+    padding-right: 30px;
+    font-size: 13px;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+
+.options-div > div {
+    position: relative;
+}
+
+.options-div > div::after {
+    content: "▼";
+    font-size: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+    position: absolute;
+    pointer-events: none;
+}
+
+.options-div > div > div::after{
+    content: "▼";
+    font-size: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+    position: absolute;
+    pointer-events: none;
+}
+
+.options-div > div > div{
+    position: relative;
+}
+
+.options-div > div > div > select{
+    border: 1px solid #ccc;
+    padding: 8px;
+    padding-right: 30px;
+    font-size: 13px;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+.options-div > div > div > select > option{
+    background-color: #22262f;
+    border: 1px solid #ccc;
+}
+
+.options-div > div:nth-last-child(2)::after{
+    display: none;
+}
+
+.options-div>div>select>option {
+    background-color: #22262f;
+    border: 1px solid #ccc;
+}
+
+.options-div>div>input {
+    border: 1px solid #ccc;
+    height: 20px;
+    padding: 13px 8px;
+    color: #fff;
+}
+
+.options-div>div>span {
+    color: #c3c6d0;
+    font-size: 14px;
+}
+
