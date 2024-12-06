@@ -1,114 +1,163 @@
 nav {
-    width: 96%;
+    width: 80%;
     height: auto;
-    margin: 0 auto;
+}
+
+
+.nav-bar {
+    width: 100%;
+    padding: calc(var(--index)*1.5) calc(var(--index)*1.5);
+    background-color: var(--other-main-color);
+    margin-top: 4%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tex h1 {
+    font-size: calc(var(--index)*1.2);
+    font-weight: 500;
+}
+
+.tex p {
+    font-size: calc(var(--index)*0.8);
+    font-weight: 300;
+}
+
+.nav {
+    width: 100%;
+    height: calc(var(--index)*3.5);
+    background-color: var(--other-main-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 calc(var(--index)*1.5);
+}
+
+.logo-name {
+    font-size: calc(var(--index)*1.2);
+    font-weight: 900;
+}
+
+.options {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--index)*1);
+}
+
+.options button {
+    background-color: var(--main-color);
+    color: var(--other-main-color);
+    font-size: calc(var(--index)*0.9);
+    width: calc(var(--index)*6);
+    height: calc(var(--index)*2);
+    border-radius: calc(var(--index)*6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--index)*0.5);
+    cursor: pointer;
+}
+
+.options>svg {
+    font-size: calc(var(--index)*1.35);
+    color: var(--text-color);
+    cursor: pointer;
 }
 
 .options-div {
     width: 100%;
-    background-color: #222627;
-    padding: 10px;
+    background-color: var(--other-main-color);
+    padding: calc(var(--index)*0.5);
     display: flex;
     justify-content: space-between;
-    color: white;
-    border: 1px solid #ccc;
-    border-top: none;
-}
-
-.options-div>div {
-    display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 15px;
+    color: var(--other-main-color);
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 10px;
+    box-shadow: 0px 0px calc(var(--index)*0.5) rgba(0, 0, 0, 0.555);
+    gap: calc(var(--index)*1);
 }
 
-.options-div>select {
-    border: 1px solid #ccc;
-    padding: 8px;
-    border-radius: 8px;
-    color: white;
-    font-size: 13px;
+.custom-select {
+    width: calc(var(--index)*12);
+    position: relative;
+    display: flex;
+    /* flex-direction: column; */
+    left: 0;
+    gap: calc(var(--index)*0.3);
+    align-items: center;
 }
 
-.options-div>select>option {
-    background-color: #22262f;
-    border: 1px solid #ccc;
+.custom-select-label {
+    display: block;
+    color: var(--text-color);
+    font-size: calc(var(--index)*0.75);
+    font-weight: 500;
 }
 
-.options-div>div>select {
-    border: 1px solid #ccc;
-    padding: 8px;
-    padding-right: 30px;
-    font-size: 13px;
-    -webkit-appearance: none;
-    appearance: none;
-    border-radius: 8px;
-    color: white;
+.custom-select-trigger {
+    padding: calc(var(--index)*0.5);
+    border: 1px solid var(--border-color);
+    background-color: var(--other-main-color);
+    color: var(--text-color);
+    border-radius: calc(var(--index)*0.25);
     cursor: pointer;
-}
-
-.options-div > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
     position: relative;
 }
 
-.options-div > div::after {
-    content: "▼";
-    font-size: 13px;
-    top: 50%;
-    transform: translateY(-50%);
-    right: 10px;
+.custom-select-trigger::after{
+    content: "▼"; /* Символ стрелки */
+    font-size: calc(var(--index)*0.6); /* Размер стрелки */
+    color: var(--text-color); /* Цвет стрелки */
     position: absolute;
+    right: calc(var(--index)*0.5); /* Отступ от правого края */
     pointer-events: none;
 }
 
-.options-div > div > div::after{
-    content: "▼";
-    font-size: 13px;
-    top: 50%;
-    transform: translateY(-50%);
-    right: 10px;
+.custom-options {
     position: absolute;
-    pointer-events: none;
+    top: calc(var(--index)*2.25);
+    left: 0;
+    width: 100%;
+    border: 1px solid var(--border-color);
+    background-color: var(--other-main-color);
+    z-index: 100;
+    overflow: hidden;
+    border-radius: calc(var(--index)*0.25);
+    padding: 0 calc(var(--index)*0.5);
+    transform: translateY(0);
 }
 
-.options-div > div > div{
-    position: relative;
-}
-
-.options-div > div > div > select{
-    border: 1px solid #ccc;
-    padding: 8px;
-    padding-right: 30px;
-    font-size: 13px;
-    -webkit-appearance: none;
-    appearance: none;
-    border-radius: 8px;
-    color: white;
+.custom-option {
+    padding: calc(var(--index)*0.5) 0;
     cursor: pointer;
-}
-.options-div > div > div > select > option{
-    background-color: #22262f;
-    border: 1px solid #ccc;
-}
-
-.options-div > div:nth-last-child(2)::after{
-    display: none;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+    background-color: transparent;
+    /* left: 0; */
 }
 
-.options-div>div>select>option {
-    background-color: #22262f;
-    border: 1px solid #ccc;
+.custom-option:hover {
+    background-color: var(--hover-color);
 }
 
-.options-div>div>input {
-    border: 1px solid #ccc;
-    height: 20px;
-    padding: 13px 8px;
-    color: #fff;
+.custom-option:last-child {
+    border-bottom: none;
 }
 
-.options-div>div>span {
-    color: #c3c6d0;
-    font-size: 14px;
+.nav-bar span {
+    color: var(--text-color);
 }
 
+.div {
+    display: flex;
+    gap: calc(var(--index)*0.4);
+    align-items: center;
+    justify-content: center;
+}

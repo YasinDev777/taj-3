@@ -1,89 +1,118 @@
+import { BiSupport } from "react-icons/bi";
+import { FiArrowRightCircle } from "react-icons/fi";
+import React, { useState } from "react";
+
+const CustomSelect = ({ options, selectedValue, onChange, label }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleSelect = (value) => {
+    onChange(value);
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="custom-select">
+      {label && <span className="custom-select-label">{label}</span>}
+      <div
+        className="custom-select-trigger"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {selectedValue || "Select an option"}
+      </div>
+      {isOpen && (
+        <div className="custom-options">
+          {options.map((option) => (
+            <div
+              key={option.value}
+              className="custom-option"
+              onClick={() => handleSelect(option.value)}
+            >
+              {option.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const Navbar = ({
   setSelectedPreset,
   setSelectedTicker,
-  setSelectedDesc,
-  setSelectedSignal,
   selectedPreset,
   selectedTicker,
-  selectedDesc,
-  selectedSignal,
-  inputValue,
-  setInputValue,
   isGrid,
-  setIsGrid
+  setIsGrid,
 }) => {
-  const handlePresetChange = (event) => {
-    setSelectedPreset(event.target.value);
-  };
+  const presetOptions = [
+    { value: "Pattern", label: "Pattern" },
+    { value: "Order-block", label: "Order-block" },
+    { value: "Imbalance1", label: "Imbalance" },
+    { value: "Imbalance2", label: "Imbalance" },
+  ];
+  
 
-  const handleTickerChange = (event) => {
-    setSelectedTicker(event.target.value);
-  };
-  const handleDescChange = (event) => {
-    setSelectedDesc(event.target.value);
-  };
-  const handleSignalChange = (event) => {
-    setSelectedSignal(event.target.value);
-  };
-  const handleSearch = (event) => {
-    setInputValue(event.target.value);
-  };
+  const tickerOptions = [
+    { value: "ticker", label: "Ticker" },
+    { value: "tickers-input-filter", label: "Tickers Input Filter" },
+    { value: "price-earnings", label: "Price/Earnings" },
+    { value: "company", label: "Company" },
+    { value: "sector", label: "Sector" },
+    { value: "industry", label: "Industry" },
+  ];
 
-  const handleGrid = (event) =>{
-    setIsGrid(event.target.value)
-  }
+  const gridOptions = [
+    { value: "6", label: "6" },
+    { value: "12", label: "12" },
+    { value: "24", label: "24" },
+  ];
 
   return (
-    <nav>
-      <div className="options-div">
-        <div>
-          <select value={selectedPreset} onChange={handlePresetChange}>
-            <option value="My Presets">My Presets</option>
-            <option value="Save Screen">Save Screen</option>
-            <option value="Edit screens">Edit Screens</option>
-          </select>
-        </div>
-        <div>
-          <span>Order by</span>
-          <div>
-          <select className="order" value={selectedTicker} onChange={handleTickerChange}>
-            <option value="Ticker">Ticker</option>
-            <option value="Tickers input filter">Tickers input filter</option>
-            <option value="Price/Earnings">Price/Earnings</option>
-            <option value="Company">Company</option>
-            <option value="Sector">Sector</option>
-            <option value="Industry">Industry</option>
-          </select>
-          </div>
-          <select className="descs" value={selectedDesc} onChange={handleDescChange}>
-            <option value="Desc">Desc</option>
-            <option value="Asc">Asc</option>
-          </select>
-        </div>
-        <div>
-          <span>Signal</span>
-          <select value={selectedSignal} onChange={handleSignalChange}>
-            <option value="None (all stocks)">None (all stocks)</option>
-            <option value="Top gainers">Top gainers</option>
-            <option value="Top losers">Top losers</option>
-            <option value="New Hight">New Hight</option>
-            <option value="New Low">New Low</option>
-          </select>
-        </div>
-        <div>
-          <span>Tickers</span>
-          <input type="text" onInput={handleSearch} placeholder="Search" />
-        </div>
-        <div>
-          <span>Per Page pagination</span>
-          <select onChange={handleGrid} value={isGrid}>
-            <option value="6">6</option>
-            <option value="12">12</option>
-            <option value="24">24</option>
-          </select>
+    <>
+      <div className="nav">
+        <div className="logo-name">AHSAN SCREENER</div>
+        <div className="options">
+          <BiSupport />
+          <button>
+            Kirish <FiArrowRightCircle />
+          </button>
         </div>
       </div>
-    </nav>
+      <div className="nav-bar">
+        <div className="tex">
+          <h1>Texnik analizlar</h1>
+          <p>Chart patterns</p>
+        </div>
+        <nav>
+          <div className="options-div">
+            <div className="div">
+              <CustomSelect
+                options={presetOptions}
+                selectedValue={selectedPreset}
+                onChange={setSelectedPreset}
+                label="Presets"
+              />
+            </div>
+            <div className="div">
+              <span>Order by</span>
+              <CustomSelect
+                options={tickerOptions}
+                selectedValue={selectedTicker}
+                onChange={setSelectedTicker}
+              />
+            </div>
+            <div className="div">
+              <span>Per Page pagination</span>
+              <CustomSelect
+                options={gridOptions}
+                selectedValue={isGrid}
+                onChange={setIsGrid}
+              />
+            </div>
+          </div>
+        </nav>
+      </div>
+    </>
   );
 };
 

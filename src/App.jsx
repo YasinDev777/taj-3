@@ -8,7 +8,7 @@ import "./styles/App.css";
 import array from "./array";
 
 const App = () => {
-  const [selectedPreset, setSelectedPreset] = useState("My Presets");
+  const [selectedPreset, setSelectedPreset] = useState("Pattern");
   const [selectedTicker, setSelectedTicker] = useState("Ticker");
   const [selectedDesc, setSelectedDesc] = useState("Desc");
   const [selectedSignal, setSelectedSignal] = useState("None all stocks");
