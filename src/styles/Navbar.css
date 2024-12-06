@@ -5,13 +5,15 @@ nav {
 
 
 .nav-bar {
-    width: 100%;
+    width: 96%;
     padding: calc(var(--index)*1.5) calc(var(--index)*1.5);
     background-color: var(--other-main-color);
-    margin-top: 2%;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin: 0 auto;
+    margin-top: 2%;
+    border-radius: 10px 10px 0 0;
 }
 
 .tex h1 {
@@ -70,24 +72,28 @@ nav {
     background-color: var(--other-main-color);
     padding: calc(var(--index)*0.5);
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     color: var(--other-main-color);
     border: 1px solid var(--border-color);
     border-top: none;
     border-radius: 10px;
-    box-shadow: 0px 0px calc(var(--index)*0.5) rgba(0, 0, 0, 0.555);
+    box-shadow: 0px 0px calc(var(--index)*0.5) rgba(0, 0, 0, 0.179);
     gap: calc(var(--index)*1);
 }
 
 .custom-select {
-    width: calc(var(--index)*12);
+    width: calc(var(--index)*5);
     position: relative;
     display: flex;
     /* flex-direction: column; */
     left: 0;
     gap: calc(var(--index)*0.3);
     align-items: center;
+}
+
+.custom-select:nth-child(1){
+    width: calc(var(--index)*10);
 }
 
 .custom-select-label {
@@ -111,13 +117,8 @@ nav {
     position: relative;
 }
 
-.custom-select-trigger::after{
-    content: "▼"; /* Символ стрелки */
-    font-size: calc(var(--index)*0.6); /* Размер стрелки */
-    color: var(--text-color); /* Цвет стрелки */
-    position: absolute;
-    right: calc(var(--index)*0.5); /* Отступ от правого края */
-    pointer-events: none;
+.custom-select-trigger span{
+    color: var(--text-color) !important;
 }
 
 .custom-options {
@@ -152,7 +153,13 @@ nav {
 }
 
 .nav-bar span {
-    color: var(--text-color);
+    color: var(--other-text-color);
+    font-weight: 300;
+    font-size: calc(var(--index)*0.74);
+}
+
+.nav-bar svg{
+    color: var(--other-text-color);
 }
 
 .div {

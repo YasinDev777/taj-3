@@ -24,6 +24,8 @@ html{
     --index: calc(1vw + 1vh);
     --border-color: #B6B6B6;
     --other-text-color: #8E8E8E;
+    --card-text: #E8EBEF;
+    --card-other-text: #bb1111;
 } 
 
 /* ::-webkit-scrollbar{

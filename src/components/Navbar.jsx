@@ -1,6 +1,7 @@
 import { BiSupport } from "react-icons/bi";
 import { FiArrowRightCircle } from "react-icons/fi";
 import React, { useState } from "react";
+import { FiChevronDown } from "react-icons/fi";
 
 const CustomSelect = ({ options, selectedValue, onChange, label }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,12 +13,13 @@ const CustomSelect = ({ options, selectedValue, onChange, label }) => {
 
   return (
     <div className="custom-select">
-      {label && <span className="custom-select-label">{label}</span>}
+      {label && <span className="custom-select-label">Anlyze</span>}
       <div
         className="custom-select-trigger"
         onClick={() => setIsOpen(!isOpen)}
       >
-        {selectedValue || "Select an option"}
+        <span>{selectedValue || "Select an option"}</span>
+        <FiChevronDown className="dropdown-icon" />
       </div>
       {isOpen && (
         <div className="custom-options">
@@ -43,6 +45,8 @@ const Navbar = ({
   selectedTicker,
   isGrid,
   setIsGrid,
+  selectedTime,
+  setSelectedTime
 }) => {
   const presetOptions = [
     { value: "Pattern", label: "Pattern" },
@@ -65,6 +69,11 @@ const Navbar = ({
     { value: "6", label: "6" },
     { value: "12", label: "12" },
     { value: "24", label: "24" },
+  ];
+  const timeOptions = [
+    { value: "1d", label: "1d" },
+    { value: "4h", label: "4h" },
+    { value: "1h", label: "1h" },
   ];
 
   return (
@@ -94,7 +103,7 @@ const Navbar = ({
               />
             </div>
             <div className="div">
-              <span>Order by</span>
+              <span>Pattern</span>
               <CustomSelect
                 options={tickerOptions}
                 selectedValue={selectedTicker}
@@ -102,11 +111,19 @@ const Navbar = ({
               />
             </div>
             <div className="div">
-              <span>Per Page pagination</span>
+              <span>grid</span>
               <CustomSelect
                 options={gridOptions}
                 selectedValue={isGrid}
                 onChange={setIsGrid}
+              />
+            </div>
+            <div className="div">
+              <span>Timeframe</span>
+              <CustomSelect
+                options={timeOptions}
+                selectedValue={selectedTime}
+                onChange={setSelectedTime}
               />
             </div>
           </div>

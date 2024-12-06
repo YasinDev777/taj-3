@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaStar } from "react-icons/fa";
-import { PiEyeFill } from "react-icons/pi";
-import { BsQuestionCircleFill } from "react-icons/bs";
-import { MdFullscreen } from "react-icons/md";
-import { FaAnglesDown } from "react-icons/fa6";
 import Chart from '../components/LineChart';
 
 const Main = ({ filtered, isCard, setIsCard, isGrid }) => {
@@ -45,27 +40,10 @@ const Main = ({ filtered, isCard, setIsCard, isGrid }) => {
                   <i>-1,19%</i>
                 </div>
                 <div className="icons">
-                  <FaStar size={17} />
                   <Link to="/chart">
-                    <PiEyeFill size={17} />
+                    <img src="/images/scan-search.svg" alt="" />
                   </Link>
-                  <BsQuestionCircleFill size={17} />
-                  <MdFullscreen size={17} />
                 </div>
-              </div>
-              <div className="nav2">
-                <div className="method1 method">Descending Triangle</div>
-                <div className="method2 method">
-                  Bearish <FaAnglesDown />
-                </div>
-                <p>
-                  Profit potential(<span>Sell</span>) +3.42%
-                </p>
-              </div>
-              <div className="text">
-                Descending Triangle has broken through the support line at Dec
-                3, 0:00 UTC. Possible bearish price movement forecast for the
-                next 16 days towards 0.2568.
               </div>
               <div className="image">
                 <Chart isCard={isCard} setIsCard={setIsCard} />

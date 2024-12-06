@@ -10,9 +10,7 @@ import array from "./array";
 const App = () => {
   const [selectedPreset, setSelectedPreset] = useState("Pattern");
   const [selectedTicker, setSelectedTicker] = useState("Ticker");
-  const [selectedDesc, setSelectedDesc] = useState("Desc");
-  const [selectedSignal, setSelectedSignal] = useState("None all stocks");
-  const [inputValue, setInputValue] = useState("");
+  const [selectedTime, setSelectedTime] = useState("1d");
   const [isCard, setIsCard] = useState(false)
   const [isGrid, setIsGrid] = useState(6)
 
@@ -20,17 +18,13 @@ const App = () => {
 
   const filtered = array.filter((item) => {
     const presetMatch =
-      selectedPreset === "My Presets" || item.presets === selectedPreset;
+      selectedPreset === "Pattern" || item.presets === selectedPreset;
     const tickerMatch =
       selectedTicker === "Ticker" || item.order === selectedTicker;
-    const descMatch =
-      selectedDesc === "Desc" || item.desc === selectedDesc;
-    const signalMatch =
-      selectedSignal === "None all stocks" || item.signal === selectedSignal;
-    const inputMatch =
-      inputValue === "" || item.name.toLowerCase().includes(inputValue.toLowerCase());
+    const timeMatch =
+    selectedTime === "1d" || item.time === selectedTime;
 
-    return presetMatch && tickerMatch && descMatch && signalMatch && inputMatch;
+    return presetMatch && tickerMatch && timeMatch;
   });
 
   return (
@@ -42,12 +36,8 @@ const App = () => {
           setSelectedPreset={setSelectedPreset}
           selectedTicker={selectedTicker}
           setSelectedTicker={setSelectedTicker}
-          selectedDesc={selectedDesc}
-          setSelectedDesc={setSelectedDesc}
-          selectedSignal={selectedSignal}
-          setSelectedSignal={setSelectedSignal}
-          inputValue={inputValue}
-          setInputValue={setInputValue}
+          selectedTime={selectedTime}
+          setSelectedTime={setSelectedTime}
           setIsGrid={setIsGrid}
           isGrid={isGrid}
         />

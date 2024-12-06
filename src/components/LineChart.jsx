@@ -66,7 +66,7 @@ const Chart = ({ isCard, setIsCard }) => {
   
       // Трендовая линия 1
       const lineSeries1 = chart.addLineSeries({
-        color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : '#000000',
+        color: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : '#000000',
         lineWidth: 2,
         priceLineVisible: false,
         lastValueVisible: false,
@@ -79,7 +79,7 @@ const Chart = ({ isCard, setIsCard }) => {
   
       // Трендовая линия 2
       const lineSeries2 = chart.addLineSeries({
-        color: isDarkMode ? 'rgba(200, 150, 255, 0.8)' : '#888888',
+        color: isDarkMode ? 'rgba(28, 75, 228, 0.8)' : '#888888',
         lineWidth: 2,
         priceLineVisible: false,
         lastValueVisible: false,
@@ -90,13 +90,12 @@ const Chart = ({ isCard, setIsCard }) => {
       ];
       lineSeries2.setData(trendLineData2);
   
-      // Добавление бесконечной горизонтальной линии
       const priceLine = candlestickSeries.createPriceLine({
-        price: candlestickData[13].low, // Уровень линии
-        color: 'rgba(255, 0, 0, 0.8)', // Красный цвет
-        lineWidth: 2, // Толщина линии
-        lineStyle: 0, // Сплошная линия (0 - сплошная, 1 - пунктирная, 2 - штриховая)
-        axisLabelVisible: true, // Показ цены на шкале
+        price: candlestickData[13].low,
+        color: 'rgba(255, 0, 0, 0.8)',
+        lineWidth: 2,
+        lineStyle: 0,
+        axisLabelVisible: true,
       });
   
       chart.timeScale().fitContent();
@@ -108,12 +107,12 @@ const Chart = ({ isCard, setIsCard }) => {
 
   const darkMode = {
     layout: {
-      background: { type: 'solid', color: '#0B0B0C' },
-      textColor: '#FFFFFF',
+      background: { type: 'solid', color: '#fff' },
+      textColor: '#000',
     },
     grid: {
-      vertLines: { visible: false, color: 'rgba(255, 255, 255, 0.1)', style: 0 },
-      horzLines: { visible: true, color: 'rgba(255, 255, 255, 0.1)', style: 0 },
+      vertLines: { visible: false, color: 'rgba(73, 70, 70, 0.1)', style: 0 },
+      horzLines: { visible: true, color: 'rgba(56, 54, 54, 0.301)', style: 0 },
       style: 1
     },
     timeScale: { borderColor: 'rgba(255, 255, 255, 0.2)', rightOffset: 10, barSpacing: 8 },
@@ -123,8 +122,8 @@ const Chart = ({ isCard, setIsCard }) => {
     },
     crosshair: {
       mode: 0,
-      vertLine: { color: 'rgba(255, 255, 255, 0.589)', width: 1, style: 3, visible: true },
-      horzLine: { color: 'rgba(255, 255, 255, 0.589)', width: 1, style: 3, visible: true },
+      vertLine: { color: 'rgba(44, 43, 43, 0.589)', width: 1, style: 3, visible: true },
+      horzLine: { color: 'rgba(44, 43, 43, 0.589)', width: 1, style: 3, visible: true },
     },
   };
 
@@ -180,7 +179,7 @@ const Chart = ({ isCard, setIsCard }) => {
       <div
         ref={chartContainerRef}
         className="chart-container"
-        style={ isCard === false ? { width: '100%', height: '300px' } : { width: '100%', height: 'calc(100dvh - 60px)'}}
+        style={ isCard === false ? { width: 'calc(var(--index)*20.5)', height: 'calc(var(--index)*15.1)' } : { width: '100%', height: 'calc(100dvh - 60px)'}}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
       ></div>

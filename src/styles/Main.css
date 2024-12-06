@@ -1,19 +1,19 @@
 .main1{
-    width: 100%;
+    width: 96%;
     background-color: var(--other-main-color);
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 0 auto;
 }
 
 .main{
-    width: 95%;
-    padding: 20px;
+    width: 100%;
+    padding: calc(var(--index)*1);
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     background-color: var(--other-main-color);
-    margin: 0 auto;
-    gap: 15px;
+    gap: calc(var(--index)*0.75);
 }
 
 .image{
@@ -30,61 +30,60 @@
 
 .card{
     width: 100%;
-    height: 435px;
+    height: calc(var(--index)*16.15);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     overflow: hidden;
-    border-radius: 15px;
-    padding: 3px;
-    background-color: #0B0B0C;
+    border-radius: calc(var(--index)*0.75);
+    background-color: var(--other-main-color);
+    /* background-color: red; */
+    box-shadow: 0px 5px 12px #0000006b;
     margin: 0 auto;
 }
 
 .nav-card{
     width: 100%;
-    height: 30px;
-    background-color: #1FC1A3;
-    /* background-color: red; */
+    background-color: var(--main-color);
     display: flex;
     align-items: center;
     justify-content: space-between;    
-    padding: 5px 8px;
-    border-radius: 10px 10px 0 0; 
-    gap: 5px;
+    padding: 0px calc(var(--index)*0.8);
+    border-radius: calc(var(--index)*0.5) calc(var(--index)*0.5) 0 0; 
+    gap: calc(var(--index)*0.25);
+    /* border: calc(var(--index)*0.1) solid var(--other-main-color); */
 }
 
 .nav-card img{
-    width: 20px;
-    filter: drop-shadow(0px 0px 5px black);
+    width: calc(var(--index)*1);
 }
 
 .nav-card big{
-    font-size: 11px;
-    color: #0B0B0C;
+    font-size: calc(var(--index)*0.8);
+    color: var(--card-text);
     font-family: var(--main-front);
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .nav-card p{
     font-family: var(--main-front);
-    color: #0B0B0C;
-    font-weight: 400;
-    font-size: 13px;
+    color: var(--card-text);
+    font-weight: 300;
+    font-size: calc(var(--index)*0.7);
 }
 
 .salary{
-    padding: 3px 15px;
-    background-color: #0B0B0C;
+    padding: calc(var(--index)*0.15) calc(var(--index)*0.15);
+    background-color: var(--other-main-color);
     position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 13px;
-    gap: 30px;
-    color: #fff;
-    border-radius: 5px;
+    font-size: calc(var(--index)*0.6);
+    gap: calc(var(--index)*1.5);
+    color: var(--text-color);
+    border-radius: calc(var(--index)*0.25);
 }
 
 
@@ -95,15 +94,15 @@
 }
 
 .salary i:nth-child(2){
-    color: #F1434F;
+    color: var(--card-other-text);
 }
 
 .salary::after{
     content: "";
     position: absolute;
-    width: 2px;
+    width: 1px;
     height: 50%;
-    background-color: #fff;
+    background-color: var(--text-color);
     top: 50%;
     left: 52%;
     transform: translate(-60%, -50%);
@@ -111,83 +110,31 @@
 
 .icons{
     display: flex;
-    gap: 5px;
+    gap: calc(var(--index)*0.25);
     align-items: center;
-}
-
-.icons svg{
-    color: #0B0B0C;
-}
-
-.icons svg:nth-child(2n + 1){
-    color: rgba(0, 0, 0, 0.719);
-}
-
-.nav2{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 15px 16px;
-}
-
-.nav2 span{
-    color: #F1434F;
-}
-
-.method{
-    padding: 5px;
-    font-size: 11px;
-    font-family: var(--main-front);
-    font-weight: 500;
-    color: #EBF3FFE6;
-    background-color: #ADC8EB24;
-    border-radius: 5px;
-}
-
-.method2{
-    color: #F1434F;
-    background-color: #C11F2A33;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.nav2 p{
-    font-size: 13px;
-    color: #EBF3FFE6;
-    font-family: var(--main-front);
-    font-weight: 500;
-}
-
-.text{
-    padding: 0 20px 30px 20px;
-    color: #EBF3FFE6;
-    font-family: var(--main-front);
-    font-size: 13px;
 }
 
 .btns{
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding: 20px 0;
+    gap: calc(var(--index)*0.75);
+    padding: calc(var(--index)*1) 0;
 }
 
 .btns > button{
-    width: 40px;
-    height: 40px;
+    width: calc(var(--index)*2);
+    height: calc(var(--index)*2);
     color: #F1434F;
     background-color: transparent;
-    border: 2px solid #F1434F;
-    font-size: 15px;
+    border: calc(var(--index)*0.1) solid #F1434F;
+    font-size: calc(var(--index)*0.75);
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: calc(var(--index)*0.15);
     transition: 0.25s ease;
 }
 
 .btns > button.active{
     background-color: #F1434F;
     color: #fff;
-    box-shadow: 0px 0px 10px #F1434F;
+    box-shadow: 0px 0px calc(var(--index)*0.5) #F1434F;
 }
