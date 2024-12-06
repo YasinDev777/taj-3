@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Chart from '../components/LineChart';
-
+import { BiLockOpen } from "react-icons/bi";
 const Main = ({ filtered, isCard, setIsCard, isGrid }) => {
   const [Charts, setCharts] = useState(filtered);
   const [loading, setLoading] = useState(false);
@@ -32,20 +32,27 @@ const Main = ({ filtered, isCard, setIsCard, isGrid }) => {
           currentChart.map((item, index) => (
             <div className="card" key={index}>
               <div className="nav-card">
-                <img src="/images/icon.png" alt="" />
-                <big>BMX</big>
-                <p>BitMart Token</p>
-                <div className="salary">
-                  <i>$0,2648</i>
-                  <i>-1,19%</i>
+                <div className="infors">
+                  <div className="info">
+                    <img src="/images/icon.png" alt="" />
+                    <big>BMX</big>
+                    <p>BitMart Token</p>
+                  </div>
+                  <div className="salary">
+                    <i>$0,2648</i>
+                    <i>-1,19%</i>
+                  </div>
                 </div>
                 <div className="icons">
-                  <Link to="/chart">
-                    <img src="/images/scan-search.svg" alt="" />
+                  <Link to="/chart" style={item.login === false ? {pointerEvents: "none", cursor: "default"} : {pointerEvents: "auto", cursor: "pointer"}}>
+                    <img src="/images/scan-search.svg" alt="" className='img-scan' />
                   </Link>
                 </div>
               </div>
               <div className="image">
+                <div className="dont-show" style={item.login === false ? {display: "flex", cursor: "default"} : {display: "none", pointerEvents: "auto"}}>
+                  <button>Qo’lga kiritish <BiLockOpen/></button>
+                </div>
                 <Chart isCard={isCard} setIsCard={setIsCard} />
               </div>
             </div>

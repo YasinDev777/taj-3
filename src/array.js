@@ -4,6 +4,7 @@ const array = [
         name: "ZZZ",
         presets: "Pattern",
         order: "Ticker",
+        login: true,
         time: "1d"
     },
     {
@@ -11,6 +12,7 @@ const array = [
         name: "ZYXI",
         presets: "Pattern",
         order: "Ticker",
+        login: true,
         time: "1d"
     },
     {
@@ -18,6 +20,7 @@ const array = [
         name: "ZYME",
         presets: "Pattern",
         order: "Ticker",
+        login: false,
         time: "1d"
     },
     {
@@ -25,6 +28,7 @@ const array = [
         name: "ZWS",
         presets: "Pattern",
         order: "Ticker",
+        login: false,
         time: "1d"
     },
     {
@@ -32,6 +36,7 @@ const array = [
         name: "ZVSA",
         presets: "Pattern",
         order: "Ticker",
+        login: true,
         time: "1d",
     },
     {
@@ -39,6 +44,7 @@ const array = [
         name: "ZVRA",
         presets: "Pattern",
         order: "Ticker",
+        login: false,
         time: "1d"
     },
     {
@@ -46,6 +52,7 @@ const array = [
         name: "ZURA",
         presets: "Pattern",
         order: "Ticker",
+        login: false,
         time: "1d"
     },
     {
@@ -53,6 +60,7 @@ const array = [
         name: "ZUO",
         presets: "Pattern",
         order: "Ticker",
+        login: true,
         time: "1d"
     },
     {
@@ -60,6 +68,7 @@ const array = [
         name: "ZUMZ",
         presets: "Pattern",
         order: "Tickers input filter",
+        login: true,
         time: "1d"
     },
     {
@@ -67,6 +76,7 @@ const array = [
         name: "ZTWO",
         presets: "Pattern",
         order: "Tickers input filter",
+        login: false,
         time: "1d"
     },
     {
@@ -74,6 +84,7 @@ const array = [
         name: "ZTS",
         presets: "Pattern",
         order: "Tickers input filter",
+        login: true,
         time: "1d"
     },
     {
@@ -81,6 +92,7 @@ const array = [
         name: "ZTRE",
         presets: "Pattern",
         order: "Tickers input filter",
+        login: false,
         time: "1d"
     },
     {
@@ -88,6 +100,7 @@ const array = [
         name: "ZTR",
         presets: "Pattern",
         order: "Price/Earnings",
+        login: false,
         time: "1d"
     },
     {
@@ -95,6 +108,7 @@ const array = [
         name: "ZTO",
         presets: "Pattern",
         order: "Price/Earnings",
+        login: true,
         time: "1d"
     },
     {
@@ -102,6 +116,7 @@ const array = [
         name: "ZTEN",
         presets: "Pattern",
         order: "Price/Earnings",
+        login: true,
         time: "1d"
     },
     {
@@ -109,6 +124,7 @@ const array = [
         name: "ZTEK",
         presets: "Pattern",
         order: "Company",
+        login: true,
         time: "1d"
     },
     {
@@ -116,6 +132,7 @@ const array = [
         name: "ZTAX",
         presets: "Pattern",
         order: "Company",
+        login: true,
         time: "1d"
     },
     {
@@ -123,6 +140,7 @@ const array = [
         name: "ZSL",
         presets: "Pattern",
         order: "Company",
+        login: false,
         time: "1d"
     },
     {
@@ -130,6 +148,7 @@ const array = [
         name: "ZSEP",
         presets: "Pattern",
         order: "Company",
+        login: true,
         time: "1d"
     },
     {
@@ -137,6 +156,7 @@ const array = [
         name: "ZSC",
         presets: "Pattern",
         order: "Sector",
+        login: false,
         time: "1d"
     },
     {
@@ -144,6 +164,7 @@ const array = [
         name: "ZSB",
         presets: "Pattern",
         order: "Sector",
+        login: true,
         time: "1d"
     },
     {
@@ -151,6 +172,7 @@ const array = [
         name: "ZS",
         presets: "Pattern",
         order: "Sector",
+        login: false,
         time: "1d"
     },
     {
@@ -158,6 +180,7 @@ const array = [
         name: "ZROZ",
         presets: "Pattern",
         order: "Industry",
+        login: false,
         time: "1d"
     },
     {
@@ -165,6 +188,7 @@ const array = [
         name: "ZOOZ",
         presets: "Pattern",
         order: "Industry",
+        login: true,
         time: "1d"
     },
     {
@@ -172,6 +196,7 @@ const array = [
         name: "ZONE",
         presets: "Pattern",
         order: "Industry",
+        login: true,
         time: "1d"
     },
 ]

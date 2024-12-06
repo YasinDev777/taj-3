@@ -9,11 +9,23 @@
 
 .main{
     width: 100%;
-    padding: calc(var(--index)*1);
+    padding: 0 calc(var(--index)*1.5);
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     background-color: var(--other-main-color);
     gap: calc(var(--index)*0.75);
+}
+
+.infors{
+    display: flex;
+    align-items: center;
+    gap: calc(var(--index)*0.5);
+}
+
+.info{
+    display: flex;
+    align-items: center;
+    gap: calc(var(--index)*0.5);
 }
 
 .image{
@@ -21,6 +33,7 @@
     height: 100%;
     cursor: pointer;
     /* padding: 3px 0; */
+    position: relative;
 }
 
 .image img{
@@ -36,27 +49,31 @@
     justify-content: space-between;
     align-items: center;
     overflow: hidden;
-    border-radius: calc(var(--index)*0.75);
+    border-radius: calc(var(--index)*0.3);
     background-color: var(--other-main-color);
-    /* background-color: red; */
-    box-shadow: 0px 5px 12px #0000006b;
+    box-shadow: 0px calc(var(--index)*0.25) calc(var(--index)*0.6) #0000006b;
     margin: 0 auto;
 }
 
 .nav-card{
     width: 100%;
+    height: calc(var(--index)*1.75);
     background-color: var(--main-color);
     display: flex;
     align-items: center;
     justify-content: space-between;    
-    padding: 0px calc(var(--index)*0.8);
-    border-radius: calc(var(--index)*0.5) calc(var(--index)*0.5) 0 0; 
+    padding: calc(var(--index)*0.25) calc(var(--index)*0.5);
+    border-radius: calc(var(--index)*0.3) calc(var(--index)*0.3) 0 0; 
     gap: calc(var(--index)*0.25);
-    /* border: calc(var(--index)*0.1) solid var(--other-main-color); */
 }
 
 .nav-card img{
     width: calc(var(--index)*1);
+    height: calc(var(--index)*1);
+}
+
+.img-scan{
+    transform: translateY(calc(var(--index)*0.12));
 }
 
 .nav-card big{
@@ -74,7 +91,7 @@
 }
 
 .salary{
-    padding: calc(var(--index)*0.15) calc(var(--index)*0.15);
+    padding: calc(var(--index)*0.15) calc(var(--index)*0.3);
     background-color: var(--other-main-color);
     position: relative;
     display: flex;
@@ -137,4 +154,32 @@
     background-color: #F1434F;
     color: #fff;
     box-shadow: 0px 0px calc(var(--index)*0.5) #F1434F;
+}
+
+.dont-show{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 101;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
+}
+
+.dont-show button{
+    width: 55%;
+    height: calc(var(--index)*2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--block-card-color);
+    border-radius: calc(var(--index)*0.3);
+    font-size: calc(var(--index)*1);
+    gap: calc(var(--index)*0.5);
+    color: var(--block-card-color);
+    background-color: var(--other-main-color);
+    cursor: pointer;
 }
