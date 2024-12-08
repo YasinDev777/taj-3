@@ -2,7 +2,8 @@ import { BiSupport } from "react-icons/bi";
 import { FiArrowRightCircle } from "react-icons/fi";
 import React, { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
-
+import { LuFilterX } from "react-icons/lu";
+import { Link } from "react-router-dom";
 const CustomSelect = ({ options, selectedValue, onChange, label }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -54,15 +55,15 @@ const Navbar = ({
     { value: "Imbalance1", label: "Imbalance" },
     { value: "Imbalance2", label: "Imbalance" },
   ];
-  
+
 
   const tickerOptions = [
-    { value: "ticker", label: "Ticker" },
-    { value: "tickers-input-filter", label: "Tickers Input Filter" },
-    { value: "price-earnings", label: "Price/Earnings" },
-    { value: "company", label: "Company" },
-    { value: "sector", label: "Sector" },
-    { value: "industry", label: "Industry" },
+    { value: "Ticker", label: "Ticker" },
+    { value: "Tickers input filter", label: "Tickers Input Filter" },
+    { value: "Price/Earnings", label: "Price/Earnings" },
+    { value: "Company", label: "Company" },
+    { value: "Sector", label: "Sector" },
+    { value: "Industry", label: "Industry" },
   ];
 
   const gridOptions = [
@@ -82,9 +83,11 @@ const Navbar = ({
         <div className="logo-name">AHSAN SCREENER</div>
         <div className="options">
           <BiSupport />
+          <Link to={"/login"}>
           <button>
             Kirish <FiArrowRightCircle />
           </button>
+          </Link>
         </div>
       </div>
       <div className="nav-bar">
@@ -93,38 +96,41 @@ const Navbar = ({
           <p>Chart patterns</p>
         </div>
         <nav>
-          <div className="options-div">
-            <div className="div">
-              <CustomSelect
-                options={presetOptions}
-                selectedValue={selectedPreset}
-                onChange={setSelectedPreset}
-                label="Presets"
-              />
-            </div>
-            <div className="div">
-              <span>Pattern</span>
-              <CustomSelect
-                options={tickerOptions}
-                selectedValue={selectedTicker}
-                onChange={setSelectedTicker}
-              />
-            </div>
-            <div className="div">
-              <span>grid</span>
-              <CustomSelect
-                options={gridOptions}
-                selectedValue={isGrid}
-                onChange={setIsGrid}
-              />
-            </div>
-            <div className="div">
-              <span>Timeframe</span>
-              <CustomSelect
-                options={timeOptions}
-                selectedValue={selectedTime}
-                onChange={setSelectedTime}
-              />
+          <div className="fixed-div">
+            <div className="options-div">
+              <div className="div">
+                <CustomSelect
+                  options={presetOptions}
+                  selectedValue={selectedPreset}
+                  onChange={setSelectedPreset}
+                  label="Presets"
+                />
+              </div>
+              <div className="div">
+                <span>Pattern</span>
+                <CustomSelect
+                  options={tickerOptions}
+                  selectedValue={selectedTicker}
+                  onChange={setSelectedTicker}
+                />
+              </div>
+              <div className="div">
+                <span>grid</span>
+                <CustomSelect
+                  options={gridOptions}
+                  selectedValue={isGrid}
+                  onChange={setIsGrid}
+                />
+              </div>
+              <div className="div">
+                <span>Timeframe</span>
+                <CustomSelect
+                  options={timeOptions}
+                  selectedValue={selectedTime}
+                  onChange={setSelectedTime }
+                />
+              </div>
+              <LuFilterX className="filter-svg"/>
             </div>
           </div>
         </nav>

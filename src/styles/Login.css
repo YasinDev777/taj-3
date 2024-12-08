@@ -1,0 +1,44 @@
+.login{
+    width: 100%;
+    height: 100dvh;
+    background-color: var(--body-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container{
+    width: 90%;
+    height: 90%;
+    border-radius: calc(var(--index)*1);
+    background-color: var(--other-main-color);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.left{
+    width: 50%;
+    height: 100%;
+    background-color: var(--main-color);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.right{
+    width: 50%;
+    height: 100%;
+    background-color: var(--other-main-color);
+}
+
+.exit-nav{
+    padding: calc(var(--index)*1) calc(var(--index)*1.2);
+}
+
+.exit-nav svg{
+    color: var(--other-main-color);
+    font-size: calc(var(--index)*1.55);
+    cursor: pointer;
+}

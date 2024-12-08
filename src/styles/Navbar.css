@@ -12,8 +12,10 @@ nav {
     justify-content: space-between;
     margin: 0 auto;
     margin-top: 2%;
+    position: relative;
     border-radius: calc(var(--index)*0.5) calc(var(--index)*0.5) 0 0;
 }
+
 
 .tex h1 {
     font-size: calc(var(--index)*1.2);
@@ -33,6 +35,8 @@ nav {
     justify-content: space-between;
     align-items: center;
     padding: 0 calc(var(--index)*1.5);
+    position: relative;
+    z-index: 102;
 }
 
 .logo-name {
@@ -66,9 +70,10 @@ nav {
     cursor: pointer;
 }
 
-.dropdown-icon{
+.dropdown-icon {
     font-size: calc(var(--index)*1);
 }
+
 
 .options-div {
     width: 100%;
@@ -79,8 +84,16 @@ nav {
     align-items: center;
     color: var(--other-main-color);
     border-radius: calc(var(--index)*0.5);
-    box-shadow: 0px 0px calc(var(--index)*1) rgba(0, 0, 0, 0.315);
+    -webkit-box-shadow: 0px 0px calc(var(--index)*0.4) calc(var(--index)*-0.2) rgba(0, 0, 0, 1);
+    -moz-box-shadow: 0px 0px calc(var(--index)*0.4) calc(var(--index)*-0.2) rgba(0, 0, 0, 1);
+    box-shadow: 0px 0px calc(var(--index)*0.4) calc(var(--index)*-0.2) rgba(0, 0, 0, 1);
     gap: calc(var(--index)*1);
+
+}
+
+.filter-svg{
+    font-size: calc(var(--index)*1.1);
+    cursor: pointer;
 }
 
 .custom-select {
@@ -92,10 +105,25 @@ nav {
     align-items: center;
 }
 
-.custom-select:nth-child(1){
+.custom-select:nth-child(1) {
     width: calc(var(--index)*9);
 }
 
+.custom-select:nth-child(2) {
+    width: calc(var(--index)*9);
+}
+
+.div:nth-child(3) {
+    width: calc(var(--index)*5);
+}
+
+.div:nth-child(4) {
+    width: calc(var(--index)*7.5);
+}
+
+.div:nth-child(2) {
+    width: calc(var(--index)*9);
+}
 
 .custom-select-label {
     display: block;
@@ -119,7 +147,7 @@ nav {
     position: relative;
 }
 
-.custom-select-trigger span{
+.custom-select-trigger span {
     color: var(--text-color) !important;
 }
 
@@ -156,7 +184,7 @@ nav {
     font-size: calc(var(--index)*0.74);
 }
 
-.nav-bar svg{
+.nav-bar svg {
     color: var(--other-text-color);
 }
 

@@ -179,7 +179,7 @@ const Chart = ({ isCard, setIsCard }) => {
       <div
         ref={chartContainerRef}
         className="chart-container"
-        style={ isCard === false ? { width: 'calc(var(--index)*20)', height: 'calc(var(--index)*14.5)' } : { width: '100%', height: 'calc(100dvh - 60px)'}}
+        style={ isCard === false ? { width: 'calc(var(--index)*20)', height: 'calc(var(--index)*13)' } : { width: '100%', height: 'calc(100dvh - 60px)'}}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
       ></div>

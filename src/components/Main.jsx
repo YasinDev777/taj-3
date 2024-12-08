@@ -2,26 +2,61 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Chart from '../components/LineChart';
 import { BiLockOpen } from "react-icons/bi";
-const Main = ({ filtered, isCard, setIsCard, isGrid }) => {
+import { GrFormPrevious, GrFormNext } from "react-icons/gr";
+
+const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
   const [Charts, setCharts] = useState(filtered);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [ChartsPerPage, setChartPerPage] = useState(isGrid);
 
+  const totalPages = Math.ceil(Charts.length / ChartsPerPage);
+
   useEffect(() => {
-    setChartPerPage(Number(isGrid)); // Обновляем количество элементов при изменении isGrid
+    setCharts(filtered); 
+  }, [filtered]);
+
+  useEffect(() => {
+    setChartPerPage(Number(isGrid));
   }, [isGrid]);
 
   const lastChartIndex = currentPage * ChartsPerPage;
   const firstChartIndex = lastChartIndex - ChartsPerPage;
   const currentChart = Charts.slice(firstChartIndex, lastChartIndex);
 
-  const pageNumber = [];
-  for (let i = 1; i <= Math.ceil(Charts.length / ChartsPerPage); i++) {
-    pageNumber.push(i);
-  }
+  const getVisiblePages = () => {
+    const pages = [];
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      if (currentPage <= 3) {
+        pages.push(1, 2, 3, 4, '...', totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pages.push(
+          1,
+          '...',
+          currentPage - 1,
+          currentPage,
+          currentPage + 1,
+          '...',
+          totalPages
+        );
+      }
+    }
+    return pages;
+  };
 
   const paginate = (number) => setCurrentPage(number);
+
+  const nextPgae = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
+
+  const prevPgae = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
 
   return (
     <div className="main1">
@@ -31,7 +66,14 @@ const Main = ({ filtered, isCard, setIsCard, isGrid }) => {
         ) : (
           currentChart.map((item, index) => (
             <div className="card" key={index}>
-              <div className="nav-card">
+              <div
+                className="nav-card"
+                style={
+                  item.login === false
+                    ? { background: "var(--block-card-color)" }
+                    : { background: "var(--main-color)" }
+                }
+              >
                 <div className="infors">
                   <div className="info">
                     <img src="/images/icon.png" alt="" />
@@ -40,35 +82,86 @@ const Main = ({ filtered, isCard, setIsCard, isGrid }) => {
                   </div>
                   <div className="salary">
                     <i>$0,2648</i>
-                    <i>-1,19%</i>
+                    <i
+                      style={
+                        item.salarys === "-"
+                          ? { color: "var(--card-other-text)" }
+                          : { color: "var(--salary-plus)" }
+                      }
+                    >
+                      {item.salarys}1,19%
+                    </i>
                   </div>
                 </div>
                 <div className="icons">
-                  <Link to="/chart" style={item.login === false ? {pointerEvents: "none", cursor: "default"} : {pointerEvents: "auto", cursor: "pointer"}}>
-                    <img src="/images/scan-search.svg" alt="" className='img-scan' />
+                  <Link
+                    to="/chart"
+                    style={
+                      item.login === false
+                        ? { pointerEvents: "none", cursor: "default" }
+                        : { pointerEvents: "auto", cursor: "pointer" }
+                    }
+                  >
+                    <img
+                      src="/images/scan-search.svg"
+                      alt=""
+                      className="img-scan"
+                    />
                   </Link>
                 </div>
               </div>
               <div className="image">
-                <div className="dont-show" style={item.login === false ? {display: "flex", cursor: "default"} : {display: "none", pointerEvents: "auto"}}>
-                  <button>Qo’lga kiritish <BiLockOpen/></button>
+                <div
+                  className="dont-show"
+                  style={
+                    item.login === false
+                      ? { display: "flex", cursor: "default" }
+                      : { display: "none", pointerEvents: "auto" }
+                  }
+                >
+                  <button onClick={() => setIsAlert(!isAlert)}>
+                    Qo’lga kiritish <BiLockOpen />
+                  </button>
                 </div>
                 <Chart isCard={isCard} setIsCard={setIsCard} />
+              </div>
+              <div className="texx">
+                <p>Aniqlandi: {item.searched} oldin</p>
               </div>
             </div>
           ))
         )}
       </div>
       <div className="btns">
-        {pageNumber.map((number) => (
-          <button
-            key={number}
-            onClick={() => paginate(number)}
-            className={number === currentPage ? 'active' : ''}
-          >
-            {number}
-          </button>
-        ))}
+        <button
+          className="prev-btn"
+          onClick={prevPgae}
+          disabled={currentPage === 1}
+        >
+          <GrFormPrevious />
+        </button>
+        {getVisiblePages().map((page, index) =>
+          typeof page === "number" ? (
+            <button
+              key={index}
+              onClick={() => paginate(page)}
+              className={page === currentPage ? "active" : ""}
+            >
+              {page}
+            </button>
+          ) : (
+            <span key={index} className="dots">
+              ...
+            </span>
+          )
+        )}
+        <button
+          className="next-btn"
+          onClick={nextPgae}
+          disabled={currentPage === totalPages}
+        >
+          <GrFormNext />
+        </button>
       </div>
     </div>
   );
