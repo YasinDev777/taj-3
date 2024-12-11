@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import {  Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from "./components/Navbar";
 import Main from "./components/Main";
 import Chart from "./components/LineChart";
@@ -16,6 +16,14 @@ const App = () => {
   const [isCard, setIsCard] = useState(false)
   const location = useLocation();
   const [isAlert, setIsAlert] = useState(false)
+  const [isVideo, setIsVideo] = useState(false)
+  let body = document.querySelector("body")
+
+  if (isAlert === true || isVideo === true) {
+    body.style.overflow = "hidden";
+  }else{
+    body.style.overflow = "auto";
+  }
 
   const filtered = array.filter((item) => {
     const presetMatch =
@@ -24,7 +32,6 @@ const App = () => {
       selectedTicker === "Ticker" || item.order === selectedTicker;
     const timeMatch =
       selectedTime === "1d" || item.time === selectedTime;
-
     return presetMatch && tickerMatch && timeMatch;
   });
 
@@ -40,6 +47,8 @@ const App = () => {
           setSelectedTime={setSelectedTime}
           setIsGrid={setIsGrid}
           isGrid={isGrid}
+          isVideo={isVideo}
+          setIsVideo={setIsVideo}
         />
       }
       <Routes>
@@ -53,7 +62,12 @@ const App = () => {
         <Route path="/chart" element={<Chart />} />
         <Route path="/login" element={<Login />} />
       </Routes>
-      <Popav isAlert={isAlert} setIsAlert={setIsAlert} />
+      <Popav 
+        isAlert={isAlert}
+        setIsAlert={setIsAlert}
+        isVideo={isVideo}
+        setIsVideo={setIsVideo}
+        />
     </div>
   );
 };

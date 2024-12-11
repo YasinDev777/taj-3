@@ -47,6 +47,10 @@ body{
     background-color: var(--body-color);
 } 
 
+a{
+    text-decoration: none;
+}
+
 .app{
     width: 100%;
     height: auto;
@@ -57,37 +61,30 @@ body{
 }
 .chart-container {
     cursor: crosshair;
-}
-
-.navbar{
-    width: 100%;
-    height: calc(var(--index)*3);
-    background-color: var(--main-color);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 100px;
-    cursor: auto;
+    transform: translateY(3%);
 }
 
 .none-nav{
     display: none;
 }
 
-.logo{
-    width: 50px;
-    height: 50px;
-    background: url(/public/images/ahsan.jpg) center/cover;
-    border-radius: 100%;
+.exit-svg{
+    width: 100%;
+    height: calc(var(--index)*3);
+    background-color: var(--other-main-color);
+    display: flex;
+    align-items: center;
+    padding: 0 calc(var(--index)*1.5);
 }
 
-.list > svg{
-    color: var(--other-main-color);
-    cursor: pointer;
+.exitsvg{
+    font-size: calc(var(--index)*1.3);
+    color: var(--text-color);
 }
 
-a{
-    text-decoration: none;
+.chart{
+    width: 100%;
+    height: 100vh;
 }
 
 @import "./Navbar.css";

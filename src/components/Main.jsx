@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Chart from '../components/LineChart';
 import { BiLockOpen } from "react-icons/bi";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
+import { LuScanSearch } from "react-icons/lu";
 
 const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
   const [Charts, setCharts] = useState(filtered);
@@ -93,8 +94,9 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
                     </i>
                   </div>
                 </div>
-                <div className="icons">
+                {/* <div className="icons"> */}
                   <Link
+                   className='navCardLink'
                     to="/chart"
                     style={
                       item.login === false
@@ -102,13 +104,9 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
                         : { pointerEvents: "auto", cursor: "pointer" }
                     }
                   >
-                    <img
-                      src="/images/scan-search.svg"
-                      alt=""
-                      className="img-scan"
-                    />
+                    <LuScanSearch className='scanIcon' />
                   </Link>
-                </div>
+                {/* </div> */}
               </div>
               <div className="image">
                 <div

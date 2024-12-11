@@ -6,7 +6,7 @@
     justify-content: center;
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 101;
@@ -69,4 +69,41 @@
 .btn-div > button:nth-child(1){
     background-color: var(--popav-text-color);
     color: var(--new-red-color);
+}
+
+.video-alert{
+    width: calc(var(--index)*26);
+    height: calc(var(--index)*17.4);
+    background-color: var(--other-main-color);
+    padding: calc(var(--index)*1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    overflow: hidden;
+    border-radius: calc(var(--index)*0.5);
+    box-shadow: 0 0 calc(var(--index)*1) rgba(0, 0, 0, 0.301);
+}
+
+.textss{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0 calc(var(--index)*0.5) 0;
+}
+
+.textss p{
+    font-size: calc(var(--index)*1);
+    font-weight: 400;
+    color: var(--text-color);
+}
+
+.textss > svg{
+    font-size: calc(var(--index)*1.5);
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.video-alert > iframe{
+    border-radius: calc(var(--index)*0.25);
 }

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { LuFilterX } from "react-icons/lu";
 import { Link } from "react-router-dom";
+import { RxVideo } from "react-icons/rx";
 const CustomSelect = ({ options, selectedValue, onChange, label }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -47,7 +48,9 @@ const Navbar = ({
   isGrid,
   setIsGrid,
   selectedTime,
-  setSelectedTime
+  setSelectedTime,
+  isVideo,
+  setIsVideo
 }) => {
   const presetOptions = [
     { value: "Pattern", label: "Pattern" },
@@ -79,9 +82,12 @@ const Navbar = ({
 
   return (
     <>
-      <div className="nav">
+      <div className="nav" id="nav">
         <div className="logo-name">AHSAN SCREENER</div>
         <div className="options">
+          <button className="video-btn" onClick={()=> setIsVideo(!isVideo)} style={isVideo === true ? {display: "none"} : {display: "flex"}}>
+            <RxVideo /> Foydalanish videosi
+          </button>
           <BiSupport />
           <Link to={"/login"}>
           <button>
