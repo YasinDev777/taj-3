@@ -226,7 +226,7 @@
 
 @media (max-width: 650px) {
     .card{
-        width: 90%;
+        width: 100%;
         height: calc(var(--index)*28);
         margin: 0 auto;
     }

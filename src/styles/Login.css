@@ -162,7 +162,7 @@
 .login-div{
     width: 85%;
     height: calc(var(--index)*20.53);
-    background-color: var(--card-text);
+    background-color: var(--alert-color);
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -171,6 +171,7 @@
     padding-bottom: calc(var(--index)*2.5);
     border-radius: calc(var(--index)*1.6);
     gap: calc(var(--index)*0.5);
+    border: calc(var(--idnex)*0.05) solid var(--card-text-color);
 }
 
 .right h1{
@@ -288,5 +289,5 @@
 @media (max-width: 900px) {
     .img3{
         transform: translateX(0%) !important;
-    }   
+    }
 }

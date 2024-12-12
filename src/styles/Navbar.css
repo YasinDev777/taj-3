@@ -263,6 +263,13 @@ nav {
         width: calc(var(--index)*6) !important;
     }
     .custom-select:nth-child(3){
-        width: calc(var(--index)*4) !important;
+        width: calc(var(--index)*2) !important;
+    }
+    .div > span{
+        display: none;
+    }
+
+    .custom-select-label{
+        display: none;
     }
 }

@@ -107,3 +107,17 @@
 .video-alert > iframe{
     border-radius: calc(var(--index)*0.25);
 }
+
+@media (max-width: 750px){
+    .video-alert{
+        width: calc(var(--index)*39);
+        height: calc(var(--index)*25);
+    }
+}
+
+@media (max-width: 500px) {
+    .video-alert{
+        width: calc(var(--index)*33);
+        height: calc(var(--index)*21);
+    }
+}
