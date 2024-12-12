@@ -1,4 +1,4 @@
-import { BiSupport } from "react-icons/bi";
+import { PiHeadsetBold } from "react-icons/pi";
 import { FiArrowRightCircle } from "react-icons/fi";
 import React, { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
@@ -88,8 +88,8 @@ const Navbar = ({
           <button className="video-btn" onClick={()=> setIsVideo(!isVideo)} style={isVideo === true ? {display: "none"} : {display: "flex"}}>
             <RxVideo /> Foydalanish videosi
           </button>
-          <BiSupport />
-          <Link to={"/login"}>
+          <PiHeadsetBold />
+          <Link to="/login">
           <button>
             Kirish <FiArrowRightCircle />
           </button>
@@ -146,3 +146,8 @@ const Navbar = ({
 };
 
 export default Navbar;
+
+
+
+// apikey vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A
+// secretkey NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j

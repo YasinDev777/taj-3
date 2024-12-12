@@ -52,7 +52,6 @@
     -webkit-box-shadow: 0 0 calc(var(--index)*0.4) calc(var(--index)*-0.2) rgba(0, 0, 0, 1);
     -moz-box-shadow: 0 0 calc(var(--index)*0.4) calc(var(--index)*-0.2) rgba(0, 0, 0, 1);
     box-shadow: 0 0 calc(var(--index)*0.4) calc(var(--index)*-0.2) rgba(0, 0, 0, 1);
-    margin: 0 auto;
 }
 
 .nav-card {
@@ -222,5 +221,17 @@
 
     .chart-container{
         width: 100% !important;
+    }
+}
+
+@media (max-width: 650px) {
+    .card{
+        width: 90%;
+        height: calc(var(--index)*28);
+        margin: 0 auto;
+    }
+
+    .chart-container-mobile{
+        height: calc(var(--index)*25) !important;
     }
 }

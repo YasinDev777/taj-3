@@ -6,7 +6,7 @@ import { FiArrowRightCircle } from "react-icons/fi";
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import axios from 'axios';
 import news from "../new.json"
-// c504a279-fe1d-49ec-b85b-09c9c4d7a636
+
 const Chart = ({ isCard, setIsCard }) => {
   const chartContainerRef = useRef(null);
   const [candlestickData, setCandlestickData] = useState([]);
@@ -17,79 +17,62 @@ const Chart = ({ isCard, setIsCard }) => {
   const handleMouseUp = () => setIsMouseDown(false);
 
   useEffect(() => {
-    const fetchBitcoinData = async () => {
-      const formattedData = news.map((item) => {
-        return {
-          time: new Date(item.Date).getTime() / 1000,
-          open: parseFloat(item.Open.replace(/,/g, '')),
-          high: parseFloat(item.High.replace(/,/g, '')),
-          low: parseFloat(item.Low.replace(/,/g, '')),
-          close: parseFloat(item.Price.replace(/,/g, '')),
-        };
-      });
+    const fetchBitCoinData = async () => {
+      try {
+        // Use HTTPS proxy to avoid SSL errors
+        const response = await axios.get(
+          'https://api.binance.com/api/v3/klines', {
+            params: {
+              symbol: 'BTCUSDT',
+              interval: '4h',
+              limit: 1000
+            },
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            // Add proxy configuration
+            proxy: {
+              protocol: 'https',
+              host: 'cors-anywhere.herokuapp.com',
+              port: 443
+            }
+          }
+        );
 
-      formattedData.sort((a, b) => a.time - b.time);
-      setCandlestickData(formattedData);
+        if (response.data) {
+          const formattedData = response.data.map(item => ({
+            time: item[0] / 1000,
+            open: parseFloat(item[1]),
+            high: parseFloat(item[2]),
+            low: parseFloat(item[3]), 
+            close: parseFloat(item[4])
+          }));
+
+          if (formattedData.length > 0) {
+            setCandlestickData(formattedData);
+          } else {
+            console.error('No valid data available');
+          }
+        } else {
+          console.error('No data in response');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error.message);
+        // Implement retry logic
+        if (error.code === 'ERR_NETWORK' || error.code === 'ERR_SSL_PROTOCOL_ERROR') {
+          console.log('Retrying request...');
+          setTimeout(fetchBitCoinData, 2000); // Retry after 2 seconds
+        }
+      }
     };
 
-    fetchBitcoinData();
-
-    // const fetchBitCoinData = async () => {
-    //   try {
-    //     const response = await axios.get(
-    //       'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/historical',
-    //       {
-    //         headers: {
-    //           'Accepts': 'application/json',
-    //           'X-CMC_PRO_API_KEY': 'c504a279-fe1d-49ec-b85b-09c9c4d7a636',
-    //         },
-    //         params: {
-    //           symbol: 'BTC',
-    //           convert: 'USD',
-    //           time_start: '2022-01-01',
-    //           time_end: '2022-12-31',
-    //         },
-    //       }
-    //     );
-
-    //     console.log('API Response:', response.data);
-
-    //     if (response.data && response.data.data) {
-    //       const formattedData = response.data.data.map((item) => ({
-    //         time: new Date(item.date).getTime() / 1000,
-    //         open: parseFloat(item.open.replace(/,/g, '')) || 0,
-    //         high: parseFloat(item.high.replace(/,/g, '')) || 0,
-    //         low: parseFloat(item.low.replace(/,/g, '')) || 0,
-    //         close: parseFloat(item.close.replace(/,/g, '')) || 0,
-    //       }));
-
-    //       console.log('Formatted Data:', formattedData);
-
-    //       if (formattedData.length > 0) {
-    //         setCandlestickData(formattedData);
-    //       } else {
-    //         console.log('No valid data available');
-    //       }
-
-    //       formattedData.sort((a, b) => a.time - b.time);
-
-    //     } else {
-    //       console.log('No data in response');
-    //     }
-    //   } catch (error) {
-    //     console.error('Error fetching data:', error.message);
-    //   }
-
-    // };
-    // fetchBitCoinData()
+    fetchBitCoinData();
   }, []);
-
-
-  console.log(candlestickData);
-
 
   useEffect(() => {
     if (chartContainerRef.current && candlestickData.length > 0) {
+      // Создание графика
       const chart = createChart(chartContainerRef.current, {
         width: chartContainerRef.current.clientWidth,
         height: chartContainerRef.current.clientHeight,
@@ -98,6 +81,8 @@ const Chart = ({ isCard, setIsCard }) => {
         timeScale: {
           ...isDarkMode ? darkMode.timeScale : lightMode.timeScale,
           scrollable: isCard,
+          rightOffset: 10,
+          barSpacing: 12,
         },
         handleScale: isCard,
         handleScroll: isCard,
@@ -107,81 +92,84 @@ const Chart = ({ isCard, setIsCard }) => {
         },
         crosshair: isDarkMode ? darkMode.crosshair : lightMode.crosshair,
       });
-
-      const findCandleIndex = (candles, targetDate) => {
-        const targetTime = new Date(targetDate).getTime() / 1000;
-        return candles.findIndex(candle => candle.time === targetTime);
-      };
-
-      const pointA = "2021-09-07";
-      const pointB = "2021-09-18";
-
-      const indexA = findCandleIndex(candlestickData, pointA);
-      const indexB = findCandleIndex(candlestickData, pointB);
-
+  
+      // Настройка свечных данных
       const candlestickSeries = chart.addCandlestickSeries({
         upColor: isDarkMode ? '#A2C4C9' : '#4caf50',
         downColor: isDarkMode ? '#F6B26B' : '#f44336',
         borderUpColor: isDarkMode ? '#719CA4' : '#4caf50',
-        borderDownColor: isDarkMode ? '#422C19' : '#f44336',
+        borderDownColor: isDarkMode ? '#F6B26B' : '#f44336',
         wickUpColor: isDarkMode ? '#719CA4' : '#4caf50',
         wickDownColor: isDarkMode ? '#F6B26B' : '#f44336',
       });
-
       candlestickSeries.setData(candlestickData);
-
-
+  
+      // Настройка трендовых линий
       const lineSeries1 = chart.addLineSeries({
         color: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : '#000000',
         lineWidth: 2,
         priceLineVisible: false,
         lastValueVisible: false,
       });
-      const trendLineData1 = [
+      lineSeries1.setData([
         { time: new Date('2021-08-27').getTime() / 1000, value: 46307 },
         { time: new Date('2021-09-06').getTime() / 1000, value: 52751 },
-      ];
-      lineSeries1.setData(trendLineData1);
-
+      ]);
+  
       const lineSeries2 = chart.addLineSeries({
         color: isDarkMode ? 'rgba(28, 75, 228, 0.8)' : '#888888',
         lineWidth: 2,
         priceLineVisible: false,
         lastValueVisible: false,
       });
-      const trendLineData2 = [
+      lineSeries2.setData([
         { time: new Date('2021-09-07').getTime() / 1000, value: 43000 },
         { time: new Date('2021-09-22').getTime() / 1000, value: 49730 },
-      ];
-      lineSeries2.setData(trendLineData2);
-
+      ]);
+  
       const lineSeries3 = chart.addLineSeries({
         color: isDarkMode ? 'rgba(21, 255, 0, 0.8)' : '#888888',
         lineWidth: 2,
         priceLineVisible: false,
         lastValueVisible: false,
       });
-
-      const trendLineData3 = [
+      lineSeries3.setData([
         { time: new Date('2021-09-07').getTime() / 1000, value: 52900 },
         { time: new Date('2021-09-20').getTime() / 1000, value: 43200 },
-      ];
-      lineSeries3.setData(trendLineData3);
-
-      const priceLine = candlestickSeries.createPriceLine({
-        price: candlestickData[13].low,
+      ]);
+  
+      candlestickSeries.createPriceLine({
+        price: candlestickData[13]?.low || 0,
         color: 'rgba(255, 0, 0, 0.8)',
         lineWidth: 2,
         lineStyle: 0,
         axisLabelVisible: true,
       });
-
+  
       chart.timeScale().fitContent();
+  
+      const handleResize = () => {
+        chart.applyOptions({
+          width: chartContainerRef.current.clientWidth,
+          height: chartContainerRef.current.clientHeight,
+        });
+      };
 
-      return () => chart.remove();
+      chart.timeScale().setVisibleRange({
+        from: candlestickData[candlestickData.length - 50]?.time || candlestickData[0]?.time, // Последние 50 свечей
+        to: candlestickData[candlestickData.length - 1]?.time,
+      });
+  
+
+
+      window.addEventListener('resize', handleResize);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        chart.remove();
+      };
     }
   }, [candlestickData, isDarkMode]);
-
+  
 
   const darkMode = {
     layout: {
@@ -249,8 +237,8 @@ const Chart = ({ isCard, setIsCard }) => {
       </div>
       <div
         ref={chartContainerRef}
-        className="chart-container"
-        style={isCard === false ? { width: 'calc(var(--index)*20)', height: 'calc(var(--index)*13)', transform: "translateY(0)" } : { width: '100%', height: 'calc(var(--index)*25)' }}
+        className={`chart-container ${isCard === false ? "chart-container-mobile" : ""}`}
+        style={isCard === false ? { width: 'calc(var(--index)*20)', height: 'calc(var(--index)*13.5)', transform: "translateY(0)" } : { width: '100%', height: 'calc(var(--index)*25)' }}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
       >

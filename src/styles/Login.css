@@ -284,3 +284,9 @@
         top: 40% !important;
     }
 }
+
+@media (max-width: 900px) {
+    .img3{
+        transform: translateX(0%) !important;
+    }   
+}
