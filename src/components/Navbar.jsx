@@ -83,7 +83,7 @@ const Navbar = ({
   ];
 
 
-  const handleChange = () =>{
+  const handleChange = () => {
     setIsGrid(6)
     setSelectedPreset("Pattern")
     setSelectedTicker("Ticker")
@@ -95,21 +95,26 @@ const Navbar = ({
       <div className="nav" id="nav">
         <div className="logo-name">AHSAN SCREENER</div>
         <div className="options">
-          <button className="video-btn" onClick={()=> setIsVideo(!isVideo)} style={isVideo === true ? {display: "none"} : {display: "flex"}}>
+          <button className="video-btn" onClick={() => setIsVideo(!isVideo)} style={isVideo === true ? { display: "none" } : { display: "flex" }}>
             <RxVideo /> Foydalanish videosi
           </button>
           <PiHeadsetBold />
-          <Link to="/login" onClick={()=>setIsVideo(false)}>
-          <button onClick={()=>setIsAlert(false)}>
-            Kirish <FiArrowRightCircle />
-          </button>
+          <Link to="/login" onClick={() => setIsVideo(false)}>
+            <button onClick={() => setIsAlert(false)}>
+              Kirish <FiArrowRightCircle />
+            </button>
           </Link>
         </div>
       </div>
       <div className="nav-bar">
-        <div className="tex">
-          <h1>Texnik analizlar</h1>
-          <p>Chart patterns</p>
+        <div className="texsss">
+          <div className="tex">
+            <h1>Texnik analizlar</h1>
+            <p>Chart patterns</p>
+          </div>
+          <button className="video-btn2" onClick={() => setIsVideo(!isVideo)} style={isVideo === true ? { display: "none" } : { display: "flex" }}>
+            <RxVideo /> Foydalanish videosi
+          </button>
         </div>
         <nav>
           <div className="fixed-div">
@@ -143,10 +148,10 @@ const Navbar = ({
                 <CustomSelect
                   options={timeOptions}
                   selectedValue={selectedTime}
-                  onChange={setSelectedTime }
+                  onChange={setSelectedTime}
                 />
               </div>
-              <LuFilterX className="filter-svg" onClick={handleChange}/>
+              <LuFilterX className="filter-svg" onClick={handleChange} />
             </div>
           </div>
         </nav>

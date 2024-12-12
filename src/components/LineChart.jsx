@@ -31,7 +31,7 @@ const Chart = ({ isCard, setIsCard }) => {
               'Accept': 'application/json',
               'Content-Type': 'application/json'
             },
-            // Add proxy configuration
+
             proxy: {
               protocol: 'https',
               host: 'cors-anywhere.herokuapp.com',
