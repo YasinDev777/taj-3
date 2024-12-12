@@ -50,7 +50,9 @@ const Navbar = ({
   selectedTime,
   setSelectedTime,
   isVideo,
-  setIsVideo
+  setIsVideo,
+  isAlert,
+  setIsAlert,
 }) => {
   const presetOptions = [
     { value: "Pattern", label: "Pattern" },
@@ -89,8 +91,8 @@ const Navbar = ({
             <RxVideo /> Foydalanish videosi
           </button>
           <PiHeadsetBold />
-          <Link to="/login">
-          <button>
+          <Link to="/login" onClick={()=>setIsVideo(false)}>
+          <button onClick={()=>setIsAlert(false)}>
             Kirish <FiArrowRightCircle />
           </button>
           </Link>

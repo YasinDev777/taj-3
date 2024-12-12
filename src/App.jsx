@@ -49,6 +49,8 @@ const App = () => {
           isGrid={isGrid}
           isVideo={isVideo}
           setIsVideo={setIsVideo}
+          setIsAlert={setIsAlert}
+          isAlert={isAlert}
         />
       }
       <Routes>
