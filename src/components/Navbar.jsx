@@ -82,6 +82,14 @@ const Navbar = ({
     { value: "1h", label: "1h" },
   ];
 
+
+  const handleChange = () =>{
+    setIsGrid(6)
+    setSelectedPreset("Pattern")
+    setSelectedTicker("Ticker")
+    setSelectedTime("1d")
+  }
+
   return (
     <>
       <div className="nav" id="nav">
@@ -138,7 +146,7 @@ const Navbar = ({
                   onChange={setSelectedTime }
                 />
               </div>
-              <LuFilterX className="filter-svg"/>
+              <LuFilterX className="filter-svg" onClick={handleChange}/>
             </div>
           </div>
         </nav>

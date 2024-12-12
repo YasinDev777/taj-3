@@ -94,7 +94,6 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
                     </i>
                   </div>
                 </div>
-                {/* <div className="icons"> */}
                   <Link
                    className='navCardLink'
                     to="/chart"
@@ -106,7 +105,6 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
                   >
                     <LuScanSearch className='scanIcon' />
                   </Link>
-                {/* </div> */}
               </div>
               <div className="image">
                 <div
