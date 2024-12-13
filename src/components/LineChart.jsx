@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createChart } from 'lightweight-charts';
+import { PiHeadsetBold } from "react-icons/pi";
 import { Link } from 'react-router-dom';
 import { BiSupport } from "react-icons/bi";
 import { FiArrowRightCircle } from "react-icons/fi";
@@ -227,8 +228,8 @@ const Chart = ({ isCard, setIsCard }) => {
       <div className="nav" id="nav" style={isCard === false ? { display: "none" } : { display: "flex" }}>
         <div className="logo-name">AHSAN SCREENER</div>
         <div className="options">
-          <BiSupport />
-          <Link to="/login">
+        <PiHeadsetBold />
+        <Link to="/login">
             <button>
               Kirish <FiArrowRightCircle />
             </button>

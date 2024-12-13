@@ -40,7 +40,7 @@
 
 
 .card {
-    width: 32.45%;
+    width: 32%;
     height: calc(var(--index)*16.15);
     display: flex;
     flex-direction: column;
@@ -142,7 +142,7 @@
     align-items: center;
     gap: calc(var(--index)*0.75);
     padding: calc(var(--index)*1) 0;
-    transform: translateX(-8%);
+    transform: translateX(calc(var(--index)*-2.3));
 }
 
 .btns>button {
@@ -225,6 +225,17 @@
 }
 
 @media (max-width: 650px) {
+
+    .btns > button{
+        width: calc(var(--index)*3);
+        height: calc(var(--index)*3);
+        font-size: calc(var(--index)*1.1);
+    }
+
+    .btns{
+        gap: calc(var(--index)*1);
+    }
+
     .card{
         width: 100%;
         height: calc(var(--index)*28);
