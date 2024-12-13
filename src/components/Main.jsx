@@ -55,7 +55,7 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
     if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
   };
 
-  const prevPgae = () => {
+  const prevPage = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
 
@@ -137,7 +137,7 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
         <button
           className="prev-btn"
           onClick={() => {
-            prevPgae();
+            prevPage();
             handleScroll();
           }}
           disabled={currentPage === 1}
