@@ -68,11 +68,11 @@ const Login = () => {
                     </div>
                 </div>
                 <div className="right">
-                <div className="exit-nav2">
+                    <div className="exit-nav2">
                         <Link to="/">
                             <BsArrowLeftCircle />
                         </Link>
-                </div>
+                    </div>
                     <h1>AHSAN.</h1>
                     <div className="login-div">
                         <h3>Log In</h3>

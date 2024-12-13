@@ -233,7 +233,7 @@
     overflow: hidden;
     border-radius: calc(var(--index)*0.3);
     background-color: var(--other-main-color);
-    box-shadow: 0 0 calc(var(--index)*0.25) rgba(0, 0, 0, 0.363);
+    border: calc(var(--index)*0.1) solid var(--card-text);
 }
 
 .input-div>input {
@@ -308,6 +308,19 @@
         display: none;
     }
 
+    .input-div{
+        height: calc(var(--index)*3.5);
+        padding: calc(var(--index)*0.5) calc(var(--index)*0.8);
+    }
+
+    .input-div > svg{
+        font-size: calc(var(--index)*1.4);
+    }
+
+    .input-div > input{
+        font-size: calc(var(--index)*1.2);
+    }
+
     .right {
         width: 100%;
         height: 100%;
@@ -316,18 +329,19 @@
     .container {
         align-content: flex-start;
         height: 60%;
-        /* justify-content: center; */
     }
 
     .exit-nav2 {
         display: block;
         justify-self: flex-start;
         width: 93%;
-        height: calc(var(--index)*4);
+        height: calc(var(--index)*0.3);
     }
 
     .exit-nav {
         display: none;
     }
-
+    .logining > p > span{
+        font-size: calc(var(--index)*0.9);
+    }
 }
