@@ -208,7 +208,7 @@ nav {
 }
 
 .video-btn2{
-    display: none;
+    display: none !important;
 }
 
 .video-btn>svg {
