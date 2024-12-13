@@ -16,7 +16,7 @@
     justify-content: flex-start;
     flex-wrap: wrap;
     background-color: var(--other-main-color);
-    gap: calc(var(--index)*0.75);
+    gap: calc(var(--index)*0.8);
 }
 
 .infors {
@@ -142,7 +142,7 @@
     align-items: center;
     gap: calc(var(--index)*0.75);
     padding: calc(var(--index)*1) 0;
-    transform: translateX(calc(var(--index)*-1.45));
+    transform: translateX(-11.5%);
 }
 
 .btns>button {

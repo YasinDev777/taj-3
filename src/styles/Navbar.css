@@ -211,6 +211,10 @@ nav {
     display: none !important;
 }
 
+.video-btn2 > svg{
+    color: var(--block-card-color);
+}
+
 .video-btn>svg {
     font-size: calc(var(--index)*0.8) !important;
 }
@@ -257,18 +261,43 @@ nav {
 
     .custom-select-trigger{
         width: 100%;
+        height: calc(var(--index)*2);
+        padding: calc(var(--index)*1) calc(var(--index)*0.4);
+    }
+    
+    .custom-select-trigger > span{
+        font-size: calc(var(--index)*1.2);
     }
 
-    .custom-select:nth-child(1){
-        width: calc(var(--index)*6) !important;
+
+    .div{
+        width: calc(var(--index)*4) !important;
     }
 
-    .custom-select:nth-child(2){
-        width: calc(var(--index)*6) !important;
+    .div:nth-child(1){
+        width: calc(var(--index)*9) !important;
     }
-    .custom-select:nth-child(3){
-        width: calc(var(--index)*2) !important;
+
+    .div:nth-child(2){
+        width: calc(var(--index)*7) !important;
     }
+
+    .custom-option{
+        font-size: calc(var(--index)*1.1);
+    }
+
+    .dropdown-icon{
+        font-size: calc(var(--index)*1.1);
+    }
+
+    .filter-svg{
+        font-size: calc(var(--index)*1.4);
+    }
+
+    .options-div{
+        height: calc(var(--index)*4);
+    }
+
     .div > span{
         display: none;
     }
@@ -287,7 +316,7 @@ nav {
         padding: calc(var(--index)*0.5) calc(var(--index)*0.3) !important;
         border: calc(var(--index)*0.1) solid var(--block-card-color);
         border-radius: calc(var(--index)*0.5) !important;
-        font-size: calc(var(--index)*0.6) !important;
+        font-size: calc(var(--index)*0.8) !important;
         width: auto !important;
         display: flex !important;
         align-items: center !important;
