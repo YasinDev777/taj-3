@@ -87,6 +87,12 @@ a{
     height: 100vh;
 }
 
+@media (max-width: 650px) {
+    .chart-container{
+        height: 84dvh !important;
+    }
+}
+
 @import "./Navbar.css";
 @import "./Main.css";
 @import "./Popav.css";

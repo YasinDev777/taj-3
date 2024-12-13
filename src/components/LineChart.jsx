@@ -25,7 +25,7 @@ const Chart = ({ isCard, setIsCard }) => {
           'https://api.binance.com/api/v3/klines', {
             params: {
               symbol: 'BTCUSDT',
-              interval: '4h',
+              interval: '1h',
               limit: 1000
             },
             headers: {
