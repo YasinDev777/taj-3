@@ -49,20 +49,20 @@ const Login = () => {
                                         Kripto bozoridagi eng so'nggi texnik analizlar!
                                     </h1>
                                     <p>Ahsan Screener orqali eng yangi tahlillar va halol kripto imkoniyatlarini kuzating.</p>
-                                    <img src="./images/ETH.png" alt="" />
-                                    <img src="./images/StarAtlas.png" alt="" className='img1' />
-                                    <img src="./images/SOL.png" alt="" className='img2' />
+                                    <img src="./images/ETH.png" alt="eth" />
+                                    <img src="./images/StarAtlas.png" alt="starAtlas" className='img1' />
+                                    <img src="./images/SOL.png" alt="sol" className='img2' />
                                 </div>
                             </SwiperSlide>
                             <SwiperSlide className='swiper-slide'>
                                 <h1>Kripto bozoridagi eng so'nggi texnik analizlar!</h1>
                                 <p>Ahsan Screener orqali eng yangi tahlillar va halol kripto imkoniyatlarini kuzating.</p>
-                                <img src="/images/ChatBot.png" alt="" />
+                                <img src="/images/ChatBot.png" alt="chatBot" />
                             </SwiperSlide>
                             <SwiperSlide className='swiper-slide'>
                                 <h1>Biz bilan vaqtingizni tejang!</h1>
                                 <p>Ahsan Screener orqali eng yangi tahlillar va halol kripto imkoniyatlarini oson filterlar bilan kuzating.</p>
-                                <img src="/images/Working.png" alt="" className='img3' />
+                                <img src="/images/Working.png" alt="working" className='img3' />
                             </SwiperSlide>
                         </Swiper>
                     </div>

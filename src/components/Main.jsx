@@ -82,7 +82,7 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
               >
                 <div className="infors">
                   <div className="info">
-                    <img src="/images/icon.png" alt="" />
+                    <img src="/images/icon.png" alt="fullScreenIcon" />
                     <big>BMX</big>
                     <p>BitMart Token</p>
                   </div>
