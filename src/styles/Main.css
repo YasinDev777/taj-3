@@ -120,14 +120,6 @@
     transform: translate(-60%, -50%);
 }
 
-.icons {
-    width: calc(var(--index)*1.1);
-    height: 65%;
-    display: flex;
-    align-items: center;
-}
-
-
 .navCardLink {
     font-size: var(--index);
     color: var(--other-main-color);
@@ -214,6 +206,17 @@
     font-size: calc(var(--index)*0.6);
 }
 
+
+
+/* @keyframes anim {
+    0%{
+        transform: scale(1);
+    }
+    80%{
+        transform: scale(1.2);
+    }
+} */
+
 @media (max-width: 900px) {
     .card {
         width: 48%;
@@ -257,8 +260,7 @@
     }
 
     .nav-card {
-        height: calc(var(--index)*8);
-        /* padding: calc(var(--index)*3) calc(var(--index)*0.5); */
+        height: calc(var(--index)*8) !important;
     }
 
     .info {
@@ -287,7 +289,7 @@
     }
 
     .navCardLink {
-        font-size: calc(var(--index)*1.5);
+        font-size: calc(var(--index)*1.8);
     }
 
     .texx>p {

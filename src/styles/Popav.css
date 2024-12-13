@@ -113,6 +113,12 @@
         width: calc(var(--index)*39);
         height: calc(var(--index)*25);
     }
+    .textss > p{
+        font-size: calc(var(--index)*1.5);
+    }
+    .textss > svg{
+        font-size: calc(var(--index)*2.3);
+    }
 }
 
 @media (max-width: 500px) {

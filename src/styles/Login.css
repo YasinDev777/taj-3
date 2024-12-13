@@ -342,6 +342,9 @@
         display: none;
     }
     .logining > p > span{
-        font-size: calc(var(--index)*0.9);
+        font-size: calc(var(--index)*1.35);
+    }
+    .logining > p{
+        font-size: calc(var(--index)*1.3);
     }
 }

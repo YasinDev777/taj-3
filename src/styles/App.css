@@ -89,7 +89,14 @@ a{
 
 @media (max-width: 650px) {
     .chart-container{
-        height: 84dvh !important;
+        height: 83dvh !important;
+    }
+    .exitsvg{
+        font-size: calc(var(--index)*2.3)
+    }
+
+    .exit-svg{
+        height: calc(var(--index)*5)
     }
 }
 
