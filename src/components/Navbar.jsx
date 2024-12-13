@@ -6,6 +6,7 @@ import { LuFilterX } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import { RxVideo } from "react-icons/rx";
 const CustomSelect = ({ options, selectedValue, onChange, label }) => {
+  
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSelect = (value) => {
@@ -93,7 +94,11 @@ const Navbar = ({
   return (
     <>
       <div className="nav" id="nav">
-        <div className="logo-name">AHSAN SCREENER</div>
+        <div className="logo-name">
+          <a href="#">
+            AHSAN SCREENER
+          </a>
+        </div>
         <div className="options">
           <button className="video-btn" onClick={() => setIsVideo(!isVideo)} style={isVideo === true ? { display: "none" } : { display: "flex" }}>
             <RxVideo /> Foydalanish videosi

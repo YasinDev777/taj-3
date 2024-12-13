@@ -44,6 +44,10 @@ nav {
     font-weight: 900;
 }
 
+.logo-name a{
+    color: var(--text-color);
+}
+
 .options {
     display: flex;
     align-items: center;
@@ -279,7 +283,7 @@ nav {
 
     .div {
         justify-content: center;
-        width: calc(var(--index)*5) !important;
+        width: calc(var(--index)*3.7) !important;
         flex-direction: column;
         align-items: flex-start;
     }
@@ -297,12 +301,7 @@ nav {
     }
     
     .custom-select-trigger > span{
-        font-size: calc(var(--index)*1.2);
-    }
-
-
-    .div{
-        width: calc(var(--index)*4) !important;
+        font-size: calc(var(--index)*0.87);
     }
 
     .div:nth-child(1){
@@ -310,11 +309,11 @@ nav {
     }
 
     .div:nth-child(2){
-        width: calc(var(--index)*7) !important;
+        width: calc(var(--index)*9.3) !important;
     }
 
     .custom-option{
-        font-size: calc(var(--index)*1.1);
+        font-size: calc(var(--index)*0.9);
     }
 
     .dropdown-icon{

@@ -226,7 +226,11 @@ const Chart = ({ isCard, setIsCard }) => {
   return (
     <div>
       <div className="nav" id="nav" style={isCard === false ? { display: "none" } : { display: "flex" }}>
-        <div className="logo-name">AHSAN SCREENER</div>
+        <div className="logo-name">
+          <Link to="/">
+            AHSAN SCREENER
+          </Link>
+        </div>
         <div className="options">
         <PiHeadsetBold />
         <Link to="/login">
