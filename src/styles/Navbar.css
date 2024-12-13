@@ -352,8 +352,13 @@ nav {
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        gap: calc(var(--index)*0.5);
+        gap: calc(var(--index)*1);
         cursor: pointer;
+        height: calc(var(--index)*2.5);
+    }
+
+    .video-btn2 > svg{
+        font-size: calc(var(--index)*1.5);
     }
 
     .video-btn{
