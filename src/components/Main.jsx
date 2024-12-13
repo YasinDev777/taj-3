@@ -59,6 +59,11 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
 
+  const handleScroll = () =>{
+    window.scrollTo({top: 0, behaivor: "smooth"})
+  }
+
+
   return (
     <div className="main1">
       <div className="main">
@@ -131,7 +136,10 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
       <div className="btns">
         <button
           className="prev-btn"
-          onClick={prevPgae}
+          onClick={() => {
+            prevPgae();
+            handleScroll();
+          }}
           disabled={currentPage === 1}
         >
           <GrFormPrevious />
@@ -140,7 +148,10 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
           typeof page === "number" ? (
             <button
               key={index}
-              onClick={() => paginate(page)}
+              onClick={() => {
+                paginate(page);
+                handleScroll();
+              }}
               className={page === currentPage ? "active" : ""}
             >
               {page}
@@ -153,7 +164,10 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
         )}
         <button
           className="next-btn"
-          onClick={nextPgae}
+          onClick={() => {
+            nextPgae();
+            handleScroll();
+          }}
           disabled={currentPage === totalPages}
         >
           <GrFormNext />
