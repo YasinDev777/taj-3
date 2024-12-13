@@ -238,7 +238,7 @@ const Chart = ({ isCard, setIsCard }) => {
       <div
         ref={chartContainerRef}
         className={`chart-container ${isCard === false ? "chart-container-mobile" : ""}`}
-        style={isCard === false ? { width: 'calc(var(--index)*20)', height: 'calc(var(--index)*13.5)', transform: "translateY(0)" } : { width: '100%', height: 'calc(var(--index)*25)' }}
+        style={isCard === false ? { width: 'calc(var(--index)*20)', height: 'calc(var(--index)*13.5)', transform: "translateY(0)" } : { width: '100%', height: '77.6dvh' }}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
       >
