@@ -5,6 +5,7 @@ import { Pagination, Autoplay } from 'swiper/modules';
 import { RiKey2Line } from "react-icons/ri";
 import { FiArrowRightCircle } from "react-icons/fi";
 import { Link } from 'react-router-dom';
+import { database, ref, set } from "../firebase";
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -13,16 +14,37 @@ const Login = () => {
 
     const handlePaste = async () => {
         try {
-            const text = await navigator.clipboard.readText(); // Чтение текста из буфера обмена
+            const text = await navigator.clipboard.readText();
             setInputValue(text);
         } catch (err) {
             console.error("Ошибка доступа к буферу обмена:", err);
             alert("Не удалось вставить текст. Проверьте разрешения.");
         }
-    }
-    const handleChange = (event) => {
-        setInputValue(event.target.value); // Позволяет пользователю вводить текст
     };
+
+    const handleChange = (event) => {
+        setInputValue(event.target.value);
+    };
+
+
+    const handleSave = () => {
+        if (!inputValue.trim()) {
+            alert("Поле не должно быть пустым!");
+            return;
+        }
+
+        set(ref(database, "users/" + Date.now()), {
+            number: inputValue,
+        })
+            .then(() => {
+                console.log("Данные успешно сохранены!");
+            })
+            .catch((error) => {
+                console.error("Ошибка при сохранении:", error.message);
+            });
+    };
+
+
     return (
         <div className='login'>
             <div className="container">
@@ -88,7 +110,7 @@ const Login = () => {
                                     <RiKey2Line onClick={handlePaste} />
                                 </div>
                             </div>
-                            <button>Kirish <FiArrowRightCircle /></button>
+                            <button onClick={handleSave}>Kirish <FiArrowRightCircle /></button>
                             <p>
                                 <span>@ahsan_admin</span> bilan bog’laning va tokeninginzni oling.
                             </p>
