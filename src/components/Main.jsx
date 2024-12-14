@@ -139,7 +139,7 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
                 {
                   item.login === true ? 
                   <Chart isCard={isCard} setIsCard={setIsCard} />
-                  : <img src="/images/Rasm.png" alt="" />
+                  : <img src="/images/chartimg.jpg" alt="" />
                 }
               </div>
               <div className="texx">
