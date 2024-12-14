@@ -26,7 +26,7 @@ const Popav = ({ isAlert, setIsAlert, isVideo, setIsVideo }) => {
                 <iframe
                     width="100%"
                     height="100%"
-                    src="https://www.youtube.com/embed/Mo9KIpPOeqg"
+                    src="https://www.youtube.com/embed/QvsQ9hYKq7c"
                     title="YouTube video player"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

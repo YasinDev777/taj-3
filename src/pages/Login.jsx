@@ -5,7 +5,7 @@ import { Pagination, Autoplay } from 'swiper/modules';
 import { RiKey2Line } from "react-icons/ri";
 import { FiArrowRightCircle } from "react-icons/fi";
 import { Link } from 'react-router-dom';
-import { database, ref, set } from "../firebase";
+// import { database, ref, set } from "../firebase";
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -27,22 +27,22 @@ const Login = () => {
     };
 
 
-    const handleSave = () => {
-        if (!inputValue.trim()) {
-            alert("Поле не должно быть пустым!");
-            return;
-        }
+    // const handleSave = () => {
+    //     if (!inputValue.trim()) {
+    //         alert("Поле не должно быть пустым!");
+    //         return;
+    //     }
 
-        set(ref(database, "users/" + Date.now()), {
-            number: inputValue,
-        })
-            .then(() => {
-                console.log("Данные успешно сохранены!");
-            })
-            .catch((error) => {
-                console.error("Ошибка при сохранении:", error.message);
-            });
-    };
+    //     set(ref(database, "users/" + Date.now()), {
+    //         number: inputValue,
+    //     })
+    //         .then(() => {
+    //             console.log("Данные успешно сохранены!");
+    //         })
+    //         .catch((error) => {
+    //             console.error("Ошибка при сохранении:", error.message);
+    //         });
+    // };
 
 
     return (
@@ -110,7 +110,7 @@ const Login = () => {
                                     <RiKey2Line onClick={handlePaste} />
                                 </div>
                             </div>
-                            <button onClick={handleSave}>Kirish <FiArrowRightCircle /></button>
+                            <button >Kirish <FiArrowRightCircle /></button>
                             <p>
                                 <span>@ahsan_admin</span> bilan bog’laning va tokeninginzni oling.
                             </p>
