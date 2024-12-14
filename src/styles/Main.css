@@ -252,6 +252,7 @@
         
     .main{
         grid-template-columns: repeat(1, 1fr);
+        gap: calc(var(--index)*1.5);
     }
 
     .card {
