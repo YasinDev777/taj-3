@@ -5,22 +5,31 @@ import { FiChevronDown } from "react-icons/fi";
 import { LuFilterX } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import { RxVideo } from "react-icons/rx";
-const CustomSelect = ({ options, selectedValue, onChange, label }) => {
-  
-  const [isOpen, setIsOpen] = useState(false);
+
+const CustomSelect = ({
+  options,
+  selectedValue,
+  onChange,
+  label,
+  openSelect,
+  setOpenSelect,
+  id,
+}) => {
+  const isOpen = openSelect === id;
 
   const handleSelect = (value) => {
     onChange(value);
-    setIsOpen(false);
+    setOpenSelect(null); // Закрыть селект после выбора
+  };
+
+  const toggleDropdown = () => {
+    setOpenSelect(isOpen ? null : id); // Открыть/закрыть текущий селект
   };
 
   return (
     <div className="custom-select">
-      {label && <span className="custom-select-label">Anlyze</span>}
-      <div
-        className="custom-select-trigger"
-        onClick={() => setIsOpen(!isOpen)}
-      >
+      {label && <span className="custom-select-label">{label}</span>}
+      <div className="custom-select-trigger" onClick={toggleDropdown}>
         <span>{selectedValue || "Select an option"}</span>
         <FiChevronDown className="dropdown-icon" />
       </div>
@@ -40,6 +49,7 @@ const CustomSelect = ({ options, selectedValue, onChange, label }) => {
     </div>
   );
 };
+
 
 const Navbar = ({
   setSelectedPreset,
@@ -62,7 +72,6 @@ const Navbar = ({
     { value: "Imbalance2", label: "Imbalance" },
   ];
 
-
   const tickerOptions = [
     { value: "Ticker", label: "Ticker" },
     { value: "Tickers input filter", label: "Tickers Input Filter" },
@@ -77,30 +86,36 @@ const Navbar = ({
     { value: "12", label: "12" },
     { value: "24", label: "24" },
   ];
+
   const timeOptions = [
     { value: "1d", label: "1d" },
     { value: "4h", label: "4h" },
     { value: "1h", label: "1h" },
   ];
 
+  // Состояние для управления открытым селектом
+  const [openSelect, setOpenSelect] = useState(null);
 
   const handleChange = () => {
-    setIsGrid(6)
-    setSelectedPreset("Pattern")
-    setSelectedTicker("Ticker")
-    setSelectedTime("1d")
-  }
+    setIsGrid(6);
+    setSelectedPreset("Pattern");
+    setSelectedTicker("Ticker");
+    setSelectedTime("1d");
+    setOpenSelect(null)
+  };
 
   return (
     <>
       <div className="nav" id="nav">
         <div className="logo-name">
-          <a href="#">
-            AHSAN SCREENER
-          </a>
+          <a href="#">AHSAN SCREENER</a>
         </div>
         <div className="options">
-          <button className="video-btn" onClick={() => setIsVideo(!isVideo)} style={isVideo === true ? { display: "none" } : { display: "flex" }}>
+          <button
+            className="video-btn"
+            onClick={() => setIsVideo(!isVideo)}
+            style={isVideo === true ? { display: "none" } : { display: "flex" }}
+          >
             <RxVideo /> Foydalanish videosi
           </button>
           <PiHeadsetBold />
@@ -117,7 +132,11 @@ const Navbar = ({
             <h1>Texnik analizlar</h1>
             <p>Chart patterns</p>
           </div>
-          <button className="video-btn2" onClick={() => setIsVideo(!isVideo)} style={isVideo === true ? { display: "none" } : { display: "flex" }}>
+          <button
+            className="video-btn2"
+            onClick={() => setIsVideo(!isVideo)}
+            style={isVideo === true ? { display: "none" } : { display: "flex" }}
+          >
             <RxVideo /> Foydalanish videosi
           </button>
         </div>
@@ -129,7 +148,10 @@ const Navbar = ({
                   options={presetOptions}
                   selectedValue={selectedPreset}
                   onChange={setSelectedPreset}
-                  label="Presets"
+                  label="Anlyze"
+                  openSelect={openSelect}
+                  setOpenSelect={setOpenSelect}
+                  id="preset"
                 />
               </div>
               <div className="div">
@@ -138,6 +160,9 @@ const Navbar = ({
                   options={tickerOptions}
                   selectedValue={selectedTicker}
                   onChange={setSelectedTicker}
+                  openSelect={openSelect}
+                  setOpenSelect={setOpenSelect}
+                  id="ticker"
                 />
               </div>
               <div className="div">
@@ -146,6 +171,9 @@ const Navbar = ({
                   options={gridOptions}
                   selectedValue={isGrid}
                   onChange={setIsGrid}
+                  openSelect={openSelect}
+                  setOpenSelect={setOpenSelect}
+                  id="grid"
                 />
               </div>
               <div className="div">
@@ -154,6 +182,9 @@ const Navbar = ({
                   options={timeOptions}
                   selectedValue={selectedTime}
                   onChange={setSelectedTime}
+                  openSelect={openSelect}
+                  setOpenSelect={setOpenSelect}
+                  id="timeframe"
                 />
               </div>
               <LuFilterX className="filter-svg" onClick={handleChange} />
@@ -164,6 +195,7 @@ const Navbar = ({
     </>
   );
 };
+
 
 export default Navbar;
 

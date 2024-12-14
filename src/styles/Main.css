@@ -12,11 +12,16 @@
 .main {
     width: 100%;
     padding: 0 calc(var(--index)*1.5);
-    display: flex;
-    justify-content: flex-start;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     background-color: var(--other-main-color);
     gap: calc(var(--index)*0.8);
+}
+
+.image img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .infors {
@@ -40,7 +45,7 @@
 
 
 .card {
-    width: 32%;
+    width: 100%;
     height: calc(var(--index)*16.15);
     display: flex;
     flex-direction: column;
@@ -134,7 +139,7 @@
     align-items: center;
     gap: calc(var(--index)*0.75);
     padding: calc(var(--index)*1) 0;
-    transform: translateX(calc(var(--index)*-2.3));
+    transform: translateX(calc(var(--index)*-1.55));
 }
 
 .btns>button {
@@ -218,8 +223,9 @@
 } */
 
 @media (max-width: 900px) {
-    .card {
-        width: 48%;
+    
+    .main{
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .image {
@@ -243,10 +249,13 @@
         gap: calc(var(--index)*1);
     }
 
+        
+    .main{
+        grid-template-columns: repeat(1, 1fr);
+    }
+
     .card {
-        width: 100%;
         height: calc(var(--index)*28);
-        margin: 0 auto;
     }
 
     .chart-container-mobile {

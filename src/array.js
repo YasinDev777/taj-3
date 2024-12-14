@@ -10,7 +10,7 @@ const array = [
         salarys: "+",
     },
     {
-        img: "../images/chart001.png",
+        img: "../images/Rasm.png",
         name: "ZYXI",
         presets: "Pattern",
         order: "Ticker",

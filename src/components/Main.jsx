@@ -4,10 +4,11 @@ import Chart from '../components/LineChart';
 import { BiLockOpen } from "react-icons/bi";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { LuScanSearch } from "react-icons/lu";
+import Loader from './Loader';
 
 const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
   const [Charts, setCharts] = useState(filtered);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [ChartsPerPage, setChartPerPage] = useState(isGrid);
 
@@ -64,11 +65,22 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
   }
 
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
+
+
   return (
     <div className="main1">
       <div className="main">
         {loading ? (
-          <h1>Loading...</h1>
+          <Loader />
         ) : (
           currentChart.map((item, index) => (
             <div className="card" key={index}>
@@ -124,7 +136,11 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
                     Qo’lga kiritish <BiLockOpen />
                   </button>
                 </div>
-                <Chart isCard={isCard} setIsCard={setIsCard} />
+                {
+                  item.login === true ? 
+                  <Chart isCard={isCard} setIsCard={setIsCard} />
+                  : <img src="/images/Rasm.png" alt="" />
+                }
               </div>
               <div className="texx">
                 <p>Aniqlandi: {item.searched} oldin</p>
@@ -133,6 +149,7 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
           ))
         )}
       </div>
+      {loading ? "" :
       <div className="btns">
         <button
           className="prev-btn"
@@ -173,6 +190,7 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
           <GrFormNext />
         </button>
       </div>
+  }
     </div>
   );
 };

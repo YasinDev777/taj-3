@@ -34,14 +34,15 @@ html{
     --popav-text-color: #FFDBD6;
 } 
 
-/* ::-webkit-scrollbar{
-    width: 10px;
-    background-color: #2c2c2c;
+::-webkit-scrollbar{
+    width: 12px;
+    background-color: transparent;
 }
 ::-webkit-scrollbar-thumb{
-    background-color: #9f9f9f;
+    background-color: var(--main-color);
+    border: calc(var(--index)*0.05) solid var(--other-main-color);
     border-radius: 120px;
-} */
+}
 
 body{
     background-color: var(--body-color);
@@ -94,7 +95,6 @@ a{
     .exitsvg{
         font-size: calc(var(--index)*2.3)
     }
-
     .exit-svg{
         height: calc(var(--index)*5)
     }
@@ -103,4 +103,5 @@ a{
 @import "./Navbar.css";
 @import "./Main.css";
 @import "./Popav.css";
-@import "./Login.css"
+@import "./Login.css";
+@import "./Loader.css";
