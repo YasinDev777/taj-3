@@ -8,6 +8,7 @@ const array = [
         time: "1d",
         searched: "2 soat",
         salarys: "+",
+        openfor: "basic",
     },
     {
         img: "../images/Rasm.png",
@@ -17,7 +18,8 @@ const array = [
         login: false,
         time: "1d",
         salarys: "+",
-        searched: "2 soat"
+        searched: "2 soat",
+        openfor: "basic",
     },
     {
         img: "../images/chart001.png",
@@ -27,7 +29,8 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
-        searched: "2 soat"
+        searched: "2 soat",
+        openfor: "basic"
     },
     {
         img: "../images/chart001.png",
@@ -37,7 +40,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
-        searched: "2 soat"
+        searched: "2 soat",
     },
     {
         img: "../images/chart001.png",

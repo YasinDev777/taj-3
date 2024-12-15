@@ -64,6 +64,8 @@ const Navbar = ({
   setIsVideo,
   isAlert,
   setIsAlert,
+  isUser,
+  isLogined
 }) => {
   const presetOptions = [
     { value: "Pattern", label: "Pattern" },
@@ -121,12 +123,16 @@ const Navbar = ({
           <Link to="https://t.me/ahsanlabs_admin" target="blank">
             <PiHeadsetBold />
           </Link>
-          <Link to="/login" onClick={() => setIsVideo(false)}>
-            <button onClick={() => setIsAlert(false)}>
-              Kirish <FiArrowRightCircle />
-            </button>
-          </Link>
-          
+          {
+            isLogined === false ?
+              <Link to="/login" onClick={() => setIsVideo(false)}>
+                <button onClick={() => setIsAlert(false)}>
+                  Kirish <FiArrowRightCircle />
+                </button>
+              </Link>
+              :
+              <h3>{isUser}</h3>
+          }
         </div>
       </div>
       <div className="nav-bar">

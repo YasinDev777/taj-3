@@ -5,8 +5,16 @@ import { BiLockOpen } from "react-icons/bi";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { LuScanSearch } from "react-icons/lu";
 import Loader from './Loader';
+import array from '../array';
 
-const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
+const Main = ({ 
+  filtered, 
+  isCard,
+  setIsCard, 
+  isGrid, 
+  isAlert, 
+  setIsAlert,
+  isLogined }) => {
   const [Charts, setCharts] = useState(filtered);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,6 +24,7 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
 
   useEffect(() => {
     setCharts(filtered); 
+    
   }, [filtered]);
 
   useEffect(() => {
@@ -140,6 +149,10 @@ const Main = ({ filtered, isCard, setIsCard, isGrid, isAlert, setIsAlert }) => {
                   item.login === true ? 
                   <Chart isCard={isCard} setIsCard={setIsCard} />
                   : <img src="/images/chartimg.jpg" alt="" />
+                }
+                {
+                  item.openfor === "basic" && isLogined === true ?
+                  item.login = true : ""
                 }
               </div>
               <div className="texx">

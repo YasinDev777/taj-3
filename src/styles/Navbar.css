@@ -83,6 +83,10 @@ nav {
     font-size: calc(var(--index)*1);
 }
 
+.nav h3{
+    font-size: calc(var(--index)*1.2);
+    font-weight: 600;
+}
 
 .options-div {
     width: 100%;

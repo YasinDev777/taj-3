@@ -4,14 +4,15 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import { RiKey2Line } from "react-icons/ri";
 import { FiArrowRightCircle } from "react-icons/fi";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { collection, getDocs } from "firebase/firestore";  // Модульный импорт
 import { db } from "../firebase";
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-const Login = () => {
+const Login = ({isUser, isLogined, setIsLogined, setIsUser}) => {
     const [inputValue, setInputValue] = useState("")
+    const location = useLocation()
 
     const handlePaste = async () => {
         try {
@@ -43,7 +44,10 @@ const Login = () => {
             });
 
             if (foundUser) {
-                alert(`Добро пожаловать, ${foundUser.name}!`);
+                setIsLogined(true)
+                setIsUser(foundUser.name)
+                location.pathname = "/"
+
             } else {
                 alert("Пароль неверный или пользователь не найден.");
             }

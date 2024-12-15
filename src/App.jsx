@@ -17,7 +17,8 @@ const App = () => {
   const location = useLocation();
   const [isAlert, setIsAlert] = useState(false)
   const [isVideo, setIsVideo] = useState(false)
-  const [isUser, setIsUser] = useState(false)
+  const [isUser, setIsUser] = useState("")
+  const [isLogined, setIsLoginded] = useState(false)
   let body = document.querySelector("body")
 
   if (isAlert === true || isVideo === true) {
@@ -53,7 +54,7 @@ const App = () => {
           setIsAlert={setIsAlert}
           isAlert={isAlert}
           isUser={isUser}
-          setIsUser={setIsUser}
+          isLogined={isLogined}
         />
       }
       <Routes>
@@ -63,9 +64,14 @@ const App = () => {
           isGrid={isGrid}
           isAlert={isAlert}
           setIsAlert={setIsAlert}
+          isLogined={isLogined}
         />} />
         <Route path="/chart" element={<Chart />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login
+        isUser={isUser}
+        setIsUser={setIsUser}
+        isLogined={isLogined}
+        setIsLogined={setIsLoginded} />} />
       </Routes>
       <Popav 
         isAlert={isAlert}

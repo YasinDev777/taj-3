@@ -20,7 +20,6 @@ const Chart = ({ isCard, setIsCard }) => {
   useEffect(() => {
     const fetchBitCoinData = async () => {
       try {
-        // Use HTTPS proxy to avoid SSL errors
         const response = await axios.get(
           'https://api.binance.com/api/v3/klines', {
           params: {
