@@ -8,7 +8,7 @@ import { BsArrowLeftCircle } from 'react-icons/bs';
 import axios from 'axios';
 import news from "../new.json"
 
-const Chart = ({ isCard, setIsCard }) => {
+const Chart = ({ isCard, setIsCard, isUser, isLogined }) => {
   const chartContainerRef = useRef(null);
   const [candlestickData, setCandlestickData] = useState([]);
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -234,11 +234,16 @@ const Chart = ({ isCard, setIsCard }) => {
           <Link to="https://t.me/ahsanlabs_admin" target="blank">
             <PiHeadsetBold />
           </Link>
-          <Link to="/login">
-            <button>
-              Kirish <FiArrowRightCircle />
-            </button>
-          </Link>
+          {
+            isLogined === false ?
+              <Link to="/login">
+                <button>
+                  Kirish <FiArrowRightCircle />
+                </button>
+              </Link>
+              :
+              <h3>{isUser}</h3>
+          }
         </div>
       </div>
       <div

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import {  Routes, Route, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from "./components/Navbar";
 import Main from "./components/Main";
 import Chart from "./components/LineChart";
@@ -12,20 +12,28 @@ const App = () => {
   const [selectedPreset, setSelectedPreset] = useState("Pattern");
   const [selectedTicker, setSelectedTicker] = useState("Ticker");
   const [selectedTime, setSelectedTime] = useState("1d");
-  const [isGrid, setIsGrid] = useState(6)
-  const [isCard, setIsCard] = useState(false)
+  const [isGrid, setIsGrid] = useState(6);
+  const [isCard, setIsCard] = useState(false);
   const location = useLocation();
-  const [isAlert, setIsAlert] = useState(false)
-  const [isVideo, setIsVideo] = useState(false)
-  const [isUser, setIsUser] = useState("")
-  const [isLogined, setIsLoginded] = useState(false)
-  let body = document.querySelector("body")
+  const [isAlert, setIsAlert] = useState(false);
+  const [isVideo, setIsVideo] = useState(false);
+  const [isUser, setIsUser] = useState("");
+  const [isLogined, setIsLogined] = useState(false);
 
-  if (isAlert === true || isVideo === true) {
-    body.style.overflow = "hidden";
-  }else{
-    body.style.overflow = "auto";
-  }
+  useEffect(() => {
+    // Проверяем статус пользователя из localStorage при загрузке приложения
+    const storedLogin = localStorage.getItem("isLogined");
+    const storedUser = localStorage.getItem("userName");
+
+    if (storedLogin === "true" && storedUser) {
+      setIsLogined(true);
+      setIsUser(storedUser);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = isAlert || isVideo ? "hidden" : "auto";
+  }, [isAlert, isVideo]);
 
   const filtered = array.filter((item) => {
     const presetMatch =
@@ -39,7 +47,7 @@ const App = () => {
 
   return (
     <div className="app">
-      {location.pathname === "/chart" || location.pathname === "/login" ? "" :
+      {location.pathname === "/chart" || location.pathname === "/login" ? null : (
         <Navbar
           selectedPreset={selectedPreset}
           setSelectedPreset={setSelectedPreset}
@@ -56,34 +64,46 @@ const App = () => {
           isUser={isUser}
           isLogined={isLogined}
         />
-      }
+      )}
       <Routes>
-        <Route path="/" element={<Main
-          filtered={filtered} isCard={isCard}
-          setIsCard={setIsCard}
-          isGrid={isGrid}
-          isAlert={isAlert}
-          setIsAlert={setIsAlert}
-          isLogined={isLogined}
-        />} />
-        <Route path="/chart" element={<Chart />} />
-        <Route path="/login" element={<Login
-        isUser={isUser}
-        setIsUser={setIsUser}
-        isLogined={isLogined}
-        setIsLogined={setIsLoginded} />} />
+        <Route
+          path="/"
+          element={
+            <Main
+              filtered={filtered}
+              isCard={isCard}
+              setIsCard={setIsCard}
+              isGrid={isGrid}
+              isAlert={isAlert}
+              setIsAlert={setIsAlert}
+              isLogined={isLogined}
+            />
+          }
+        />
+        <Route
+          path="/chart"
+          element={<Chart isUser={isUser} isLogined={isLogined} />}
+        />
+        <Route
+          path="/login"
+          element={
+            <Login
+              isUser={isUser}
+              setIsUser={setIsUser}
+              isLogined={isLogined}
+              setIsLogined={setIsLogined}
+            />
+          }
+        />
       </Routes>
-      <Popav 
+      <Popav
         isAlert={isAlert}
         setIsAlert={setIsAlert}
         isVideo={isVideo}
         setIsVideo={setIsVideo}
-        />
+      />
     </div>
   );
 };
 
 export default App;
-
-
-

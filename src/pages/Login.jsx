@@ -1,18 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import { RiKey2Line } from "react-icons/ri";
 import { FiArrowRightCircle } from "react-icons/fi";
-import { Link, useLocation } from 'react-router-dom';
-import { collection, getDocs } from "firebase/firestore";  // Модульный импорт
+import { Link, useNavigate } from 'react-router-dom';
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-const Login = ({isUser, isLogined, setIsLogined, setIsUser}) => {
-    const [inputValue, setInputValue] = useState("")
-    const location = useLocation()
+const Login = ({ setIsLogined, setIsUser }) => {
+    const [inputValue, setInputValue] = useState("");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const storedLogin = localStorage.getItem("isLogined");
+        const storedUser = localStorage.getItem("userName");
+
+        if (storedLogin === "true" && storedUser) {
+            setIsLogined(true);
+            setIsUser(storedUser);
+            navigate("/");
+        }
+    }, [setIsLogined, setIsUser, navigate]);
 
     const handlePaste = async () => {
         try {
@@ -27,7 +38,6 @@ const Login = ({isUser, isLogined, setIsLogined, setIsUser}) => {
     const handleChange = (event) => {
         setInputValue(event.target.value);
     };
-
 
     const handleLogin = async () => {
         try {
@@ -44,10 +54,13 @@ const Login = ({isUser, isLogined, setIsLogined, setIsUser}) => {
             });
 
             if (foundUser) {
-                setIsLogined(true)
-                setIsUser(foundUser.name)
-                location.pathname = "/"
+                setIsLogined(true);
+                setIsUser(foundUser.name);
 
+                localStorage.setItem("isLogined", "true");
+                localStorage.setItem("userName", foundUser.name);
+
+                navigate("/");
             } else {
                 alert("Пароль неверный или пользователь не найден.");
             }
@@ -71,17 +84,13 @@ const Login = ({isUser, isLogined, setIsLogined, setIsUser}) => {
                             spaceBetween={30}
                             loop={true}
                             autoplay={{ delay: 10000 }}
-                            pagination={{
-                                clickable: true,
-                            }}
+                            pagination={{ clickable: true }}
                             modules={[Pagination, Autoplay]}
                             className="mySwiper"
                         >
                             <SwiperSlide className='swiper-slide'>
                                 <div className="textx">
-                                    <h1>
-                                        Kripto bozoridagi eng so'nggi texnik analizlar!
-                                    </h1>
+                                    <h1>Kripto bozoridagi eng so'nggi texnik analizlar!</h1>
                                     <p>Ahsan Screener orqali eng yangi tahlillar va halol kripto imkoniyatlarini kuzating.</p>
                                     <img src="./images/ETH.png" alt="eth" />
                                     <img src="./images/StarAtlas.png" alt="starAtlas" className='img1' />
@@ -90,12 +99,12 @@ const Login = ({isUser, isLogined, setIsLogined, setIsUser}) => {
                             </SwiperSlide>
                             <SwiperSlide className='swiper-slide'>
                                 <h1>Kripto bozoridagi eng so'nggi texnik analizlar!</h1>
-                                <p>Ahsan Screener orqali eng yangi tahlillar va halol kripto imkoniyatlarini kuzating.</p>
+                                <p>Ahsan Screener orqali eng yangi tahlillar va halol kripto imkonиятларни осон кузатинг.</p>
                                 <img src="/images/ChatBot.png" alt="chatBot" />
                             </SwiperSlide>
                             <SwiperSlide className='swiper-slide'>
-                                <h1>Biz bilan vaqtingizni tejang!</h1>
-                                <p>Ahsan Screener orqali eng yangi tahlillar va halol kripto imkoniyatlarini oson filterlar bilan kuzating.</p>
+                                <h1>Биз билан вақтингизни тежанг!</h1>
+                                <p>Ahsan Screener орқали янги таҳлиллар ва осон фильтрларни кузатинг.</p>
                                 <img src="/images/Working.png" alt="working" className='img3' />
                             </SwiperSlide>
                         </Swiper>
@@ -123,11 +132,11 @@ const Login = ({isUser, isLogined, setIsLogined, setIsUser}) => {
                                 </div>
                             </div>
                             <button onClick={handleLogin}>Kirish <FiArrowRightCircle /></button>
-                                <p>
-                                  <Link to="https://t.me/ahsanlabs_admin">
-                                    <span>@ahsan_admin</span> bilan bog’laning va tokeninginzni oling.
-                                    </Link>
-                                </p>
+                            <p>
+                                <Link to="https://t.me/ahsanlabs_admin">
+                                    <span>@ahsan_admin</span> билан боғланинг ва токенингизни олинг.
+                                </Link>
+                            </p>
                         </div>
                     </div>
                     <p className='p'>© Ahsan 2024</p>
