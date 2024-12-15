@@ -118,7 +118,7 @@ const Navbar = ({
           >
             <RxVideo /> Foydalanish videosi
           </button>
-          <Link to="https://t.me/ahsanlabs_admin">
+          <Link to="https://t.me/ahsanlabs_admin" target="blank">
             <PiHeadsetBold />
           </Link>
           <Link to="/login" onClick={() => setIsVideo(false)}>
@@ -126,6 +126,7 @@ const Navbar = ({
               Kirish <FiArrowRightCircle />
             </button>
           </Link>
+          
         </div>
       </div>
       <div className="nav-bar">

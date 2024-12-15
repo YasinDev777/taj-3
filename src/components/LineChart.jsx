@@ -23,22 +23,22 @@ const Chart = ({ isCard, setIsCard }) => {
         // Use HTTPS proxy to avoid SSL errors
         const response = await axios.get(
           'https://api.binance.com/api/v3/klines', {
-            params: {
-              symbol: 'BTCUSDT',
-              interval: '1h',
-              limit: 1000
-            },
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
+          params: {
+            symbol: 'BTCUSDT',
+            interval: '1h',
+            limit: 1000
+          },
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
 
-            proxy: {
-              protocol: 'https',
-              host: 'cors-anywhere.herokuapp.com',
-              port: 443
-            }
+          proxy: {
+            protocol: 'https',
+            host: 'cors-anywhere.herokuapp.com',
+            port: 443
           }
+        }
         );
 
         if (response.data) {
@@ -46,7 +46,7 @@ const Chart = ({ isCard, setIsCard }) => {
             time: item[0] / 1000,
             open: parseFloat(item[1]),
             high: parseFloat(item[2]),
-            low: parseFloat(item[3]), 
+            low: parseFloat(item[3]),
             close: parseFloat(item[4])
           }));
 
@@ -93,7 +93,7 @@ const Chart = ({ isCard, setIsCard }) => {
         },
         crosshair: isDarkMode ? darkMode.crosshair : lightMode.crosshair,
       });
-  
+
       // Настройка свечных данных
       const candlestickSeries = chart.addCandlestickSeries({
         upColor: isDarkMode ? '#A2C4C9' : '#4caf50',
@@ -104,7 +104,7 @@ const Chart = ({ isCard, setIsCard }) => {
         wickDownColor: isDarkMode ? '#F6B26B' : '#f44336',
       });
       candlestickSeries.setData(candlestickData);
-  
+
       // Настройка трендовых линий
       const lineSeries1 = chart.addLineSeries({
         color: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : '#000000',
@@ -116,7 +116,7 @@ const Chart = ({ isCard, setIsCard }) => {
         { time: new Date('2021-08-27').getTime() / 1000, value: 46307 },
         { time: new Date('2021-09-06').getTime() / 1000, value: 52751 },
       ]);
-  
+
       const lineSeries2 = chart.addLineSeries({
         color: isDarkMode ? 'rgba(28, 75, 228, 0.8)' : '#888888',
         lineWidth: 2,
@@ -127,7 +127,7 @@ const Chart = ({ isCard, setIsCard }) => {
         { time: new Date('2021-09-07').getTime() / 1000, value: 43000 },
         { time: new Date('2021-09-22').getTime() / 1000, value: 49730 },
       ]);
-  
+
       const lineSeries3 = chart.addLineSeries({
         color: isDarkMode ? 'rgba(21, 255, 0, 0.8)' : '#888888',
         lineWidth: 2,
@@ -138,7 +138,7 @@ const Chart = ({ isCard, setIsCard }) => {
         { time: new Date('2021-09-07').getTime() / 1000, value: 52900 },
         { time: new Date('2021-09-20').getTime() / 1000, value: 43200 },
       ]);
-  
+
       candlestickSeries.createPriceLine({
         price: candlestickData[13]?.low || 0,
         color: 'rgba(255, 0, 0, 0.8)',
@@ -146,9 +146,9 @@ const Chart = ({ isCard, setIsCard }) => {
         lineStyle: 0,
         axisLabelVisible: true,
       });
-  
+
       chart.timeScale().fitContent();
-  
+
       const handleResize = () => {
         chart.applyOptions({
           width: chartContainerRef.current.clientWidth,
@@ -160,7 +160,7 @@ const Chart = ({ isCard, setIsCard }) => {
         from: candlestickData[candlestickData.length - 50]?.time || candlestickData[0]?.time, // Последние 50 свечей
         to: candlestickData[candlestickData.length - 1]?.time,
       });
-  
+
 
 
       window.addEventListener('resize', handleResize);
@@ -170,7 +170,7 @@ const Chart = ({ isCard, setIsCard }) => {
       };
     }
   }, [candlestickData, isDarkMode]);
-  
+
 
   const darkMode = {
     layout: {
@@ -232,8 +232,10 @@ const Chart = ({ isCard, setIsCard }) => {
           </Link>
         </div>
         <div className="options">
-        <PiHeadsetBold />
-        <Link to="/login">
+          <Link to="https://t.me/ahsanlabs_admin" target="blank">
+            <PiHeadsetBold />
+          </Link>
+          <Link to="/login">
             <button>
               Kirish <FiArrowRightCircle />
             </button>

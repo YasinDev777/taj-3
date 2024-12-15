@@ -34,7 +34,7 @@ const array = [
         name: "ZWS",
         presets: "Pattern",
         order: "Ticker",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "-",
         searched: "2 soat"
@@ -64,7 +64,7 @@ const array = [
         name: "ZURA",
         presets: "Pattern",
         order: "Ticker",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "+",
         searched: "2 soat"
@@ -74,7 +74,7 @@ const array = [
         name: "ZUO",
         presets: "Pattern",
         order: "Ticker",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "+",
         searched: "2 soat"
@@ -84,7 +84,7 @@ const array = [
         name: "ZUMZ",
         presets: "Pattern",
         order: "Tickers input filter",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "+",
         searched: "2 soat"
@@ -104,7 +104,7 @@ const array = [
         name: "ZTS",
         presets: "Pattern",
         order: "Tickers input filter",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "+",
         searched: "2 soat"
@@ -134,7 +134,7 @@ const array = [
         name: "ZTO",
         presets: "Pattern",
         order: "Price/Earnings",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "-",
         searched: "2 soat"
@@ -144,7 +144,7 @@ const array = [
         name: "ZTEN",
         presets: "Pattern",
         order: "Price/Earnings",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "-",
         searched: "2 soat"
@@ -154,7 +154,7 @@ const array = [
         name: "ZTEK",
         presets: "Pattern",
         order: "Company",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "-",
         searched: "2 soat"
@@ -164,7 +164,7 @@ const array = [
         name: "ZTAX",
         presets: "Pattern",
         order: "Company",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "-",
         searched: "2 soat"
@@ -184,7 +184,7 @@ const array = [
         name: "ZSEP",
         presets: "Pattern",
         order: "Company",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "-",
         searched: "2 soat"
@@ -204,7 +204,7 @@ const array = [
         name: "ZSB",
         presets: "Pattern",
         order: "Sector",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "-",
         searched: "2 soat"
@@ -234,7 +234,7 @@ const array = [
         name: "ZOOZ",
         presets: "Pattern",
         order: "Industry",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "-",
         searched: "2 soat"
@@ -244,7 +244,7 @@ const array = [
         name: "ZONE",
         presets: "Pattern",
         order: "Industry",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "-",
         searched: "2 soat"
@@ -254,7 +254,7 @@ const array = [
         name: "ZTO",
         presets: "Pattern",
         order: "Price/Earnings",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "-",
         searched: "2 soat"
@@ -264,7 +264,7 @@ const array = [
         name: "ZTEN",
         presets: "Pattern",
         order: "Price/Earnings",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "-",
         searched: "2 soat"
@@ -274,7 +274,7 @@ const array = [
         name: "ZTEK",
         presets: "Pattern",
         order: "Company",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "-",
         searched: "2 soat"
@@ -284,7 +284,7 @@ const array = [
         name: "ZTAX",
         presets: "Pattern",
         order: "Company",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "-",
         searched: "2 soat"
@@ -304,7 +304,7 @@ const array = [
         name: "ZSEP",
         presets: "Pattern",
         order: "Company",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "-",
         searched: "2 soat"
@@ -324,7 +324,7 @@ const array = [
         name: "ZSB",
         presets: "Pattern",
         order: "Sector",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "-",
         searched: "2 soat"
@@ -354,7 +354,7 @@ const array = [
         name: "ZOOZ",
         presets: "Pattern",
         order: "Industry",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "-",
         searched: "2 soat"
@@ -364,7 +364,7 @@ const array = [
         name: "ZONE",
         presets: "Pattern",
         order: "Industry",
-        login: true,
+        login: false,
         time: "1d",
         salarys: "-",
         searched: "2 soat"

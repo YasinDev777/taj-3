@@ -15,7 +15,7 @@ const Popav = ({ isAlert, setIsAlert, isVideo, setIsVideo }) => {
                 </p>
                 <div className="btn-div">
                     <button onClick={() => setIsAlert(!isAlert)}>Chiqish</button>
-                    <Link to="https://t.me/ahsanlabs_admin">
+                    <Link to="https://t.me/ahsanlabs_admin" target="blank">
                         <button onClick={() => setIsAlert(!isAlert)}>Bog'lanish</button>
                     </Link>
                 </div>
