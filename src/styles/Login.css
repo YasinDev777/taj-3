@@ -259,7 +259,8 @@
     gap: calc(var(--index)*0.3);
 }
 
-.logining p {
+.logining p,
+.logining a {
     font-size: calc(var(--index)*0.8);
     color: var(--main-color);
     font-weight: 400;
@@ -268,7 +269,7 @@
     width: 70%;
 }
 
-.logining p>span {
+.logining a>span {
     font-weight: 700;
 }
 
@@ -341,7 +342,7 @@
     .exit-nav {
         display: none;
     }
-    .logining > p > span{
+    .logining > a > span{
         font-size: calc(var(--index)*1.35);
     }
     .logining > p{

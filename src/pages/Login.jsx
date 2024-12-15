@@ -5,7 +5,8 @@ import { Pagination, Autoplay } from 'swiper/modules';
 import { RiKey2Line } from "react-icons/ri";
 import { FiArrowRightCircle } from "react-icons/fi";
 import { Link } from 'react-router-dom';
-// import { database, ref, set } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";  // Модульный импорт
+import { db } from "../firebase";
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -27,23 +28,30 @@ const Login = () => {
     };
 
 
-    // const handleSave = () => {
-    //     if (!inputValue.trim()) {
-    //         alert("Поле не должно быть пустым!");
-    //         return;
-    //     }
+    const handleLogin = async () => {
+        try {
+            const usersCollection = collection(db, "user");
+            const querySnapshot = await getDocs(usersCollection);
 
-    //     set(ref(database, "users/" + Date.now()), {
-    //         number: inputValue,
-    //     })
-    //         .then(() => {
-    //             console.log("Данные успешно сохранены!");
-    //         })
-    //         .catch((error) => {
-    //             console.error("Ошибка при сохранении:", error.message);
-    //         });
-    // };
+            let foundUser = null;
 
+            querySnapshot.forEach((doc) => {
+                const userData = doc.data();
+                if (userData.id === inputValue) {
+                    foundUser = userData;
+                }
+            });
+
+            if (foundUser) {
+                alert(`Добро пожаловать, ${foundUser.name}!`);
+            } else {
+                alert("Пароль неверный или пользователь не найден.");
+            }
+        } catch (error) {
+            console.error("Ошибка при проверке данных:", error);
+            alert("Произошла ошибка. Попробуйте снова.");
+        }
+    };
 
     return (
         <div className='login'>
@@ -110,10 +118,12 @@ const Login = () => {
                                     <RiKey2Line onClick={handlePaste} />
                                 </div>
                             </div>
-                            <button >Kirish <FiArrowRightCircle /></button>
-                            <p>
-                                <span>@ahsan_admin</span> bilan bog’laning va tokeninginzni oling.
-                            </p>
+                            <button onClick={handleLogin}>Kirish <FiArrowRightCircle /></button>
+                                <p>
+                                  <Link to="https://t.me/ahsanlabs_admin">
+                                    <span>@ahsan_admin</span> bilan bog’laning va tokeninginzni oling.
+                                    </Link>
+                                </p>
                         </div>
                     </div>
                     <p className='p'>© Ahsan 2024</p>

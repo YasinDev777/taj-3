@@ -15,7 +15,9 @@ const Popav = ({ isAlert, setIsAlert, isVideo, setIsVideo }) => {
                 </p>
                 <div className="btn-div">
                     <button onClick={() => setIsAlert(!isAlert)}>Chiqish</button>
-                    <button onClick={() => setIsAlert(!isAlert)}>Bog'lanish</button>
+                    <Link to="https://t.me/ahsanlabs_admin">
+                        <button onClick={() => setIsAlert(!isAlert)}>Bog'lanish</button>
+                    </Link>
                 </div>
             </div>
             <div className="video-alert" style={isVideo === true ? { display: "flex" } : { display: "none" }}>

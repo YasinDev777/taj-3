@@ -118,7 +118,9 @@ const Navbar = ({
           >
             <RxVideo /> Foydalanish videosi
           </button>
-          <PiHeadsetBold />
+          <Link to="https://t.me/ahsanlabs_admin">
+            <PiHeadsetBold />
+          </Link>
           <Link to="/login" onClick={() => setIsVideo(false)}>
             <button onClick={() => setIsAlert(false)}>
               Kirish <FiArrowRightCircle />

@@ -17,6 +17,7 @@ const App = () => {
   const location = useLocation();
   const [isAlert, setIsAlert] = useState(false)
   const [isVideo, setIsVideo] = useState(false)
+  const [isUser, setIsUser] = useState(false)
   let body = document.querySelector("body")
 
   if (isAlert === true || isVideo === true) {
@@ -51,6 +52,8 @@ const App = () => {
           setIsVideo={setIsVideo}
           setIsAlert={setIsAlert}
           isAlert={isAlert}
+          isUser={isUser}
+          setIsUser={setIsUser}
         />
       }
       <Routes>

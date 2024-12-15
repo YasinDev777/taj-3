@@ -73,6 +73,11 @@ nav {
     color: var(--text-color);
     cursor: pointer;
 }
+.options a>svg {
+    font-size: calc(var(--index)*1.35);
+    color: var(--text-color);
+    cursor: pointer;
+}
 
 .dropdown-icon {
     font-size: calc(var(--index)*1);
