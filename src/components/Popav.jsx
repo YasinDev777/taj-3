@@ -3,15 +3,23 @@ import { BiX } from "react-icons/bi";
 import { Link } from 'react-router-dom'
 
 const Popav = ({ isAlert, setIsAlert, isVideo, setIsVideo }) => {
+
+    const handleNone = (e) => {
+        if (e.target.classList.contains('popav')) {
+            setIsVideo(false)
+            setIsAlert(false)
+        }
+    }
+
     return (
-        <div className='popav' style={isAlert === true || isVideo === true ? { display: "flex" } : { display: "none" }}>
+        <div className='popav' style={isAlert === true || isVideo === true ? { display: "flex" } : { display: "none" }} onClick={handleNone} >
             <div className="alert" style={isVideo === true ? { display: "none" } : { display: "flex" }}>
                 <h3>
                     Yana bir qadam ⚡<br />
-                    Analizlarni ko’rish uchun ro’yxatdan o’ting!
+                    Analizlarni ko'rish uchun ro'yxatdan o'ting!
                 </h3>
                 <p>
-                    Pastdagi tugmani bosing va telegram orqali admin bilan bog’laning!
+                    Pastdagi tugmani bosing va telegram orqali admin bilan bog'laning!
                 </p>
                 <div className="btn-div">
                     <button onClick={() => setIsAlert(!isAlert)}>Chiqish</button>
@@ -22,8 +30,11 @@ const Popav = ({ isAlert, setIsAlert, isVideo, setIsVideo }) => {
             </div>
             <div className="video-alert" style={isVideo === true ? { display: "flex" } : { display: "none" }}>
                 <div className="textss">
-                    <p>Video qo’llanma 😎</p>
-                    <BiX onClick={()=> setIsVideo(!isVideo)} />
+                    <p>Video qo'llanma 😎</p>
+                    <BiX onClick={() => {
+                        setIsVideo(false)
+                        setIsAlert(false)
+                    }} className='textsss-btn' />
                 </div>
                 <iframe
                     width="100%"

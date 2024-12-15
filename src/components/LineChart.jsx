@@ -95,12 +95,12 @@ const Chart = ({ isCard, setIsCard, isUser, isLogined }) => {
 
       // Настройка свечных данных
       const candlestickSeries = chart.addCandlestickSeries({
-        upColor: isDarkMode ? '#A2C4C9' : '#4caf50',
-        downColor: isDarkMode ? '#F6B26B' : '#f44336',
-        borderUpColor: isDarkMode ? '#719CA4' : '#4caf50',
-        borderDownColor: isDarkMode ? '#F6B26B' : '#f44336',
-        wickUpColor: isDarkMode ? '#719CA4' : '#4caf50',
-        wickDownColor: isDarkMode ? '#F6B26B' : '#f44336',
+        upColor: isDarkMode ? '#27a691' : '#4caf50',
+        downColor: isDarkMode ? '#f23645' : '#f44336',
+        borderUpColor: isDarkMode ? '#27a691' : '#4caf50',
+        borderDownColor: isDarkMode ? '#f23645 ' : '#f44336',
+        wickUpColor: isDarkMode ? '#27a691' : '#4caf50',
+        wickDownColor: isDarkMode ? '#f23645' : '#f44336',
       });
       candlestickSeries.setData(candlestickData);
 
@@ -177,8 +177,8 @@ const Chart = ({ isCard, setIsCard, isUser, isLogined }) => {
       textColor: '#000',
     },
     grid: {
-      vertLines: { visible: false, color: 'rgba(73, 70, 70, 0.1)', style: 0 },
-      horzLines: { visible: true, color: 'rgba(56, 54, 54, 0.301)', style: 0 },
+      vertLines: { visible: true, color: 'rgba(0, 0, 0, 0.1)', style: 0 },
+      horzLines: { visible: true, color: 'rgba(0, 0, 0, 0.1)', style: 0 },
       style: 1
     },
     timeScale: { borderColor: 'rgba(255, 255, 255, 0.2)', rightOffset: 10, barSpacing: 8 },
