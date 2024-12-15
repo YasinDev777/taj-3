@@ -25,7 +25,7 @@ const Main = ({
   useEffect(() => {
     setCharts(filtered); 
     
-  }, [filtered]);
+  }, [filtered,isLogined]);
 
   useEffect(() => {
     setChartPerPage(Number(isGrid));
@@ -96,9 +96,7 @@ const Main = ({
               <div
                 className="nav-card"
                 style={
-                  item.login === false
-                    ? { background: "var(--block-card-color)" }
-                    : { background: "var(--main-color)" }
+                    { background: "var(--main-color)" }
                 }
               >
                 <div className="infors">

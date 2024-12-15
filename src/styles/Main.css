@@ -259,8 +259,8 @@
         height: calc(var(--index)*28);
     }
 
-    .chart-container-mobile {
-        height: calc(var(--index)*24) !important;
+    .chart-container {
+        height: calc(var(--index)*2) !important;
     }
 
     .dont-show>button {
@@ -270,7 +270,7 @@
     }
 
     .nav-card {
-        height: calc(var(--index)*8) !important;
+        height: calc(var(--index)*3) !important;
     }
 
     .info {
