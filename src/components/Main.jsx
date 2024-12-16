@@ -70,7 +70,7 @@ const Main = ({
   };
 
   const handleScroll = () =>{
-    window.scrollTo({top: 0, behaivor: "smooth"})
+    window.scrollTo({top: 0})
   }
 
 
