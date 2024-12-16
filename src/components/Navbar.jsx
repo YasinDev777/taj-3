@@ -120,6 +120,7 @@ const Navbar = ({
   }, [setAlertShown]);
 
   const handleCloseAlert = () => {
+    setAlertShown(false);
     localStorage.setItem("alertShown", false);
   };
 
