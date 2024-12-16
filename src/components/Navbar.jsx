@@ -1,6 +1,6 @@
 import { PiHeadsetBold } from "react-icons/pi";
 import { FiArrowRightCircle } from "react-icons/fi";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { LuFilterX } from "react-icons/lu";
 import { Link } from "react-router-dom";
@@ -21,13 +21,14 @@ const CustomSelect = ({
 
   const handleSelect = (value) => {
     onChange(value);
-    setOpenSelect(null); // Закрыть селект после выбора
+    setOpenSelect(null);
   };
-
+  
+  
   const toggleDropdown = () => {
-    setOpenSelect(isOpen ? null : id); // Открыть/закрыть текущий селект
+    setOpenSelect(isOpen ? null : id);
   };
-
+  
   return (
     <div className="custom-select">
       {label && <span className="custom-select-label">{label}</span>}
@@ -39,7 +40,7 @@ const CustomSelect = ({
         <div className="custom-options">
           {options.map((option) => (
             <div
-              key={option.value}
+            key={option.value}
               className="custom-option"
               onClick={() => handleSelect(option.value)}
             >
@@ -51,7 +52,6 @@ const CustomSelect = ({
     </div>
   );
 };
-
 
 const Navbar = ({
   setSelectedPreset,
@@ -69,7 +69,8 @@ const Navbar = ({
   isUser,
   isLogined,
   alertShown,
-  setAlertShown
+  setAlertShown,
+  limit
 }) => {
   const presetOptions = [
     { value: "Pattern", label: "Pattern" },
@@ -77,6 +78,7 @@ const Navbar = ({
     { value: "Imbalance1", label: "Imbalance" },
     { value: "Imbalance2", label: "Imbalance" },
   ];
+  console.log(alertShown);
 
   const tickerOptions = [
     { value: "Ticker", label: "Ticker" },
@@ -108,6 +110,19 @@ const Navbar = ({
     setOpenSelect(null)
   };
 
+  useEffect(() => {
+    const storedAlertShown = localStorage.getItem("alertShown");
+    if (storedAlertShown == true) {
+      setAlertShown(true);
+    } else {
+      setAlertShown(false);
+    }
+  }, [setAlertShown]);
+
+  const handleCloseAlert = () => {
+    localStorage.setItem("alertShown", false);
+  };
+
   return (
     <>
       <div className="nav">
@@ -137,18 +152,31 @@ const Navbar = ({
           }
         </div>
       </div>
-      <div className="warning-alert" style={alertShown === false ? {display: "none"} : {display: "flex"}}>
-        <div className="war-texts">
-            <h3><RiErrorWarningLine /> Eslatma:</h3>
-            <p>Hurmatli, {isUser} 1 haftadan so’ng obunangiz bekor qilinadi. Iltimos, admin bilan bog’laning!</p>
+      {isLogined && alertShown && (
+        <div className="warning-alert" style={{display: "flex"}}>
+          <div className="war-texts">
+            <h3>
+              <RiErrorWarningLine /> {limit === false ? "Eslatma:" : "Diqqat:"}
+            </h3>
+            {limit === false ? (
+              <p>
+                Hurmatli, {isUser} 1 haftadan so'ng obunangiz bekor qilinadi. Iltimos, admin bilan bog'laning!
+              </p>
+            ) : (
+              <p>
+                Hurmatli, {isUser} obunangiz bekor qilindi. Iltimos, admin bilan bog'laning!
+              </p>
+            )}
+          </div>
+          <div className="war-options">
+            <Link to="https://t.me/ahsanlabs_admin" target="blank">
+              <button>Sotib olish</button>
+            </Link>
+            <BiX onClick={handleCloseAlert} />
+          </div>
         </div>
-        <div className="war-options">
-          <Link to="https://t.me/ahsanlabs_admin" target="blank">
-          <button>Sotib olish</button>
-          </Link>
-          <BiX onClick={() => setAlertShown(!alertShown)} />
-       </div>
-      </div>
+      )}
+
       <div className="nav-bar">
         <div className="texsss">
           <div className="tex">
@@ -219,10 +247,7 @@ const Navbar = ({
   );
 };
 
-
 export default Navbar;
 
-
-
-// apikey vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A
-// secretkey NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j
+{/* // apikey vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A */}
+{/* // secretkey NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j */}

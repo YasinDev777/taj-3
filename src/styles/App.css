@@ -35,18 +35,17 @@ html{
 } 
 
 ::-webkit-scrollbar{
-    width: 12px;
+    width: 9px;
     background-color: transparent;
 }
 ::-webkit-scrollbar-thumb{
     background-color: var(--main-color);
-    border: calc(var(--index)*0.05) solid var(--other-main-color);
     border-radius: 120px;
 }
 
 body{
     background-color: var(--body-color);
-} 
+}
 
 a{
     text-decoration: none;

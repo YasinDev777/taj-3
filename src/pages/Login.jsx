@@ -17,13 +17,15 @@ const Login = ({ setIsLogined, setIsUser }) => {
     useEffect(() => {
         const storedLogin = localStorage.getItem("isLogined");
         const storedUser = localStorage.getItem("userName");
-
+    
         if (storedLogin === "true" && storedUser) {
             setIsLogined(true);
             setIsUser(storedUser);
-            navigate("/");
+            navigate("/"); // Перенаправляем на главную страницу, если пользователь уже авторизован
         }
     }, [setIsLogined, setIsUser, navigate]);
+    
+    
 
     const handlePaste = async () => {
         try {
@@ -43,24 +45,25 @@ const Login = ({ setIsLogined, setIsUser }) => {
         try {
             const usersCollection = collection(db, "user");
             const querySnapshot = await getDocs(usersCollection);
-
+    
             let foundUser = null;
-
+    
             querySnapshot.forEach((doc) => {
                 const userData = doc.data();
                 if (userData.id === inputValue) {
                     foundUser = userData;
                 }
             });
-
+    
             if (foundUser) {
                 setIsLogined(true);
                 setIsUser(foundUser.name);
-
+    
+                // Сохраняем данные в localStorage
                 localStorage.setItem("isLogined", "true");
                 localStorage.setItem("userName", foundUser.name);
-
-                navigate("/");
+    
+                navigate("/"); // Переходим на главную страницу
             } else {
                 alert("Пароль неверный или пользователь не найден.");
             }
@@ -69,6 +72,7 @@ const Login = ({ setIsLogined, setIsUser }) => {
             alert("Произошла ошибка. Попробуйте снова.");
         }
     };
+    
 
     return (
         <div className='login'>

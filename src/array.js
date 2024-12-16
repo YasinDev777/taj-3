@@ -304,6 +304,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
+        id: 28,
         searched: "2 soat"
     },
     {
@@ -314,6 +315,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
+        id: 29,
         searched: "2 soat"
     },
     {
@@ -324,6 +326,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
+        id: 30,
         searched: "2 soat"
     },
     {
@@ -334,6 +337,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
+        id: 31,
         searched: "2 soat"
     },
     {
@@ -344,6 +348,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
+        id: 32,
         searched: "2 soat"
     },
     {
@@ -354,6 +359,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
+        id: 33,
         searched: "2 soat"
     },
     {
@@ -364,6 +370,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
+        id: 34,
         searched: "2 soat"
     },
     {
@@ -374,6 +381,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
+        id: 35,
         searched: "2 soat"
     },
     {
@@ -384,6 +392,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
+        id: 36,
         searched: "2 soat"
     },
     {
@@ -394,6 +403,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
+        id: 37,
         searched: "10 soat"
     },
 ]

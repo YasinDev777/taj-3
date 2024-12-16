@@ -19,17 +19,65 @@ const App = () => {
   const [isVideo, setIsVideo] = useState(false);
   const [isUser, setIsUser] = useState("");
   const [isLogined, setIsLogined] = useState(false);
-  const [alertShown, setAlertShown] = useState(true)
+  const [alertShown, setAlertShown] = useState(false);
+  const [premiumExpiryDate, setPremiumExpiryDate] = useState(null);
+  const [limit, setLimit] = useState(false)
+
 
   useEffect(() => {
     const storedLogin = localStorage.getItem("isLogined");
     const storedUser = localStorage.getItem("userName");
+    const storedExpiryDate = localStorage.getItem("premiumExpiryDate");
 
     if (storedLogin === "true" && storedUser) {
       setIsLogined(true);
       setIsUser(storedUser);
     }
+
+    if (storedExpiryDate) {
+      setPremiumExpiryDate(new Date(storedExpiryDate));
+    }
   }, []);
+
+  useEffect(() => {
+    if (isLogined && !premiumExpiryDate) {
+      const expiryDate = new Date();
+      expiryDate.setMinutes(expiryDate.getMinutes() + 10);
+      setPremiumExpiryDate(expiryDate);
+      localStorage.setItem("premiumExpiryDate", expiryDate.toISOString());
+    }
+  }, [isLogined, premiumExpiryDate]);
+
+  useEffect(() => {
+    if (premiumExpiryDate) {
+      const now = new Date();
+      const timeRemaining = premiumExpiryDate - now;
+  
+      if (timeRemaining <= 0) {
+        setIsLogined(false);
+        setLimit(true);
+        localStorage.removeItem("premiumExpiryDate");
+        setAlertShown(false);
+      } else if (timeRemaining <= 5 * 60 * 1000) {
+        setAlertShown(true);
+      }
+  
+      const timer = setTimeout(() => {
+        const updatedTimeRemaining = premiumExpiryDate - new Date();
+        if (updatedTimeRemaining <= 0) {
+          setIsLogined(false);
+          setLimit(true);
+          localStorage.removeItem("premiumExpiryDate");
+          setAlertShown(false);
+        } else if (updatedTimeRemaining <= 5 * 60 * 1000) {
+          setAlertShown(true); // Устанавливаем предупреждение, если его не было
+        }
+      }, Math.min(timeRemaining, 5 * 60 * 1000));
+  
+      return () => clearTimeout(timer);
+    }
+  }, [premiumExpiryDate]);
+
 
   useEffect(() => {
     document.body.style.overflow = isAlert || isVideo ? "hidden" : "auto";
@@ -44,6 +92,8 @@ const App = () => {
       selectedTime === "1d" || item.time === selectedTime;
     return presetMatch && tickerMatch && timeMatch;
   });
+
+
 
   return (
     <div className="app">
@@ -65,6 +115,7 @@ const App = () => {
           isLogined={isLogined}
           alertShown={alertShown}
           setAlertShown={setAlertShown}
+          limit={limit}
         />
       )}
       <Routes>
