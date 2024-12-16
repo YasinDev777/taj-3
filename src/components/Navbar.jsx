@@ -110,7 +110,7 @@ const Navbar = ({
 
   return (
     <>
-      <div className="nav" id="nav">
+      <div className="nav">
         <div className="logo-name">
           <Link to="">AHSAN LABS</Link>
         </div>
