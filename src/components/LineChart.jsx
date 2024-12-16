@@ -81,8 +81,9 @@ const Chart = ({ isCard, setIsCard, isUser, isLogined }) => {
         timeScale: {
           ...isDarkMode ? darkMode.timeScale : lightMode.timeScale,
           scrollable: isCard,
-          rightOffset: 10,
+          rightOffset: 10, // Decreased rightOffset to show more candles on the right
           barSpacing: 12,
+          leftOffset: -10,
         },
         handleScale: isCard,
         handleScroll: isCard,
@@ -93,7 +94,9 @@ const Chart = ({ isCard, setIsCard, isUser, isLogined }) => {
         crosshair: isDarkMode ? darkMode.crosshair : lightMode.crosshair,
       });
 
-      // Настройка свечных данных
+      const timeScale = chart.timeScale();
+      timeScale.scrollToPosition(-12, false);
+
       const candlestickSeries = chart.addCandlestickSeries({
         upColor: isDarkMode ? '#27a691' : '#4caf50',
         downColor: isDarkMode ? '#f23645' : '#f44336',
@@ -104,7 +107,6 @@ const Chart = ({ isCard, setIsCard, isUser, isLogined }) => {
       });
       candlestickSeries.setData(candlestickData);
 
-      // Настройка трендовых линий
       const lineSeries1 = chart.addLineSeries({
         color: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : '#000000',
         lineWidth: 2,
@@ -156,11 +158,9 @@ const Chart = ({ isCard, setIsCard, isUser, isLogined }) => {
       };
 
       chart.timeScale().setVisibleRange({
-        from: candlestickData[candlestickData.length - 50]?.time || candlestickData[0]?.time, // Последние 50 свечей
+        from: candlestickData[candlestickData.length - (isCard === false ? 50 : 260)]?.time || candlestickData[0]?.time,
         to: candlestickData[candlestickData.length - 1]?.time,
       });
-
-
 
       window.addEventListener('resize', handleResize);
       return () => {
@@ -168,6 +168,7 @@ const Chart = ({ isCard, setIsCard, isUser, isLogined }) => {
         chart.remove();
       };
     }
+
   }, [candlestickData, isDarkMode]);
 
 
@@ -181,7 +182,7 @@ const Chart = ({ isCard, setIsCard, isUser, isLogined }) => {
       horzLines: { visible: true, color: 'rgba(0, 0, 0, 0.1)', style: 0 },
       style: 1
     },
-    timeScale: { borderColor: 'rgba(255, 255, 255, 0.2)', rightOffset: 10, barSpacing: 8 },
+    timeScale: { borderColor: 'rgba(255, 255, 255, 0.2)', rightOffset: 12, barSpacing: 8 },
     rightPriceScale: {
       borderColor: 'rgba(255, 255, 255, 0.2)',
       scaleMargins: { top: 0.1, bottom: 0.1 },
@@ -202,7 +203,7 @@ const Chart = ({ isCard, setIsCard, isUser, isLogined }) => {
       vertLines: { visible: false, color: 'rgba(0, 0, 0, 0.1)', style: 0 },
       horzLines: { visible: true, style: 3, color: 'rgba(0, 0, 0, 0.1)', style: 0 },
     },
-    timeScale: { borderColor: 'rgba(0, 0, 0, 0.2)', rightOffset: 10, barSpacing: 8 },
+    timeScale: { borderColor: 'rgba(0, 0, 0, 0.2)', rightOffset: 12, barSpacing: 8 },
     rightPriceScale: {
       borderColor: 'rgba(0, 0, 0, 0.2)',
       scaleMargins: { top: 0.1, bottom: 0.1 },

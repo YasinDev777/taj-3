@@ -3,7 +3,7 @@ import React from 'react'
 const Loader = () => {
   return (
     <div class="container-loader">
-        <div class="loader"></div>
+        <span class="loader"></span>
     </div>
 )
 }

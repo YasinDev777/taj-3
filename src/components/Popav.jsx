@@ -5,9 +5,13 @@ import { Link } from 'react-router-dom'
 const Popav = ({ isAlert, setIsAlert, isVideo, setIsVideo }) => {
 
     const handleNone = (e) => {
+        const textss_btn = document.querySelector(".textsss-btn")
         if (e.target.classList.contains('popav')) {
-            setIsVideo(false)
             setIsAlert(false)
+            setIsVideo(false)
+        }
+        if (textss_btn) {
+            textss_btn.style.display = "flex"
         }
     }
 

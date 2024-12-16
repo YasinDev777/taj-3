@@ -80,10 +80,22 @@ const Main = ({
       await new Promise((resolve) => setTimeout(resolve, 3000));
       setLoading(false);
     };
-
+  
     fetchData();
-  }, []);
-
+  
+    if (isLogined === true) {
+      const updatedCharts = filtered.map((item, index) => {
+        return {
+          ...item,
+          login: index < 3 ? true : false,
+        };
+      });
+  
+      setCharts(updatedCharts);
+    }
+  }, [isLogined, filtered]);
+  
+  
 
   return (
     <div className="main1">
@@ -96,7 +108,9 @@ const Main = ({
               <div
                 className="nav-card"
                 style={
+                  item.login === true ?
                     { background: "var(--main-color)" }
+                    : {background: "var(--block-card-color)"}
                 }
               >
                 <div className="infors">

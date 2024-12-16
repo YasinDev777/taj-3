@@ -4,26 +4,24 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import { RiKey2Line } from "react-icons/ri";
 import { FiArrowRightCircle } from "react-icons/fi";
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-const Login = ({ isUser, isLogined, setIsLogined, setIsUser }) => {
+const Login = ({ setIsLogined, setIsUser }) => {
     const [inputValue, setInputValue] = useState("");
-    const location = useLocation();
     const navigate = useNavigate();
 
     useEffect(() => {
         const storedLogin = localStorage.getItem("isLogined");
-        const storedUserData = localStorage.getItem("userData");
+        const storedUser = localStorage.getItem("userName");
 
-        if (storedLogin === "true" && storedUserData) {
-            const userData = JSON.parse(storedUserData);
+        if (storedLogin === "true" && storedUser) {
             setIsLogined(true);
-            setIsUser(userData.name);
-            navigate('/');
+            setIsUser(storedUser);
+            navigate("/");
         }
     }, [setIsLogined, setIsUser, navigate]);
 
@@ -60,21 +58,15 @@ const Login = ({ isUser, isLogined, setIsLogined, setIsUser }) => {
                 setIsUser(foundUser.name);
 
                 localStorage.setItem("isLogined", "true");
-                localStorage.setItem("userData", JSON.stringify(foundUser));
+                localStorage.setItem("userName", foundUser.name);
 
-                navigate('/');
+                navigate("/");
             } else {
                 alert("Пароль неверный или пользователь не найден.");
             }
         } catch (error) {
             console.error("Ошибка при проверке данных:", error);
             alert("Произошла ошибка. Попробуйте снова.");
-        }
-    };
-
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
-            handleLogin();
         }
     };
 
@@ -92,31 +84,27 @@ const Login = ({ isUser, isLogined, setIsLogined, setIsUser }) => {
                             spaceBetween={30}
                             loop={true}
                             autoplay={{ delay: 10000 }}
-                            pagination={{
-                                clickable: true,
-                            }}
+                            pagination={{ clickable: true }}
                             modules={[Pagination, Autoplay]}
                             className="mySwiper"
                         >
                             <SwiperSlide className='swiper-slide'>
                                 <div className="textx">
-                                    <h1>
-                                        Kripto bozoridagi eng so'nggi texnik analizlar!
-                                    </h1>
-                                    <p>Ahsan Screener orqali eng yangi tahlillar va halol kripto imkoniyatlarini kuzating.</p>
+                                    <h1>Kripto bozoridagi eng so'nggi texnik analizlar 😉</h1>
+                                    <p>Ahsan Labs orqali eng yangi tahlillar va halol kripto imkoniyatlarini kuzating.</p>
                                     <img src="./images/ETH.png" alt="eth" />
                                     <img src="./images/StarAtlas.png" alt="starAtlas" className='img1' />
                                     <img src="./images/SOL.png" alt="sol" className='img2' />
                                 </div>
                             </SwiperSlide>
                             <SwiperSlide className='swiper-slide'>
-                                <h1>Kripto bozoridagi eng so'nggi texnik analizlar!</h1>
-                                <p>Ahsan Screener orqali eng yangi tahlillar va halol kripto imkoniyatlarini kuzating.</p>
+                                <h1>Bozorda ishonchli tahlil bilan ish boshlang 💯</h1>
+                                <p>Ahsan Labs orqali eng yangi tahlillar bilan ish boshlab daromadingizni oshiring!</p>
                                 <img src="/images/ChatBot.png" alt="chatBot" />
                             </SwiperSlide>
                             <SwiperSlide className='swiper-slide'>
-                                <h1>Biz bilan vaqtingizni tejang!</h1>
-                                <p>Ahsan Screener orqali eng yangi tahlillar va halol kripto imkoniyatlarini oson filterlar bilan kuzating.</p>
+                                <h1>Biz bilan vaqtingizni tejang 🕒</h1>
+                                <p>Ahsan Labs orqali eng yangi tahlillar va halol kripto imkoniyatlarini oson filterlar bilan kuzating.</p>
                                 <img src="/images/Working.png" alt="working" className='img3' />
                             </SwiperSlide>
                         </Swiper>
@@ -139,8 +127,8 @@ const Login = ({ isUser, isLogined, setIsLogined, setIsUser }) => {
                                         type="text"
                                         value={inputValue}
                                         onChange={handleChange}
-                                        onKeyPress={handleKeyPress}
                                     />
+
                                     <RiKey2Line onClick={handlePaste} />
                                 </div>
                             </div>

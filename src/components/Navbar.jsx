@@ -135,6 +135,12 @@ const Navbar = ({
           }
         </div>
       </div>
+      <div className="warning-alert">
+        <div className="war-texts">
+          <div className="war-tex"></div>
+        </div>
+        <div className="war-options"></div>
+      </div>
       <div className="nav-bar">
         <div className="texsss">
           <div className="tex">

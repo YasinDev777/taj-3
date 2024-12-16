@@ -7,8 +7,8 @@ const array = [
         login: true,
         time: "1d",
         searched: "2 soat",
+        id: 1,
         salarys: "+",
-        openfor: "basic",
     },
     {
         img: "../images/Rasm.png",
@@ -18,8 +18,8 @@ const array = [
         login: false,
         time: "1d",
         salarys: "+",
+        id: 2,
         searched: "2 soat",
-        openfor: "basic",
     },
     {
         img: "../images/chart001.png",
@@ -29,8 +29,8 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
+        id: 3,
         searched: "2 soat",
-        openfor: "basic"
     },
     {
         img: "../images/chart001.png",
@@ -40,6 +40,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
+        id: 4,
         searched: "2 soat",
     },
     {
@@ -50,6 +51,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "+",
+        id: 5,
         searched: "2 soat"
     },
     {
@@ -60,6 +62,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "+",
+        id: 6,
         searched: "2 soat"
     },
     {
@@ -70,6 +73,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "+",
+        id: 7,
         searched: "2 soat"
     },
     {
@@ -80,6 +84,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "+",
+        id: 8,
         searched: "2 soat"
     },
     {
@@ -90,6 +95,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "+",
+        id: 9,
         searched: "2 soat"
     },
     {
@@ -100,6 +106,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "+",
+        id: 10,
         searched: "2 soat"
     },
     {
@@ -110,6 +117,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "+",
+        id: 11,
         searched: "2 soat"
     },
     {
@@ -120,6 +128,7 @@ const array = [
         login: false,
         salarys: "-",
         time: "1d",
+        id: 12,
         searched: "2 soat"
     },
     {
@@ -130,6 +139,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
+        id: 13,
         searched: "2 soat"
     },
     {
@@ -140,6 +150,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
+        id: 14,
         searched: "2 soat"
     },
     {
@@ -150,6 +161,139 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
+        id: 15,
+        searched: "2 soat"
+    },
+    {
+        img: "../images/chart001.png",
+        name: "ZTEK",
+        presets: "Pattern",
+        order: "Company",
+        login: false,
+        time: "1d",
+        salarys: "-",
+        id: 16,
+        searched: "2 soat"
+    },
+    {
+        img: "../images/chart001.png",
+        name: "ZTAX",
+        presets: "Pattern",
+        order: "Company",
+        login: false,
+        time: "1d",
+        salarys: "-",
+        id: 17,
+        searched: "2 soat"
+    },
+    {
+        img: "../images/chart001.png",
+        name: "ZSL",
+        presets: "Pattern",
+        order: "Company",
+        login: false,
+        time: "1d",
+        salarys: "-",
+        id: 18,
+        searched: "2 soat"
+    },
+    {
+        img: "../images/chart001.png",
+        name: "ZSEP",
+        presets: "Pattern",
+        order: "Company",
+        login: false,
+        time: "1d",
+        salarys: "-",
+        id: 19,
+        searched: "2 soat"
+    },
+    {
+        img: "../images/chart001.png",
+        name: "ZSC",
+        presets: "Pattern",
+        order: "Sector",
+        login: false,
+        time: "1d",
+        salarys: "-",
+        id: 20,
+        searched: "2 soat"
+    },
+    {
+        img: "../images/chart001.png",
+        name: "ZSB",
+        presets: "Pattern",
+        order: "Sector",
+        login: false,
+        time: "1d",
+        salarys: "-",
+        id: 21,
+        searched: "2 soat"
+    },
+    {
+        img: "../images/chart001.png",
+        name: "ZS",
+        presets: "Pattern",
+        order: "Sector",
+        login: false,
+        time: "1d",
+        salarys: "-",
+        id: 22,
+        searched: "2 soat"
+    },
+    {
+        img: "../images/chart001.png",
+        name: "ZROZ",
+        presets: "Pattern",
+        order: "Industry",
+        login: false,
+        time: "1d",
+        salarys: "-",
+        id: 23,
+        searched: "2 soat"
+    },
+    {
+        img: "../images/chart001.png",
+        name: "ZOOZ",
+        presets: "Pattern",
+        order: "Industry",
+        login: false,
+        time: "1d",
+        salarys: "-",
+        id: 24,
+        searched: "2 soat"
+    },
+    {
+        img: "../images/chart001.png",
+        name: "ZONE",
+        presets: "Pattern",
+        order: "Industry",
+        login: false,
+        time: "1d",
+        salarys: "-",
+        id: 25,
+        searched: "2 soat"
+    },
+    {
+        img: "../images/chart001.png",
+        name: "ZTO",
+        presets: "Pattern",
+        order: "Price/Earnings",
+        login: false,
+        time: "1d",
+        salarys: "-",
+        id: 26,
+        searched: "2 soat"
+    },
+    {
+        img: "../images/chart001.png",
+        name: "ZTEN",
+        presets: "Pattern",
+        order: "Price/Earnings",
+        login: false,
+        time: "1d",
+        salarys: "-",
+        id: 27,
         searched: "2 soat"
     },
     {
@@ -250,127 +394,7 @@ const array = [
         login: false,
         time: "1d",
         salarys: "-",
-        searched: "2 soat"
-    },
-    {
-        img: "../images/chart001.png",
-        name: "ZTO",
-        presets: "Pattern",
-        order: "Price/Earnings",
-        login: false,
-        time: "1d",
-        salarys: "-",
-        searched: "2 soat"
-    },
-    {
-        img: "../images/chart001.png",
-        name: "ZTEN",
-        presets: "Pattern",
-        order: "Price/Earnings",
-        login: false,
-        time: "1d",
-        salarys: "-",
-        searched: "2 soat"
-    },
-    {
-        img: "../images/chart001.png",
-        name: "ZTEK",
-        presets: "Pattern",
-        order: "Company",
-        login: false,
-        time: "1d",
-        salarys: "-",
-        searched: "2 soat"
-    },
-    {
-        img: "../images/chart001.png",
-        name: "ZTAX",
-        presets: "Pattern",
-        order: "Company",
-        login: false,
-        time: "1d",
-        salarys: "-",
-        searched: "2 soat"
-    },
-    {
-        img: "../images/chart001.png",
-        name: "ZSL",
-        presets: "Pattern",
-        order: "Company",
-        login: false,
-        time: "1d",
-        salarys: "-",
-        searched: "2 soat"
-    },
-    {
-        img: "../images/chart001.png",
-        name: "ZSEP",
-        presets: "Pattern",
-        order: "Company",
-        login: false,
-        time: "1d",
-        salarys: "-",
-        searched: "2 soat"
-    },
-    {
-        img: "../images/chart001.png",
-        name: "ZSC",
-        presets: "Pattern",
-        order: "Sector",
-        login: false,
-        time: "1d",
-        salarys: "-",
-        searched: "2 soat"
-    },
-    {
-        img: "../images/chart001.png",
-        name: "ZSB",
-        presets: "Pattern",
-        order: "Sector",
-        login: false,
-        time: "1d",
-        salarys: "-",
-        searched: "2 soat"
-    },
-    {
-        img: "../images/chart001.png",
-        name: "ZS",
-        presets: "Pattern",
-        order: "Sector",
-        login: false,
-        time: "1d",
-        salarys: "-",
-        searched: "2 soat"
-    },
-    {
-        img: "../images/chart001.png",
-        name: "ZROZ",
-        presets: "Pattern",
-        order: "Industry",
-        login: false,
-        time: "1d",
-        salarys: "-",
-        searched: "2 soat"
-    },
-    {
-        img: "../images/chart001.png",
-        name: "ZOOZ",
-        presets: "Pattern",
-        order: "Industry",
-        login: false,
-        time: "1d",
-        salarys: "-",
-        searched: "2 soat"
-    },
-    {
-        img: "../images/chart001.png",
-        name: "ZONE",
-        presets: "Pattern",
-        order: "Industry",
-        login: false,
-        time: "1d",
-        salarys: "-",
-        searched: "2 soat"
+        searched: "10 soat"
     },
 ]
 

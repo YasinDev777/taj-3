@@ -17,6 +17,18 @@ nav {
 }
 
 
+.warning-alert{
+    width: 96%;
+    margin: 0 auto;
+    height: calc(var(--index)*4);
+    background-color: var(--block-card-color);
+    transform: translateY(calc(var(--index)*0.7));
+    border-radius: calc(var(--index)*0.5);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
 .tex h1 {
     font-size: calc(var(--index)*1.2);
     font-weight: 500;
