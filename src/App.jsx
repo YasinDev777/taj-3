@@ -19,9 +19,9 @@ const App = () => {
   const [isVideo, setIsVideo] = useState(false);
   const [isUser, setIsUser] = useState("");
   const [isLogined, setIsLogined] = useState(false);
+  const [alertShown, setAlertShown] = useState(true)
 
   useEffect(() => {
-    // Проверяем статус пользователя из localStorage при загрузке приложения
     const storedLogin = localStorage.getItem("isLogined");
     const storedUser = localStorage.getItem("userName");
 
@@ -63,6 +63,8 @@ const App = () => {
           isAlert={isAlert}
           isUser={isUser}
           isLogined={isLogined}
+          alertShown={alertShown}
+          setAlertShown={setAlertShown}
         />
       )}
       <Routes>

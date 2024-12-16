@@ -26,7 +26,71 @@ nav {
     border-radius: calc(var(--index)*0.5);
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
+    padding: calc(var(--index)*0.5) calc(var(--index)*3);
+}
+
+.war-texts{
+    width: calc(var(--index)*30);
+    padding-right: calc(var(--index)*0.5);
+}
+
+.war-texts > h3{
+    position: relative;
+    font-size: calc(var(--index)*1);
+    font-weight: 500;
+    color: var(--other-main-color);
+}
+
+.war-texts h3 > svg{
+    position: absolute;
+    top: 48%;
+    transform: translateY(-50%);
+    left: calc(var(--index)*-1.2);
+    font-size: calc(var(--index)*1);
+}
+
+.war-texts > p{
+    color: var(--other-main-color);
+    font-size: calc(var(--index)*0.7);
+    font-weight: 300;
+}
+
+.war-options{
+    display: flex;   
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--index)*3);
+    height: 65%;
+    position: relative;
+}
+
+.war-options a > button{
+    width: calc(var(--index)*5);
+    border: calc(var(--index)*0.05) solid var(--border-color);
+    font-size: calc(var(--index)*0.65);
+    padding: calc(var(--index)*0.3) calc(var(--index)*0.8);
+    color: var(--other-main-color);
+    border-radius: calc(var(--index)*0.2);
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.war-options::after{
+    content: "";
+    position: absolute;
+    width: calc(var(--index)*0.05);
+    height: 100%;
+    background-color: var(--border-color);
+    top: 50%;
+    left: 72%;
+    transform: translate(-50%, -50%);
+}
+
+.war-options > svg{
+    font-size: calc(var(--index)*1.2);
+    color: var(--other-main-color);
+    cursor: pointer;
 }
 
 .tex h1 {

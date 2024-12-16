@@ -228,7 +228,7 @@ const Chart = ({ isCard, setIsCard, isUser, isLogined }) => {
       <div className="nav" id="nav" style={isCard === false ? { display: "none" } : { display: "flex" }}>
         <div className="logo-name">
           <Link to="/">
-            AHSAN SCREENER
+            AHSAN LABS
           </Link>
         </div>
         <div className="options">

@@ -5,6 +5,8 @@ import { FiChevronDown } from "react-icons/fi";
 import { LuFilterX } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import { RxVideo } from "react-icons/rx";
+import { RiErrorWarningLine } from "react-icons/ri";
+import { BiX } from "react-icons/bi";
 
 const CustomSelect = ({
   options,
@@ -65,7 +67,9 @@ const Navbar = ({
   isAlert,
   setIsAlert,
   isUser,
-  isLogined
+  isLogined,
+  alertShown,
+  setAlertShown
 }) => {
   const presetOptions = [
     { value: "Pattern", label: "Pattern" },
@@ -95,9 +99,7 @@ const Navbar = ({
     { value: "1h", label: "1h" },
   ];
 
-  // Состояние для управления открытым селектом
   const [openSelect, setOpenSelect] = useState(null);
-
   const handleChange = () => {
     setIsGrid(6);
     setSelectedPreset("Pattern");
@@ -110,7 +112,7 @@ const Navbar = ({
     <>
       <div className="nav" id="nav">
         <div className="logo-name">
-          <a href="#">AHSAN SCREENER</a>
+          <Link to="">AHSAN LABS</Link>
         </div>
         <div className="options">
           <button
@@ -135,11 +137,17 @@ const Navbar = ({
           }
         </div>
       </div>
-      <div className="warning-alert">
+      <div className="warning-alert" style={alertShown === false ? {display: "none"} : {display: "flex"}}>
         <div className="war-texts">
-          <div className="war-tex"></div>
+            <h3><RiErrorWarningLine /> Eslatma:</h3>
+            <p>Hurmatli, Aliakbar 1 haftadan so’ng obunangiz bekor qilinadi. Iltimos, admin bilan bog’laning!</p>
         </div>
-        <div className="war-options"></div>
+        <div className="war-options">
+          <Link to="https://t.me/ahsanlabs_admin" target="blank">
+          <button>Sotib olish</button>
+          </Link>
+          <BiX onClick={() => setAlertShown(!alertShown)} />
+       </div>
       </div>
       <div className="nav-bar">
         <div className="texsss">
