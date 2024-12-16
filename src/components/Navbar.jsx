@@ -140,7 +140,7 @@ const Navbar = ({
       <div className="warning-alert" style={alertShown === false ? {display: "none"} : {display: "flex"}}>
         <div className="war-texts">
             <h3><RiErrorWarningLine /> Eslatma:</h3>
-            <p>Hurmatli, Aliakbar aka 1 haftadan so’ng obunangiz bekor qilinadi. Iltimos, admin bilan bog’laning!</p>
+            <p>Hurmatli, {isUser} 1 haftadan so’ng obunangiz bekor qilinadi. Iltimos, admin bilan bog’laning!</p>
         </div>
         <div className="war-options">
           <Link to="https://t.me/ahsanlabs_admin" target="blank">
