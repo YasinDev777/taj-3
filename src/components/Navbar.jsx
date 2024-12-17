@@ -112,16 +112,12 @@ const Navbar = ({
 
   useEffect(() => {
     const storedAlertShown = localStorage.getItem("alertShown");
-    if (storedAlertShown == true) {
-      setAlertShown(true);
-    } else {
-      setAlertShown(false);
-    }
+    setAlertShown(storedAlertShown === "true");
   }, [setAlertShown]);
 
   const handleCloseAlert = () => {
     setAlertShown(false);
-    localStorage.setItem("alertShown", false);
+    localStorage.setItem("alertShown", "false");
   };
 
   return (
@@ -153,8 +149,7 @@ const Navbar = ({
           }
         </div>
       </div>
-      {isLogined && alertShown && (
-        <div className="warning-alert" style={{display: "flex"}}>
+        <div className="warning-alert" style={alertShown === true ? {display: "flex"} : {display: "none"}}>
           <div className="war-texts">
             <h3>
               <RiErrorWarningLine /> {limit === false ? "Eslatma:" : "Diqqat:"}
@@ -176,8 +171,6 @@ const Navbar = ({
             <BiX onClick={handleCloseAlert} />
           </div>
         </div>
-      )}
-
       <div className="nav-bar">
         <div className="texsss">
           <div className="tex">

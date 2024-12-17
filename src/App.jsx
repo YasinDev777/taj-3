@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Main from "./components/Main";
 import Chart from "./components/LineChart";
@@ -20,80 +20,74 @@ const App = () => {
   const [isUser, setIsUser] = useState("");
   const [isLogined, setIsLogined] = useState(false);
   const [alertShown, setAlertShown] = useState(false);
-  const [premiumExpiryDate, setPremiumExpiryDate] = useState(null);
-  const [limit, setLimit] = useState(false)
-
+  const [limit, setLimit] = useState(false);
+  const [filteredArray, setFilteredArray] = useState(array);
+  const [filterLimit, setFilterLimit] = useState(1)
+  const [PrimiumTaken, setPrimiumTaken] = useState(null)
 
   useEffect(() => {
     const storedLogin = localStorage.getItem("isLogined");
     const storedUser = localStorage.getItem("userName");
-    const storedExpiryDate = localStorage.getItem("premiumExpiryDate");
+    const storedStartDate = localStorage.getItem("premiumStartDate");
+    const storedAlertShown = localStorage.getItem("alertShown");
 
     if (storedLogin === "true" && storedUser) {
       setIsLogined(true);
       setIsUser(storedUser);
+      setFilterLimit(3)
+      const NewDate = new Date().getMinutes() + 4
+      setPrimiumTaken(NewDate)
     }
 
-    if (storedExpiryDate) {
-      setPremiumExpiryDate(new Date(storedExpiryDate));
+    if (storedStartDate) {
+      checkPremiumLimit(new Date(storedStartDate));
     }
-  }, []);
+
+    if (storedAlertShown === "true") {
+      setAlertShown(true);
+    }
+
+  }, [isLogined, setPrimiumTaken]);
 
   useEffect(() => {
-    if (isLogined && !premiumExpiryDate) {
-      const expiryDate = new Date();
-      expiryDate.setMinutes(expiryDate.getMinutes() + 10);
-      setPremiumExpiryDate(expiryDate);
-      localStorage.setItem("premiumExpiryDate", expiryDate.toISOString());
-    }
-  }, [isLogined, premiumExpiryDate]);
-
-  useEffect(() => {
-    if (premiumExpiryDate) {
+    if (isLogined) {
       const now = new Date();
-      const timeRemaining = premiumExpiryDate - now;
-  
-      if (timeRemaining <= 0) {
-        setIsLogined(false);
-        setLimit(true);
-        localStorage.removeItem("premiumExpiryDate");
-        setAlertShown(false);
-      } else if (timeRemaining <= 5 * 60 * 1000) {
-        setAlertShown(true);
-      }
-  
-      const timer = setTimeout(() => {
-        const updatedTimeRemaining = premiumExpiryDate - new Date();
-        if (updatedTimeRemaining <= 0) {
-          setIsLogined(false);
-          setLimit(true);
-          localStorage.removeItem("premiumExpiryDate");
-          setAlertShown(false);
-        } else if (updatedTimeRemaining <= 5 * 60 * 1000) {
-          setAlertShown(true); // Устанавливаем предупреждение, если его не было
-        }
-      }, Math.min(timeRemaining, 5 * 60 * 1000));
-  
-      return () => clearTimeout(timer);
-    }
-  }, [premiumExpiryDate]);
+      const storedStartDate = localStorage.getItem("premiumStartDate");
 
+      if (!storedStartDate) {
+        localStorage.setItem("premiumStartDate", now.toISOString());
+        checkPremiumLimit(now);
+      } else {
+        checkPremiumLimit(new Date(storedStartDate));
+      }
+    }
+  }, [isLogined, alertShown]);
+
+  const checkPremiumLimit = (premiumStartDate) => {
+    const now = new Date();
+    const startTime = new Date(premiumStartDate);
+    const timeDiff = Math.floor((now - startTime) / (1000 * 60));
+    
+    const medium = Math.floor(PrimiumTaken / 2);
+    const last = PrimiumTaken;
+    
+    const storedAlertShown = localStorage.getItem("alertShown");
+    const limitReached = localStorage.getItem("limit");
+    
+    if (timeDiff >= medium && !storedAlertShown && isLogined === true) {
+      setAlertShown(true);
+      localStorage.setItem("alertShown", "true");
+    }
+    
+    if (timeDiff >= last && !limitReached) {
+      setLimit(true)
+      // localStorage.setItem("limit", "true");
+    }
+  };
 
   useEffect(() => {
     document.body.style.overflow = isAlert || isVideo ? "hidden" : "auto";
   }, [isAlert, isVideo]);
-
-  const filtered = array.filter((item) => {
-    const presetMatch =
-      selectedPreset === "Pattern" || item.presets === selectedPreset;
-    const tickerMatch =
-      selectedTicker === "Ticker" || item.order === selectedTicker;
-    const timeMatch =
-      selectedTime === "1d" || item.time === selectedTime;
-    return presetMatch && tickerMatch && timeMatch;
-  });
-
-
 
   return (
     <div className="app">
@@ -123,13 +117,14 @@ const App = () => {
           path="/"
           element={
             <Main
-              filtered={filtered}
+              filtered={filteredArray}
               isCard={isCard}
               setIsCard={setIsCard}
               isGrid={isGrid}
               isAlert={isAlert}
               setIsAlert={setIsAlert}
               isLogined={isLogined}
+              filterLimit={filterLimit}
             />
           }
         />
@@ -145,6 +140,8 @@ const App = () => {
               setIsUser={setIsUser}
               isLogined={isLogined}
               setIsLogined={setIsLogined}
+              PrimiumTaken={PrimiumTaken}
+              setPrimiumTaken={setPrimiumTaken}
             />
           }
         />

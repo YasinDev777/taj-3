@@ -14,7 +14,9 @@ const Main = ({
   isGrid, 
   isAlert, 
   setIsAlert,
-  isLogined }) => {
+  isLogined,
+  filterLimit,
+}) => {
   const [Charts, setCharts] = useState(filtered);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -87,7 +89,7 @@ const Main = ({
       const updatedCharts = filtered.map((item, index) => {
         return {
           ...item,
-          login: index < 3 ? true : false,
+          login: index < filterLimit ? true : false,
         };
       });
   

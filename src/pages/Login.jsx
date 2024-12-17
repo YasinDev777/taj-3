@@ -10,20 +10,19 @@ import { db } from "../firebase";
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-const Login = ({ setIsLogined, setIsUser }) => {
+const Login = ({ setIsLogined, setIsUser, setPrimimumTaken, PrimimumTaken }) => {
     const [inputValue, setInputValue] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
         const storedLogin = localStorage.getItem("isLogined");
         const storedUser = localStorage.getItem("userName");
-    
         if (storedLogin === "true" && storedUser) {
             setIsLogined(true);
             setIsUser(storedUser);
-            navigate("/"); // Перенаправляем на главную страницу, если пользователь уже авторизован
+            navigate("/");
         }
-    }, [setIsLogined, setIsUser, navigate]);
+    }, [setIsLogined, setIsUser, navigate, setPrimimumTaken]);
     
     
 
@@ -58,12 +57,12 @@ const Login = ({ setIsLogined, setIsUser }) => {
             if (foundUser) {
                 setIsLogined(true);
                 setIsUser(foundUser.name);
-    
+                console.log(PrimimumTaken);
+                
                 // Сохраняем данные в localStorage
                 localStorage.setItem("isLogined", "true");
                 localStorage.setItem("userName", foundUser.name);
-    
-                navigate("/"); // Переходим на главную страницу
+                navigate("/");
             } else {
                 alert("Пароль неверный или пользователь не найден.");
             }
