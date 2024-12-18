@@ -28,14 +28,11 @@ const App = () => {
   const [DiffTime, setDiffTime] = useState(null)
 
   const timers = useRef([]);
-
-
-  // useEffect для загрузки начальных данных
   useEffect(() => {
     const storedLogin = localStorage.getItem("isLogined");
     const storedUser = localStorage.getItem("userName");
     const storedStartDate = localStorage.getItem("premiumStartDate");
-    const storedAlertShown = localStorage.getItem("alertShown");
+    // const storedAlertShown = localStorage.getItem("alertShown");
 
     if (storedLogin === "true" && storedUser) {
       setIsLogined(true);
@@ -46,13 +43,8 @@ const App = () => {
     if (storedStartDate) {
       checkPremiumLimit(new Date(storedStartDate));
     }
-
-    if (storedAlertShown === "true") {
-      setAlertShown(true);
-    }
   }, []);
 
-  // useEffect для обработки состояния входа
   useEffect(() => {
     if (isLogined) {
       const now = new Date();
@@ -64,10 +56,10 @@ const App = () => {
       } else {
         checkPremiumLimit(new Date(storedStartDate));
       }
+      setFilterLimit(3);
     }
   }, [isLogined]);
 
-  // Функция для обработки окончания премиум доступа
   const checkPremiumLimit = (premiumStartDate) => {
     const now = new Date();
     const timeSinceStart = now.getTime() - premiumStartDate.getTime();
