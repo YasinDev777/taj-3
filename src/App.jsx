@@ -34,7 +34,7 @@ const App = () => {
     const storedLogin = localStorage.getItem("isLogined");
     const storedUser = localStorage.getItem("userName");
     const storedStartDate = localStorage.getItem("premiumStartDate");
-    const storedAlertShown = localStorage.getItem("alertShown");
+    // const storedAlertShown = localStorage.getItem("alertShown");
 
     if (storedLogin === "true" && storedUser) {
       setIsLogined(true);
@@ -116,7 +116,6 @@ const App = () => {
   //     timers.current.forEach(clearTimeout);
   //   };
   // }, []);
-
   const closeAlert = () => {
     setAlertShown(false);
     localStorage.setItem("alertShown", "false");
