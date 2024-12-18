@@ -23,11 +23,13 @@ const App = () => {
   const [limit, setLimit] = useState(false);
   const [filterLimit, setFilterLimit] = useState(1);
   const [PrimiumTaken, setPrimiumTaken] = useState(null);
-  const [filteredArray, setFilteredArray] = useState(array)
+  const [filteredArray] = useState(array)
   const [StartTime, setStartTime] = useState(null)
   const [DiffTime, setDiffTime] = useState(null)
 
   const timers = useRef([]);
+
+  console.log(process.env.REACT_APP_apiKey);
 
   // useEffect для загрузки начальных данных
   useEffect(() => {

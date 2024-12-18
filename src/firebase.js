@@ -3,13 +3,12 @@ import { getAnalytics } from "firebase/analytics";
 import { getFirestore, collection, getDocs } from "firebase/firestore"; // Firestore
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCDxHchqIsy4AVo0ZUWnpOQWqU9YpCio7A",
-  authDomain: "ahsan-test-e89b1.firebaseapp.com",
-  projectId: "ahsan-test-e89b1",
-  storageBucket: "ahsan-test-e89b1.firebasestorage.app",
-  messagingSenderId: "979483744621",
-  appId: "1:979483744621:web:3b5959c30086d179396264",
-  measurementId: "G-ZKEXWJS0CL"
+  apiKey: process.env.REACT_APP_apiKey,
+  authDomain: process.env.REACT_APP_authDomain,
+  projectId: process.env.REACT_APP_projectId,
+  storageBucket: process.env.REACT_APP_storageBucket,
+  messagingSenderId: process.env.REACT_APP_messagingSenderId,
+  appId: process.env.REACT_APP_appId,
 };
 
 const app = initializeApp(firebaseConfig);
@@ -17,3 +16,18 @@ const analytics = getAnalytics(app);
 const db = getFirestore(app);
 
 export { db, collection, getDocs };
+
+
+
+
+
+
+
+// const firebaseConfig = {
+//   apiKey: "AIzaSyAXivWRoFPKFGiwaYhglPooEm5rG72bJXg",
+//   authDomain: "screener-2b456.firebaseapp.com",
+//   projectId: "screener-2b456",
+//   storageBucket: "screener-2b456.firebasestorage.app",
+//   messagingSenderId: "860474515607",
+//   appId: "1:860474515607:web:0b0cc8f4d3d5d757aa49d2"
+// };
