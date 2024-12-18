@@ -72,8 +72,8 @@ const App = () => {
     const timeSinceStart = now.getTime() - premiumStartDate.getTime();
 
     const firstAlertTime = 1 * 60 * 1000; // Через 1 минуту
-    const secondAlertTime = 2 * 60 * 1000; // Через 2 минуты
-    const endTime = 3 * 60 * 1000; // Через 3 минуты
+    const secondAlertTime = 5 * 60 * 1000; // Через 2 минуты
+    const endTime = 10 * 60 * 1000; // Через 3 минуты
 
     if (timeSinceStart >= endTime) {
       setFilterLimit(1);
@@ -107,14 +107,12 @@ const App = () => {
     setDiffTime(timer2)
   };
 
-  // Очистка таймеров при размонтировании
   useEffect(() => {
     return () => {
       timers.current.forEach(clearTimeout);
     };
   }, []);
 
-  // Функция для закрытия предупреждения и обновления состояния в localStorage
   const closeAlert = () => {
     setAlertShown(false);
     localStorage.setItem("alertShown", "false");
