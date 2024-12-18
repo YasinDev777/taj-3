@@ -70,7 +70,9 @@ const Navbar = ({
   isLogined,
   alertShown,
   setAlertShown,
-  limit
+  limit,
+  DiffTime,
+  StartTime
 }) => {
   const presetOptions = [
     { value: "Pattern", label: "Pattern" },
@@ -110,14 +112,18 @@ const Navbar = ({
     setOpenSelect(null)
   };
 
-  useEffect(() => {
-    const storedAlertShown = localStorage.getItem("alertShown");
-    setAlertShown(storedAlertShown === "true");
-  }, [setAlertShown]);
 
   const handleCloseAlert = () => {
+    localStorage.getItem("alertShown")
     setAlertShown(false);
     localStorage.setItem("alertShown", "false");
+    const limit = localStorage.getItem("limit")
+    if (limit === false) {
+      clearTimeout(StartTime)
+    }
+    else if(limit === true){
+      clearInterval(DiffTime)
+    }
   };
 
   return (

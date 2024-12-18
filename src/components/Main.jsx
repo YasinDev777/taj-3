@@ -95,9 +95,7 @@ const Main = ({
   
       setCharts(updatedCharts);
     }
-  }, [isLogined, filtered]);
-  
-  
+  }, [isLogined, filtered, filterLimit]);  
 
   return (
     <div className="main1">

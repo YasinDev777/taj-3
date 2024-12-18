@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Main from "./components/Main";
@@ -21,10 +21,15 @@ const App = () => {
   const [isLogined, setIsLogined] = useState(false);
   const [alertShown, setAlertShown] = useState(false);
   const [limit, setLimit] = useState(false);
-  const [filteredArray, setFilteredArray] = useState(array);
-  const [filterLimit, setFilterLimit] = useState(1)
-  const [PrimiumTaken, setPrimiumTaken] = useState(null)
+  const [filterLimit, setFilterLimit] = useState(1);
+  const [PrimiumTaken, setPrimiumTaken] = useState(null);
+  const [filteredArray, setFilteredArray] = useState(array)
+  const [StartTime, setStartTime] = useState(null)
+  const [DiffTime, setDiffTime] = useState(null)
 
+  const timers = useRef([]);
+
+  // useEffect для загрузки начальных данных
   useEffect(() => {
     const storedLogin = localStorage.getItem("isLogined");
     const storedUser = localStorage.getItem("userName");
@@ -34,9 +39,7 @@ const App = () => {
     if (storedLogin === "true" && storedUser) {
       setIsLogined(true);
       setIsUser(storedUser);
-      setFilterLimit(3)
-      const NewDate = new Date().getMinutes() + 4
-      setPrimiumTaken(NewDate)
+      setFilterLimit(3);
     }
 
     if (storedStartDate) {
@@ -46,9 +49,9 @@ const App = () => {
     if (storedAlertShown === "true") {
       setAlertShown(true);
     }
+  }, []);
 
-  }, [isLogined, setPrimiumTaken]);
-
+  // useEffect для обработки состояния входа
   useEffect(() => {
     if (isLogined) {
       const now = new Date();
@@ -61,30 +64,63 @@ const App = () => {
         checkPremiumLimit(new Date(storedStartDate));
       }
     }
-  }, [isLogined, alertShown]);
+  }, [isLogined]);
 
+  // Функция для обработки окончания премиум доступа
   const checkPremiumLimit = (premiumStartDate) => {
     const now = new Date();
-    const startTime = new Date(premiumStartDate);
-    const timeDiff = Math.floor((now - startTime) / (1000 * 60));
-    
-    const medium = Math.floor(PrimiumTaken / 2);
-    const last = PrimiumTaken;
-    
-    const storedAlertShown = localStorage.getItem("alertShown");
-    const limitReached = localStorage.getItem("limit");
-    
-    if (timeDiff >= medium && !storedAlertShown && isLogined === true) {
+    const timeSinceStart = now.getTime() - premiumStartDate.getTime();
+
+    const firstAlertTime = 1 * 60 * 1000; // Через 1 минуту
+    const secondAlertTime = 2 * 60 * 1000; // Через 2 минуты
+    const endTime = 3 * 60 * 1000; // Через 3 минуты
+
+    if (timeSinceStart >= endTime) {
+      setFilterLimit(1);
+      setAlertShown(false);
+      localStorage.setItem("alertShown", "false");
+      return;
+    }
+
+    const timer1 = setTimeout(() => {
       setAlertShown(true);
+      setLimit(false);
       localStorage.setItem("alertShown", "true");
-    }
-    
-    if (timeDiff >= last && !limitReached) {
-      setLimit(true)
-      // localStorage.setItem("limit", "true");
-    }
+      localStorage.setItem("limit", "false");
+    }, firstAlertTime - timeSinceStart);
+
+    const timer2 = setTimeout(() => {
+      setAlertShown(true);
+      setLimit(true);
+      localStorage.setItem("alertShown", "true");
+      localStorage.setItem("limit", "true");
+    }, secondAlertTime - timeSinceStart);
+
+    const timer3 = setTimeout(() => {
+      setFilterLimit(1);
+      setAlertShown(false);
+      localStorage.setItem("alertShown", "false");
+    }, endTime - timeSinceStart);
+
+    timers.current = [timer1, timer2, timer3];
+    setStartTime(timer1)
+    setDiffTime(timer2)
   };
 
+  // Очистка таймеров при размонтировании
+  useEffect(() => {
+    return () => {
+      timers.current.forEach(clearTimeout);
+    };
+  }, []);
+
+  // Функция для закрытия предупреждения и обновления состояния в localStorage
+  const closeAlert = () => {
+    setAlertShown(false);
+    localStorage.setItem("alertShown", "false");
+  };
+
+  // useEffect для управления переполнением страницы
   useEffect(() => {
     document.body.style.overflow = isAlert || isVideo ? "hidden" : "auto";
   }, [isAlert, isVideo]);
@@ -110,6 +146,10 @@ const App = () => {
           alertShown={alertShown}
           setAlertShown={setAlertShown}
           limit={limit}
+          StartTime={StartTime}
+          setStartTime={setStartTime}
+          setDiffTime={setDiffTime}
+          DiffTime={DiffTime}
         />
       )}
       <Routes>
@@ -151,6 +191,7 @@ const App = () => {
         setIsAlert={setIsAlert}
         isVideo={isVideo}
         setIsVideo={setIsVideo}
+        closeAlert={closeAlert} // Передаем функцию закрытия в Popav
       />
     </div>
   );
