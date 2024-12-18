@@ -28,9 +28,6 @@ const App = () => {
   const [DiffTime, setDiffTime] = useState(null)
 
   const timers = useRef([]);
-
-  console.log(process.env.REACT_APP_API_URL);
-
   useEffect(() => {
     const storedLogin = localStorage.getItem("isLogined");
     const storedUser = localStorage.getItem("userName");
