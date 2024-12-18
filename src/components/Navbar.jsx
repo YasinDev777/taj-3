@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { RxVideo } from "react-icons/rx";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { BiX } from "react-icons/bi";
+import Alert from "./Alert";
 
 const CustomSelect = ({
   options,
@@ -64,7 +65,7 @@ const Navbar = ({
   setSelectedTime,
   isVideo,
   setIsVideo,
-  isAlert,
+  // isAlert,
   setIsAlert,
   isUser,
   isLogined,
@@ -112,19 +113,19 @@ const Navbar = ({
     setOpenSelect(null)
   };
 
-
-  const handleCloseAlert = () => {
-    localStorage.getItem("alertShown")
-    setAlertShown(false);
-    localStorage.setItem("alertShown", "false");
-    const limit = localStorage.getItem("limit")
-    if (limit === false) {
-      clearTimeout(StartTime)
-    }
-    else if(limit === true){
-      clearInterval(DiffTime)
-    }
-  };
+ //o'zgarish
+  // const handleCloseAlert = () => {
+  //   localStorage.getItem("alertShown")
+  //   setAlertShown(false);
+  //   localStorage.setItem("alertShown", "false");
+  //   const limit = localStorage.getItem("limit")
+  //   if (limit === false) {
+  //     clearTimeout(StartTime)
+  //   }
+  //   else if(limit === true){
+  //     clearInterval(DiffTime)
+  //   }
+  // };
 
   return (
     <>
@@ -155,7 +156,9 @@ const Navbar = ({
           }
         </div>
       </div>
-        <div className="warning-alert" style={alertShown === true ? {display: "flex"} : {display: "none"}}>
+      {/* o'zgarish */}
+
+        {/* <div className="warning-alert" style={alertShown === true ? {display: "flex"} : {display: "none"}}>
           <div className="war-texts">
             <h3>
               <RiErrorWarningLine /> {limit === false ? "Eslatma:" : "Diqqat:"}
@@ -176,7 +179,8 @@ const Navbar = ({
             </Link>
             <BiX onClick={handleCloseAlert} />
           </div>
-        </div>
+        </div> */}
+        <Alert alertShown={alertShown} isLogined={isLogined} isUser={isUser} setAlertShown={setAlertShown} />
       <div className="nav-bar">
         <div className="texsss">
           <div className="tex">

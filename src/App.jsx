@@ -19,18 +19,17 @@ const App = () => {
   const [isVideo, setIsVideo] = useState(false);
   const [isUser, setIsUser] = useState("");
   const [isLogined, setIsLogined] = useState(false);
-  const [alertShown, setAlertShown] = useState(false);
   const [limit, setLimit] = useState(false);
   const [filterLimit, setFilterLimit] = useState(1);
   const [PrimiumTaken, setPrimiumTaken] = useState(null);
   const [filteredArray] = useState(array)
   const [StartTime, setStartTime] = useState(null)
   const [DiffTime, setDiffTime] = useState(null)
+  
+  const [alertShown, setAlertShown] = useState(false);
+  const timers = useRef([]);  
 
-  const timers = useRef([]);
 
-
-  // useEffect для загрузки начальных данных
   useEffect(() => {
     const storedLogin = localStorage.getItem("isLogined");
     const storedUser = localStorage.getItem("userName");
@@ -43,76 +42,80 @@ const App = () => {
       setFilterLimit(3);
     }
 
-    if (storedStartDate) {
-      checkPremiumLimit(new Date(storedStartDate));
-    }
+    // if (storedStartDate) {
+    //   checkPremiumLimit(new Date(storedStartDate));
+    // }
 
-    if (storedAlertShown === "true") {
-      setAlertShown(true);
-    }
+    // if (storedAlertShown === "true") {
+    //   setAlertShown(true);
+    // }
   }, []);
 
-  // useEffect для обработки состояния входа
-  useEffect(() => {
-    if (isLogined) {
-      const now = new Date();
-      const storedStartDate = localStorage.getItem("premiumStartDate");
+ //o'zgarish
+  // useEffect(() => {
+  //   if (isLogined) {
+  //     const now = new Date();
+  //     const storedStartDate = localStorage.getItem("premiumStartDate");
 
-      if (!storedStartDate) {
-        localStorage.setItem("premiumStartDate", now.toISOString());
-        checkPremiumLimit(now);
-      } else {
-        checkPremiumLimit(new Date(storedStartDate));
-      }
-    }
-  }, [isLogined]);
+  //     if (!storedStartDate) {
+  //       localStorage.setItem("premiumStartDate", now.toISOString());
+  //       checkPremiumLimit(now);
+  //     } else {
+  //       checkPremiumLimit(new Date(storedStartDate));
+  //     }
+  //   }
+  // }, [isLogined]);
 
-  // Функция для обработки окончания премиум доступа
-  const checkPremiumLimit = (premiumStartDate) => {
-    const now = new Date();
-    const timeSinceStart = now.getTime() - premiumStartDate.getTime();
 
-    const firstAlertTime = 1 * 60 * 1000; // Через 1 минуту
-    const secondAlertTime = 5 * 60 * 1000; // Через 2 минуты
-    const endTime = 10 * 60 * 1000; // Через 3 минуты
 
-    if (timeSinceStart >= endTime) {
-      setFilterLimit(1);
-      setAlertShown(false);
-      localStorage.setItem("alertShown", "false");
-      return;
-    }
 
-    const timer1 = setTimeout(() => {
-      setAlertShown(true);
-      setLimit(false);
-      localStorage.setItem("alertShown", "true");
-      localStorage.setItem("limit", "false");
-    }, firstAlertTime - timeSinceStart);
 
-    const timer2 = setTimeout(() => {
-      setAlertShown(true);
-      setLimit(true);
-      localStorage.setItem("alertShown", "true");
-      localStorage.setItem("limit", "true");
-    }, secondAlertTime - timeSinceStart);
+   //o'zgarish
+  // const checkPremiumLimit = (premiumStartDate) => {
+  //   const now = new Date();
+  //   const timeSinceStart = now.getTime() - premiumStartDate.getTime();
 
-    const timer3 = setTimeout(() => {
-      setFilterLimit(1);
-      setAlertShown(false);
-      localStorage.setItem("alertShown", "false");
-    }, endTime - timeSinceStart);
+  //   const firstAlertTime = 1 * 60 * 1000; // Через 1 минуту
+  //   const secondAlertTime = 5 * 60 * 1000; // Через 2 минуты
+  //   const endTime = 10 * 60 * 1000; // Через 3 минуты
 
-    timers.current = [timer1, timer2, timer3];
-    setStartTime(timer1)
-    setDiffTime(timer2)
-  };
+  //   if (timeSinceStart >= endTime) {
+  //     setFilterLimit(1);
+  //     setAlertShown(false);
+  //     localStorage.setItem("alertShown", "false");
+  //     return;
+  //   }
 
-  useEffect(() => {
-    return () => {
-      timers.current.forEach(clearTimeout);
-    };
-  }, []);
+  //   const timer1 = setTimeout(() => {
+  //     setAlertShown(true);
+  //     setLimit(false);
+  //     localStorage.setItem("alertShown", "true");
+  //     localStorage.setItem("limit", "false");
+  //   }, firstAlertTime - timeSinceStart);
+    
+  //   const timer2 = setTimeout(() => {
+  //     setAlertShown(true);
+  //     setLimit(true);
+  //     localStorage.setItem("alertShown", "true");
+  //     localStorage.setItem("limit", "true");
+  //   }, secondAlertTime - timeSinceStart);
+
+  //   const timer3 = setTimeout(() => {
+  //     setFilterLimit(1);
+  //     setAlertShown(false);
+  //     localStorage.setItem("alertShown", "false");
+  //   }, endTime - timeSinceStart);
+
+  //   timers.current = [timer1, timer2, timer3];
+  //   setStartTime(timer1)
+  //   setDiffTime(timer2)
+  // };
+
+  // useEffect(() => {
+  //   return () => {
+  //     timers.current.forEach(clearTimeout);
+  //   };
+  // }, []);
 
   const closeAlert = () => {
     setAlertShown(false);
