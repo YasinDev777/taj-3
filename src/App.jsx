@@ -29,7 +29,6 @@ const App = () => {
 
   const timers = useRef([]);
 
-  console.log(process.env.REACT_APP_apiKey);
 
   // useEffect для загрузки начальных данных
   useEffect(() => {
