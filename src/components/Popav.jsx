@@ -12,9 +12,7 @@ const Popav = ({ isAlert, setIsAlert, isVideo, setIsVideo }) => {
         }
         if (textss_btn) {
             textss_btn.style.display = "flex"
-        }
-        console.log("salom");
-        
+        }        
     }
 
     return (
