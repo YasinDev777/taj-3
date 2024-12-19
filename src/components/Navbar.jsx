@@ -1,12 +1,10 @@
 import { PiHeadsetBold } from "react-icons/pi";
 import { FiArrowRightCircle } from "react-icons/fi";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { LuFilterX } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import { RxVideo } from "react-icons/rx";
-import { RiErrorWarningLine } from "react-icons/ri";
-import { BiX } from "react-icons/bi";
 import Alert from "./Alert";
 
 const CustomSelect = ({
@@ -65,7 +63,6 @@ const Navbar = ({
   setSelectedTime,
   isVideo,
   setIsVideo,
-  // isAlert,
   setIsAlert,
   isUser,
   isLogined,
@@ -73,9 +70,7 @@ const Navbar = ({
   setAlertShown,
   setIsLogined,
   setLimit,
-  limit,
-  DiffTime,
-  StartTime
+  limit,  
 }) => {
   const presetOptions = [
     { value: "Pattern", label: "Pattern" },
@@ -83,7 +78,6 @@ const Navbar = ({
     { value: "Imbalance1", label: "Imbalance" },
     { value: "Imbalance2", label: "Imbalance" },
   ];
-  console.log(alertShown);
 
   const tickerOptions = [
     { value: "Ticker", label: "Ticker" },
@@ -114,20 +108,6 @@ const Navbar = ({
     setSelectedTime("1d");
     setOpenSelect(null)
   };
-
- //o'zgarish
-  // const handleCloseAlert = () => {
-  //   localStorage.getItem("alertShown")
-  //   setAlertShown(false);
-  //   localStorage.setItem("alertShown", "false");
-  //   const limit = localStorage.getItem("limit")
-  //   if (limit === false) {
-  //     clearTimeout(StartTime)
-  //   }
-  //   else if(limit === true){
-  //     clearInterval(DiffTime)
-  //   }
-  // };
 
   return (
     <>
