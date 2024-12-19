@@ -146,6 +146,7 @@ const App = () => {
           isLogined={isLogined}
           alertShown={alertShown}
           setAlertShown={setAlertShown}
+          setIsLogined={setIsLogined}
           limit={limit}
           setLimit={setLimit}
           StartTime={StartTime}
