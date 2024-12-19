@@ -52,7 +52,7 @@ const Login = ({
 
       querySnapshot.forEach((doc) => {
         const userData = doc.data();
-        if (userData.user_id === String(inputValue)) {
+        if (userData.user_id == inputValue) {
           foundUser = userData;
         }
       });
