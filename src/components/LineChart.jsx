@@ -2,14 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createChart } from 'lightweight-charts';
 import { PiHeadsetBold } from "react-icons/pi";
 import { Link } from 'react-router-dom';
-import { BiSupport } from "react-icons/bi";
 import { FiArrowRightCircle } from "react-icons/fi";
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import axios from 'axios';
-import news from "../new.json"
-import array from '../array';
 
-const Chart = ({ isCard, setIsCard, isUser, isLogined }) => {
+const Chart = ({ isCard, isUser, isLogined }) => {
+  
   const chartContainerRef = useRef(null);
   const [candlestickData, setCandlestickData] = useState([]);
   const [isMouseDown, setIsMouseDown] = useState(false);

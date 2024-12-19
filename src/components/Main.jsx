@@ -5,7 +5,6 @@ import { BiLockOpen } from "react-icons/bi";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { LuScanSearch } from "react-icons/lu";
 import Loader from './Loader';
-import array from '../array';
 
 const Main = ({ 
   filtered, 
@@ -17,6 +16,7 @@ const Main = ({
   isLogined,
   filterLimit,
 }) => {
+  
   const [Charts, setCharts] = useState(filtered);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);

@@ -18,8 +18,13 @@ const Alert = ({
 
   useEffect(() => {
     if (isLogined) {
-      
       let registeredTime = localStorage.getItem("registeredTime");
+      let alertShownState = JSON.parse(
+        localStorage.getItem("alertShownState")
+      ) || {
+        oneMinute: false,
+        twoMinutes: false,
+      };
 
       // Agar ro'yxatdan o'tgan vaqt yo'q bo'lsa, hozirgi vaqtni yozib qo'yamiz
       if (!registeredTime) {
@@ -32,15 +37,24 @@ const Alert = ({
       const currentTime = Date.now();
 
       // 1 daqiqadan keyin alert ko'rsatish
-      if (currentTime - registeredTime >= ONE_MINUTE && currentTime - registeredTime < TWO_MINUTES) {
+      if (
+        currentTime - registeredTime >= ONE_MINUTE &&
+        currentTime - registeredTime < TWO_MINUTES &&
+        !alertShownState.oneMinute
+      ) {
         setAlertShown(true);
         setLimit(false);
       }
 
       // 2 daqiqadan keyin alert ko'rsatish
-      if (currentTime - registeredTime >= TWO_MINUTES && currentTime - registeredTime < FIVE_MINUTES) {
+      if (
+        currentTime - registeredTime >= TWO_MINUTES &&
+        currentTime - registeredTime < FIVE_MINUTES &&
+        !alertShownState.twoMinutes
+      ) {
         setAlertShown(true);
         setLimit(true);
+       
       }
 
       // 5 daqiqadan keyin logout qilish
@@ -52,7 +66,26 @@ const Alert = ({
   }, [isLogined, setAlertShown, setLimit, setIsLogined]);
 
   const handleCloseAlert = () => {
-    setAlertShown(false);
+    if (isLogined) {
+      let alertShownState = JSON.parse(
+        localStorage.getItem("alertShownState")
+      ) || {
+        oneMinute: false,
+        twoMinutes: false,
+      };
+      alertShownState.oneMinute = true;
+      localStorage.setItem("alertShownState", JSON.stringify(alertShownState));
+      
+      if (isLogined && alertShownState.oneMinute) {
+        alertShownState.twoMinutes = true;
+        localStorage.setItem(
+          "alertShownState",
+          JSON.stringify(alertShownState)
+        );
+      }
+      setAlertShown(false);
+      
+    }
   };
 
   return (
@@ -76,8 +109,8 @@ const Alert = ({
             <RiErrorWarningLine /> Diqqat:
           </h3>
           <p>
-            Hurmatli, {isUser} 1 kundan so’ng bekor qilindi. Iltimos, admin bilan
-            bog’laning!
+            Hurmatli, {isUser} 1 kundan so’ng bekor qilindi. Iltimos, admin
+            bilan bog’laning!
           </p>
         </div>
       )}
