@@ -1,92 +1,58 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { BiX } from "react-icons/bi";
 
-const Alert = ({ isLogined, isUser, setAlertShown, alertShown, limit, setLimit }) => {
-  const ALERT_DELAY = 1 * 60 * 1000;
-  const ALERT_RESET_TIME = 2 * 60 * 1000;
-  const INITIAL_ALERT_DELAY = 1 * 60 * 1000;
+const Alert = ({
+  setIsLogined,
+  isLogined,
+  isUser,
+  setAlertShown,
+  alertShown,
+  limit,
+  setLimit,
+}) => {
+  const ONE_MINUTE = 1 * 60 * 1000; // 1 daqiqa
+  const TWO_MINUTES = 2 * 60 * 1000; // 2 daqiqa
+  const FIVE_MINUTES = 5 * 60 * 1000; // 5 daqiqa
 
   useEffect(() => {
-    const storedAlertShown = localStorage.getItem("alertShown") === "true";
-    const storedLimit = localStorage.getItem("limit") === "true";
-    const alertClosedCount = parseInt(localStorage.getItem("alertClosedCount") || "0");
-    
-    setAlertShown(storedAlertShown);
-    setLimit(storedLimit);
-
     if (isLogined) {
-      const lastClosedTime = localStorage.getItem("alertLastClosed");
-      const currentTime = Date.now();
       
-      if (currentTime - lastClosedTime > ALERT_RESET_TIME) {
-        const initialTimeout = setTimeout(() => {
-          setAlertShown(true);
-          setLimit(false);
-          localStorage.setItem("alertShown", "true");
-          localStorage.setItem("limit", "false");
+      let registeredTime = localStorage.getItem("registeredTime");
 
-          // Set limit to true after ALERT_DELAY
-          setTimeout(() => {
-            setLimit(true);
-            localStorage.setItem("limit", "true");
-            setAlertShown(true)
-            localStorage.setItem("alertShown", "true")
-          }, ALERT_DELAY);
-        }, INITIAL_ALERT_DELAY);
-
-        return () => clearTimeout(initialTimeout);
+      // Agar ro'yxatdan o'tgan vaqt yo'q bo'lsa, hozirgi vaqtni yozib qo'yamiz
+      if (!registeredTime) {
+        registeredTime = Date.now();
+        localStorage.setItem("registeredTime", registeredTime);
+      } else {
+        registeredTime = parseInt(registeredTime, 10);
       }
 
+      const currentTime = Date.now();
 
-      else if (alertClosedCount !== 1 || currentTime - lastClosedTime > ALERT_RESET_TIME) {
-        const initialTimeout = setTimeout(() => {
-          setAlertShown(true);
-          localStorage.setItem("alertShown", "true");
-          setLimit(true);
-          localStorage.setItem("limit", "true");
-          setTimeout(() => {
-            setLimit(true);
-            localStorage.setItem("limit", "true");
-            alertClosedCount++
-          }, ALERT_DELAY);
-        }, INITIAL_ALERT_DELAY);
-
-        return () => clearTimeout(initialTimeout);
+      // 1 daqiqadan keyin alert ko'rsatish
+      if (currentTime - registeredTime >= ONE_MINUTE && currentTime - registeredTime < TWO_MINUTES) {
+        setAlertShown(true);
+        setLimit(false);
       }
 
-      const limitTimeout = setTimeout(() => {
+      // 2 daqiqadan keyin alert ko'rsatish
+      if (currentTime - registeredTime >= TWO_MINUTES && currentTime - registeredTime < FIVE_MINUTES) {
+        setAlertShown(true);
         setLimit(true);
-        localStorage.setItem("limit", "true");
-        setAlertShown(true)
-        localStorage.setItem("alertShown", "true")
-      }, ALERT_DELAY);
-
-      let alertTimeout;
-      if (!alertShown && alertClosedCount < 2) {
-        alertTimeout = setTimeout(() => {
-          setAlertShown(true);
-          setLimit(false);
-          localStorage.setItem("alertShown", "true");
-          localStorage.setItem("limit", "false");
-        }, ALERT_DELAY);
       }
 
-      return () => {
-        clearTimeout(limitTimeout);
-        if (alertTimeout) clearTimeout(alertTimeout);
-      };
+      // 5 daqiqadan keyin logout qilish
+      if (currentTime - registeredTime >= FIVE_MINUTES) {
+        setIsLogined(false);
+        localStorage.setItem("isLogined", "false");
+      }
     }
-  }, [isLogined, alertShown]);
+  }, [isLogined, setAlertShown, setLimit, setIsLogined]);
 
   const handleCloseAlert = () => {
-    const currentCount = parseInt(localStorage.getItem("alertClosedCount") || "0");
-    localStorage.setItem("alertClosedCount", (currentCount + 1).toString());
-    
     setAlertShown(false);
-    localStorage.setItem("alertShown", "false");
-    localStorage.setItem("alertLastClosed", Date.now());
   };
 
   return (
@@ -100,8 +66,8 @@ const Alert = ({ isLogined, isUser, setAlertShown, alertShown, limit, setLimit }
             <RiErrorWarningLine /> Eslatma:
           </h3>
           <p>
-            Hurmatli, {isUser} 1 haftadan so'ng obunangiz bekor qilinadi. Iltimos,
-            admin bilan bog'laning!
+            Hurmatli, {isUser} 1 haftadan so’ng obunangiz bekor qilinadi.
+            Iltimos, admin bilan bog’laning!
           </p>
         </div>
       ) : (
@@ -110,8 +76,8 @@ const Alert = ({ isLogined, isUser, setAlertShown, alertShown, limit, setLimit }
             <RiErrorWarningLine /> Diqqat:
           </h3>
           <p>
-            Hurmatli, {isUser} obunangiz bekor qilindi. Iltimos, admin bilan
-            bog'laning!
+            Hurmatli, {isUser} 1 kundan so’ng bekor qilindi. Iltimos, admin bilan
+            bog’laning!
           </p>
         </div>
       )}

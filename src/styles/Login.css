@@ -342,10 +342,12 @@
     .exit-nav {
         display: none;
     }
+   
     .logining > a > span{
         font-size: calc(var(--index)*1.35);
     }
     .logining > p{
+        text-decoration: underline 1px black;
         font-size: calc(var(--index)*1.3);
     }
 }

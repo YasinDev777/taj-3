@@ -71,6 +71,7 @@ const Navbar = ({
   isLogined,
   alertShown,
   setAlertShown,
+  setIsLogined,
   setLimit,
   limit,
   DiffTime,
@@ -186,6 +187,7 @@ const Navbar = ({
         isLogined={isLogined}
         isUser={isUser} 
         setAlertShown={setAlertShown} 
+        setIsLogined={setIsLogined}
         setLimit={setLimit}
         limit={limit}
         />
