@@ -71,6 +71,7 @@ const Navbar = ({
   isLogined,
   alertShown,
   setAlertShown,
+  setLimit,
   limit,
   DiffTime,
   StartTime
@@ -180,7 +181,14 @@ const Navbar = ({
             <BiX onClick={handleCloseAlert} />
           </div>
         </div> */}
-        <Alert alertShown={alertShown} isLogined={isLogined} isUser={isUser} setAlertShown={setAlertShown} />
+        <Alert 
+        alertShown={alertShown} 
+        isLogined={isLogined}
+        isUser={isUser} 
+        setAlertShown={setAlertShown} 
+        setLimit={setLimit}
+        limit={limit}
+        />
       <div className="nav-bar">
         <div className="texsss">
           <div className="tex">

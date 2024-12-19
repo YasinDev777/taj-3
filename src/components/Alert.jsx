@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { BiX } from "react-icons/bi";
 
-const Alert = ({ isLogined, isUser, setAlertShown, alertShown }) => {
+const Alert = ({ isLogined, isUser, setAlertShown, alertShown, limit, setLimit }) => {
   const ALERT_DELAY = 2 * 60 * 1000; // 2 daqiqa
   const ALERT_RESET_TIME = 5 * 60 * 1000; // Har 5 daqiqada qayta chiqish
   const INITIAL_ALERT_DELAY = 1 * 60 * 1000; // Ro'yxatdan o'tgandan 1 daqiqada chiqadi
@@ -17,6 +17,7 @@ const Alert = ({ isLogined, isUser, setAlertShown, alertShown }) => {
       if (!lastClosedTime || currentTime - lastClosedTime > ALERT_RESET_TIME) {
         const initialTimeout = setTimeout(() => {
           setAlertShown(true);
+          setLimit(false)
         }, INITIAL_ALERT_DELAY);
 
         return () => clearTimeout(initialTimeout);
@@ -26,6 +27,7 @@ const Alert = ({ isLogined, isUser, setAlertShown, alertShown }) => {
     if (isLogined) {
       alertTimeout = setTimeout(() => {
         setAlertShown(true);
+        setLimit(true)
       }, ALERT_DELAY);
     }
 
@@ -42,12 +44,21 @@ const Alert = ({ isLogined, isUser, setAlertShown, alertShown }) => {
       className="warning-alert"
       style={alertShown ? { display: "flex" } : { display: "none" }}
     >
+      { limit === false ? 
+      <div className="war-texts">
+        <h3>
+          <RiErrorWarningLine /> Eslatma:
+        </h3>
+        <p>Hurmatli, {isUser} 1 haftadan so’ng obunangiz bekor qilinadi. Iltimos, admin bilan bog’laning!</p>
+      </div>
+      :
       <div className="war-texts">
         <h3>
           <RiErrorWarningLine /> Diqqat:
         </h3>
-        <p>Hurmatli, {isUser}. Admin bilan bog'lanishingizni so'raymiz!</p>
+        <p>Hurmatli, {isUser} obunangiz bekor qilindi. Iltimos, admin bilan bog’laning!</p>
       </div>
+      }
       <div className="war-options">
         <Link to="https://t.me/ahsanlabs_admin" target="blank">
           <button>Sotib olish</button>

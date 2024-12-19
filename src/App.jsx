@@ -147,6 +147,7 @@ const App = () => {
           alertShown={alertShown}
           setAlertShown={setAlertShown}
           limit={limit}
+          setLimit={setLimit}
           StartTime={StartTime}
           setStartTime={setStartTime}
           setDiffTime={setDiffTime}

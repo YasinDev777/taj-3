@@ -7,6 +7,7 @@ import { FiArrowRightCircle } from "react-icons/fi";
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import axios from 'axios';
 import news from "../new.json"
+import array from '../array';
 
 const Chart = ({ isCard, setIsCard, isUser, isLogined }) => {
   const chartContainerRef = useRef(null);
