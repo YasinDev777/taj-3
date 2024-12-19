@@ -159,7 +159,11 @@ const Main = ({
                 </div>
                 {
                   item.login === true ? 
+
+
                   <Chart isCard={isCard} setIsCard={setIsCard} />
+                  
+                  
                   : <img src="/images/chartimg.jpg" alt="" />
                 }
                 {

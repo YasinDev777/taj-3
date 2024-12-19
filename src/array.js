@@ -9,6 +9,7 @@ const array = [
         searched: "2 soat",
         id: 1,
         salarys: "+",
+        symbol: 'BTCUSDT'
     },
     {
         img: "../images/Rasm.png",
@@ -20,6 +21,7 @@ const array = [
         salarys: "+",
         id: 2,
         searched: "2 soat",
+        symbol: 'ETHUSDT'
     },
     {
         img: "../images/chart001.png",
@@ -31,6 +33,7 @@ const array = [
         salarys: "-",
         id: 3,
         searched: "2 soat",
+        symbol: 'BNBUSDT'
     },
     {
         img: "../images/chart001.png",
@@ -42,6 +45,7 @@ const array = [
         salarys: "-",
         id: 4,
         searched: "2 soat",
+        symbol: 'XRPUSDT'
     },
     {
         img: "../images/chart001.png",
@@ -52,7 +56,8 @@ const array = [
         time: "1d",
         salarys: "+",
         id: 5,
-        searched: "2 soat"
+        searched: "2 soat",
+        symbol: 'ADAUSDT'
     },
     {
         img: "../images/chart001.png",
@@ -63,7 +68,8 @@ const array = [
         time: "1d",
         salarys: "+",
         id: 6,
-        searched: "2 soat"
+        searched: "2 soat",
+        symbol: 'DOGEUSDT'
     },
     {
         img: "../images/chart001.png",
@@ -74,7 +80,8 @@ const array = [
         time: "1d",
         salarys: "+",
         id: 7,
-        searched: "2 soat"
+        searched: "2 soat",
+        symbol: 'SOLUSDT'
     },
     {
         img: "../images/chart001.png",
