@@ -20,7 +20,6 @@ const Alert = ({ isLogined, isUser, setAlertShown, alertShown, limit, setLimit }
       const lastClosedTime = localStorage.getItem("alertLastClosed");
       const currentTime = Date.now();
       
-      let initialTimeout
       if (currentTime - lastClosedTime > ALERT_RESET_TIME) {
         const initialTimeout = setTimeout(() => {
           setAlertShown(true);
@@ -42,7 +41,7 @@ const Alert = ({ isLogined, isUser, setAlertShown, alertShown, limit, setLimit }
 
 
       else if (alertClosedCount !== 1 || currentTime - lastClosedTime > ALERT_RESET_TIME) {
-        initialTimeout = setTimeout(() => {
+        const initialTimeout = setTimeout(() => {
           setAlertShown(true);
           localStorage.setItem("alertShown", "true");
           setLimit(true);
@@ -50,28 +49,19 @@ const Alert = ({ isLogined, isUser, setAlertShown, alertShown, limit, setLimit }
           setTimeout(() => {
             setLimit(true);
             localStorage.setItem("limit", "true");
+            alertClosedCount++
           }, ALERT_DELAY);
         }, INITIAL_ALERT_DELAY);
 
         return () => clearTimeout(initialTimeout);
       }
 
-
-      // Always set up timer for limit regardless of alertShown state
       const limitTimeout = setTimeout(() => {
         setLimit(true);
         localStorage.setItem("limit", "true");
         setAlertShown(true)
         localStorage.setItem("alertShown", "true")
       }, ALERT_DELAY);
-
-      if(alertClosedCount === 2) {
-        setLimit(false)
-        localStorage.setItem("limit", "false")
-        setAlertShown(false)
-        localStorage.setItem("alertShown", "false")
-        return () => clearTimeout(initialTimeout);
-      }
 
       let alertTimeout;
       if (!alertShown && alertClosedCount < 2) {
