@@ -75,7 +75,6 @@ const Login = ({
       alert("Произошла ошибка. Попробуйте снова.");
     }
   };
-
   return (
     <div className="login">
       <div className="container">

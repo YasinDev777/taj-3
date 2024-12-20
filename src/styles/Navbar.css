@@ -211,7 +211,7 @@ nav {
 }
 
 .div:nth-child(2) {
-    width: calc(var(--index)*11);
+    width: calc(var(--index)*13);
 }
 
 .custom-select-label {
@@ -318,6 +318,26 @@ nav {
 
     nav {
         width: 100%;
+    }
+}
+
+@media (max-width: 650px) {
+    .warning-alert{
+        background-color: var(--other-main-color);
+        border: calc(var(--index)*0.1) solid var(--block-card-color);
+        transform: translateY(calc(var(--index)*0.45));
+    }
+    .war-texts p{
+        color: var(--text-color);
+    }
+    .war-texts h3{
+        color: var(--block-card-color);
+    }
+    .war-options a > button{
+        color: var(--text-color);
+    }
+    .war-options > svg{
+        color: var(--text-color);
     }
 }
 
@@ -447,5 +467,11 @@ nav {
 
     .video-btn{
         display: none !important;
+    }
+}
+
+@media (max-width: 390px) {
+    .warning-alert{
+        padding: calc(var(--index)*1) calc(var(--index)*1.5);
     }
 }
