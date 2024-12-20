@@ -321,6 +321,26 @@ nav {
     }
 }
 
+@media (max-width: 650px) {
+    .warning-alert{
+        background-color: var(--other-main-color);
+        border: calc(var(--index)*0.1) solid var(--block-card-color);
+        transform: translateY(calc(var(--index)*0.45));
+    }
+    .war-texts p{
+        color: var(--text-color);
+    }
+    .war-texts h3{
+        color: var(--block-card-color);
+    }
+    .war-options a > button{
+        color: var(--text-color);
+    }
+    .war-options > svg{
+        color: var(--text-color);
+    }
+}
+
 @media (max-width: 540px) {
 
     .nav{
@@ -447,5 +467,11 @@ nav {
 
     .video-btn{
         display: none !important;
+    }
+}
+
+@media (max-width: 390px) {
+    .warning-alert{
+        padding: calc(var(--index)*1) calc(var(--index)*1.5);
     }
 }

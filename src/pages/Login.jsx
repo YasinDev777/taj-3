@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
-import { RiKey2Line } from "react-icons/ri";
 import { FiArrowRightCircle } from "react-icons/fi";
 import { Link, useNavigate } from 'react-router-dom';
 import { collection, getDocs } from "firebase/firestore";
+import { LuClipboardCopy } from "react-icons/lu";
 import { db } from "../firebase";
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -49,7 +49,7 @@ const Login = ({ setIsLogined, setIsUser, setPrimimumTaken, PrimimumTaken }) => 
     
             querySnapshot.forEach((doc) => {
                 const userData = doc.data();
-                if (userData.id === inputValue) {
+                if (userData.user_id === inputValue) {
                     foundUser = userData;
                 }
             });
@@ -63,6 +63,7 @@ const Login = ({ setIsLogined, setIsUser, setPrimimumTaken, PrimimumTaken }) => 
                 localStorage.setItem("isLogined", "true");
                 localStorage.setItem("userName", foundUser.name);
                 navigate("/");
+                window.location.reload();
             } else {
                 alert("Пароль неверный или пользователь не найден.");
             }
@@ -132,7 +133,7 @@ const Login = ({ setIsLogined, setIsUser, setPrimimumTaken, PrimimumTaken }) => 
                                         onChange={handleChange}
                                     />
 
-                                    <RiKey2Line onClick={handlePaste} />
+                                    <LuClipboardCopy onClick={handlePaste} />
                                 </div>
                             </div>
                             <button onClick={handleLogin}>Kirish <FiArrowRightCircle /></button>
