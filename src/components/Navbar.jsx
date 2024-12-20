@@ -1,12 +1,10 @@
 import { PiHeadsetBold } from "react-icons/pi";
 import { FiArrowRightCircle } from "react-icons/fi";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { LuFilterX } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import { RxVideo } from "react-icons/rx";
-import { RiErrorWarningLine } from "react-icons/ri";
-import { BiX } from "react-icons/bi";
 import Alert from "./Alert";
 
 const CustomSelect = ({
@@ -65,23 +63,20 @@ const Navbar = ({
   setSelectedTime,
   isVideo,
   setIsVideo,
-  // isAlert,
   setIsAlert,
   isUser,
   isLogined,
   alertShown,
   setAlertShown,
+  setIsLogined,
   setLimit,
-  limit,
-  DiffTime,
-  StartTime
+  limit,  
 }) => {
   const presetOptions = [
     { value: "Pattern", label: "Pattern", id: 1},
     { value: "Classic TA", label: "Classic TA", id:2 },
     { value: "SMC", label: "SMC", id:3 },
   ];
-  console.log(alertShown);
 
   const tickerOptions = [
     { value: "Ticker", label: "Ticker" },
@@ -147,6 +142,7 @@ const Navbar = ({
         isLogined={isLogined}
         isUser={isUser} 
         setAlertShown={setAlertShown} 
+        setIsLogined={setIsLogined}
         setLimit={setLimit}
         limit={limit}
         />

@@ -7,6 +7,9 @@ import "./styles/App.css";
 import array from "./array";
 import Popav from "./components/Popav";
 import Login from "./pages/Login";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "./firebase";
+
 
 const App = () => {
   const [selectedPreset, setSelectedPreset] = useState("Pattern");
@@ -34,7 +37,6 @@ const App = () => {
     const storedLogin = localStorage.getItem("isLogined");
     const storedUser = localStorage.getItem("userName");
     const storedStartDate = localStorage.getItem("premiumStartDate");
-    // const storedAlertShown = localStorage.getItem("alertShown");
 
     if (storedLogin === "true" && storedUser) {
       setIsLogined(true);
@@ -42,80 +44,10 @@ const App = () => {
       setFilterLimit(3);
     }
 
-    // if (storedStartDate) {
-    //   checkPremiumLimit(new Date(storedStartDate));
-    // }
-
-    // if (storedAlertShown === "true") {
-    //   setAlertShown(true);
-    // }
+   
   }, []);
 
- //o'zgarish
-  // useEffect(() => {
-  //   if (isLogined) {
-  //     const now = new Date();
-  //     const storedStartDate = localStorage.getItem("premiumStartDate");
-
-  //     if (!storedStartDate) {
-  //       localStorage.setItem("premiumStartDate", now.toISOString());
-  //       checkPremiumLimit(now);
-  //     } else {
-  //       checkPremiumLimit(new Date(storedStartDate));
-  //     }
-  //   }
-  // }, [isLogined]);
-
-
-
-
-
-   //o'zgarish
-  // const checkPremiumLimit = (premiumStartDate) => {
-  //   const now = new Date();
-  //   const timeSinceStart = now.getTime() - premiumStartDate.getTime();
-
-  //   const firstAlertTime = 1 * 60 * 1000; // Через 1 минуту
-  //   const secondAlertTime = 5 * 60 * 1000; // Через 2 минуты
-  //   const endTime = 10 * 60 * 1000; // Через 3 минуты
-
-  //   if (timeSinceStart >= endTime) {
-  //     setFilterLimit(1);
-  //     setAlertShown(false);
-  //     localStorage.setItem("alertShown", "false");
-  //     return;
-  //   }
-
-  //   const timer1 = setTimeout(() => {
-  //     setAlertShown(true);
-  //     setLimit(false);
-  //     localStorage.setItem("alertShown", "true");
-  //     localStorage.setItem("limit", "false");
-  //   }, firstAlertTime - timeSinceStart);
-    
-  //   const timer2 = setTimeout(() => {
-  //     setAlertShown(true);
-  //     setLimit(true);
-  //     localStorage.setItem("alertShown", "true");
-  //     localStorage.setItem("limit", "true");
-  //   }, secondAlertTime - timeSinceStart);
-
-  //   const timer3 = setTimeout(() => {
-  //     setFilterLimit(1);
-  //     setAlertShown(false);
-  //     localStorage.setItem("alertShown", "false");
-  //   }, endTime - timeSinceStart);
-
-  //   timers.current = [timer1, timer2, timer3];
-  //   setStartTime(timer1)
-  //   setDiffTime(timer2)
-  // };
-
-  // useEffect(() => {
-  //   return () => {
-  //     timers.current.forEach(clearTimeout);
-  //   };
-  // }, []);
+ 
   const closeAlert = () => {
     setAlertShown(false);
     localStorage.setItem("alertShown", "false");
@@ -146,6 +78,7 @@ const App = () => {
           isLogined={isLogined}
           alertShown={alertShown}
           setAlertShown={setAlertShown}
+          setIsLogined={setIsLogined}
           limit={limit}
           setLimit={setLimit}
           StartTime={StartTime}
