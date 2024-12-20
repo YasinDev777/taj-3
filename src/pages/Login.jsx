@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { BsArrowLeftCircle } from 'react-icons/bs';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay } from 'swiper/modules';
+import React, { useState, useEffect } from "react";
+import { BsArrowLeftCircle } from "react-icons/bs";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay } from "swiper/modules";
 import { RiKey2Line } from "react-icons/ri";
 import { FiArrowRightCircle } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
-import { LuClipboardCopy } from "react-icons/lu";
 import { db } from "../firebase";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -44,39 +43,38 @@ const Login = ({
     setInputValue(event.target.value);
   };
 
-    const handleLogin = async () => {
-        try {
-            const usersCollection = collection(db, "user");
-            const querySnapshot = await getDocs(usersCollection);
-    
-            let foundUser = null;
-    
-            querySnapshot.forEach((doc) => {
-                const userData = doc.data();
-                if (userData.id === inputValue) {
-                    foundUser = userData;
-                }
-            });
-    
-            if (foundUser) {
-                setIsLogined(true);
-                setIsUser(foundUser.name);
-                console.log(PrimimumTaken);
-                
-                // Сохраняем данные в localStorage
-                localStorage.setItem("isLogined", "true");
-                localStorage.setItem("userName", foundUser.name);
-                navigate("/");
-            } else {
-                alert("Пароль неверный или пользователь не найден.");
-            }
-        } catch (error) {
-            console.error("Ошибка при проверке данных:", error);
-            alert("Произошла ошибка. Попробуйте снова.");
-        }
-    };
-    
+  const handleLogin = async () => {
+    try {
+      const usersCollection = collection(db, "user");
+      const querySnapshot = await getDocs(usersCollection);
 
+      let foundUser = null;
+
+      querySnapshot.forEach((doc) => {
+        const userData = doc.data();
+        if (userData.user_id == inputValue) {
+          foundUser = userData;
+        }
+      });
+      if (foundUser) {
+        setIsLogined(true);
+        setIsUser(foundUser.name);
+        console.log(PrimimumTaken);
+
+        // Сохраняем данные в localStorage
+        localStorage.clear()
+        localStorage.setItem("isLogined", "true");
+        localStorage.setItem("userName", foundUser.name);
+        navigate("/");
+        window.location.reload();
+      } else {
+        alert("Пароль неверный или пользователь не найден.");
+      }
+    } catch (error) {
+      console.error("Ошибка при проверке данных:", error);
+      alert("Произошла ошибка. Попробуйте снова.");
+    }
+  };
   return (
     <div className="login">
       <div className="container">
@@ -149,22 +147,25 @@ const Login = ({
                     onChange={handleChange}
                   />
 
-                                    <RiKey2Line onClick={handlePaste} />
-                                </div>
-                            </div>
-                            <button onClick={handleLogin}>Kirish <FiArrowRightCircle /></button>
-                                <p>
-                                  <Link to="https://t.me/ahsanlabs_admin">
-                                    <span>@ahsan_admin</span> bilan bog'laning va tokeninginzni oling.
-                                    </Link>
-                                </p>
-                        </div>
-                    </div>
-                    <p className='p'>© Ahsan 2024</p>
+                  <RiKey2Line onClick={handlePaste} />
                 </div>
+              </div>
+              <button onClick={handleLogin}>
+                Kirish <FiArrowRightCircle />
+              </button>
+              <p>
+                <Link to="https://t.me/ahsanlabs_admin">
+                  <span>@ahsan_admin</span> bilan bog'laning va <br /> tokeninginzni
+                  oling.
+                </Link>
+              </p>
             </div>
+          </div>
+          <p className="p">© Ahsan 2024</p>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default Login;
