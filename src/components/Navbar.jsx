@@ -77,10 +77,9 @@ const Navbar = ({
   StartTime
 }) => {
   const presetOptions = [
-    { value: "Pattern", label: "Pattern" },
-    { value: "Order-block", label: "Order-block" },
-    { value: "Imbalance1", label: "Imbalance" },
-    { value: "Imbalance2", label: "Imbalance" },
+    { value: "Pattern", label: "Pattern", id: 1},
+    { value: "Classic TA", label: "Classic TA", id:2 },
+    { value: "SMC", label: "SMC", id:3 },
   ];
   console.log(alertShown);
 
@@ -114,20 +113,6 @@ const Navbar = ({
     setOpenSelect(null)
   };
 
- //o'zgarish
-  // const handleCloseAlert = () => {
-  //   localStorage.getItem("alertShown")
-  //   setAlertShown(false);
-  //   localStorage.setItem("alertShown", "false");
-  //   const limit = localStorage.getItem("limit")
-  //   if (limit === false) {
-  //     clearTimeout(StartTime)
-  //   }
-  //   else if(limit === true){
-  //     clearInterval(DiffTime)
-  //   }
-  // };
-
   return (
     <>
       <div className="nav">
@@ -157,30 +142,6 @@ const Navbar = ({
           }
         </div>
       </div>
-      {/* o'zgarish */}
-
-        {/* <div className="warning-alert" style={alertShown === true ? {display: "flex"} : {display: "none"}}>
-          <div className="war-texts">
-            <h3>
-              <RiErrorWarningLine /> {limit === false ? "Eslatma:" : "Diqqat:"}
-            </h3>
-            {limit === false ? (
-              <p>
-                Hurmatli, {isUser} 1 haftadan so'ng obunangiz bekor qilinadi. Iltimos, admin bilan bog'laning!
-              </p>
-            ) : (
-              <p>
-                Hurmatli, {isUser} obunangiz bekor qilindi. Iltimos, admin bilan bog'laning!
-              </p>
-            )}
-          </div>
-          <div className="war-options">
-            <Link to="https://t.me/ahsanlabs_admin" target="blank">
-              <button>Sotib olish</button>
-            </Link>
-            <BiX onClick={handleCloseAlert} />
-          </div>
-        </div> */}
         <Alert 
         alertShown={alertShown} 
         isLogined={isLogined}
@@ -218,7 +179,9 @@ const Navbar = ({
                 />
               </div>
               <div className="div">
-                <span>Pattern</span>
+                    <span className="analyze-span">
+                      {selectedPreset}
+                    </span>
                 <CustomSelect
                   options={tickerOptions}
                   selectedValue={selectedTicker}
@@ -260,4 +223,3 @@ const Navbar = ({
 };
 
 export default Navbar;
-

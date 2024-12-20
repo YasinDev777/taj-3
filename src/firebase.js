@@ -11,18 +11,6 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_appId,
 };
 
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const db = getFirestore(app);
-
-export { db, collection, getDocs };
-
-
-
-
-
-
-
 // const firebaseConfig = {
 //   apiKey: "AIzaSyAXivWRoFPKFGiwaYhglPooEm5rG72bJXg",
 //   authDomain: "screener-2b456.firebaseapp.com",
@@ -31,3 +19,9 @@ export { db, collection, getDocs };
 //   messagingSenderId: "860474515607",
 //   appId: "1:860474515607:web:0b0cc8f4d3d5d757aa49d2"
 // };
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getFirestore(app);
+
+export { db, collection, getDocs };
