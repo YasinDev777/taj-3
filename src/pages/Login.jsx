@@ -4,29 +4,22 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import { RiKey2Line } from "react-icons/ri";
 import { FiArrowRightCircle } from "react-icons/fi";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
 import "swiper/css";
 import "swiper/css/pagination";
 
 const Login = ({
   setIsLogined,
   setIsUser,
-  setPrimimumTaken, 
-  handleLogin
+  isUser,
+  PrimimumTaken,
+  setFilterLimit
 }) => {
   const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate()
 
-  useEffect(() => {
-    const storedLogin = localStorage.getItem("isLogined");
-    const storedUser = localStorage.getItem("userName");
-    if (storedLogin === "true" && storedUser) {
-      setIsLogined(true);
-      setIsUser(storedUser);
-      navigate("/");
-    }
-  }, [setIsLogined, setIsUser, navigate, setPrimimumTaken]);
 
   const handlePaste = async () => {
     try {
@@ -42,7 +35,76 @@ const Login = ({
     setInputValue(event.target.value);
   };
 
- 
+  const handleLogin = async (inputValues) => {
+    let foundUser = null;
+    let is_blocked = null
+    console.log("salom");
+    try {
+      const usersCollection = collection(db, "user");
+      const querySnapshot = await getDocs(usersCollection);
+      querySnapshot.forEach((doc) => {
+        const userData = doc.data();
+        const userBlock = doc.data().is_blocked
+        if (inputValues) {
+          if (userData.user_id === inputValues) {
+            foundUser = userData;
+          is_blocked = userBlock
+        }
+      }
+        
+        
+      if (userData.name === isUser) {
+        console.log(userData.subscription_type);
+      }
+      });
+
+//  switch (foundUser.subscription_type) {
+//           case "pro":
+//             setFilterLimit(20);
+//             break;
+//           case "basic":
+//             setFilterLimit(10);
+//             break;
+//           case "free":
+//             setFilterLimit(3);
+//             break;
+//           default:
+//             setFilterLimit(1);
+//         }
+      if (foundUser && is_blocked === false) {
+        setIsLogined(true);
+        setIsUser(foundUser.name);
+        localStorage.clear()
+        localStorage.setItem("isLogined", "true");
+        localStorage.setItem("userName", foundUser.name);
+        navigate("/");
+        window.location.reload();
+      } else if (foundUser && is_blocked === true) {
+        alert(`Hurmatli ${isUser}, siz bloklangansiz iltimos admin bilan bog'laning`)
+      }
+      else {
+        alert("Parol noto‘g‘ri yoki foydalanuvchi topilmadi, iltimos, yana urinib ko‘ring.");
+      }
+
+
+    } catch (error) {
+      console.error("Ошибка при проверке данных:", error);
+      alert("Xatolik yuz berdi. Iltimos, yana urinib ko‘ring.");
+    }
+  };
+
+  useEffect(() => {
+    handleLogin()
+    const storedLogin = localStorage.getItem("isLogined");
+    const storedUser = localStorage.getItem("userName");
+    if (storedLogin === "true" && storedUser) {
+      setIsLogined(true);
+      setIsUser(storedUser);
+      navigate("/");
+    }
+  }, [setIsLogined, setIsUser, navigate]);
+
+
   return (
     <div className="login">
       <div className="container">
@@ -118,7 +180,7 @@ const Login = ({
                   <RiKey2Line onClick={handlePaste} />
                 </div>
               </div>
-              <button onClick={()=>handleLogin(inputValue)}>
+              <button onClick={() => handleLogin(inputValue)}>
                 Kirish <FiArrowRightCircle />
               </button>
               <p>

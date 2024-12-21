@@ -253,6 +253,7 @@ nav {
     padding: 0 calc(var(--index)*0.5);
     transform: translateY(0);
     font-size: calc(var(--index)*0.75);
+
 }
 
 .custom-option {
@@ -261,7 +262,14 @@ nav {
     border-bottom: calc(var(--index)*0.05) solid var(--border-color);
     color: var(--text-color);
     background-color: transparent;
-    /* left: 0; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.disabled{
+    opacity: 0.6;
+    pointer-events: none;
 }
 
 .custom-option:hover {
