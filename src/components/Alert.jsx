@@ -1,7 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { BiX } from "react-icons/bi";
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "../firebase";
 
 const Alert = ({
   setIsLogined,
@@ -9,83 +18,95 @@ const Alert = ({
   isUser,
   setAlertShown,
   alertShown,
-  limit,
-  setLimit,
 }) => {
-  const ONE_MINUTE = 1 * 60 * 1000; // 1 daqiqa
-  const TWO_MINUTES = 2 * 60 * 1000; // 2 daqiqa
-  const FIVE_MINUTES = 5 * 60 * 1000; // 5 daqiqa
+  const [subscriptionDateEnd, setSubscriptionDateEnd] = useState(null);
+  const [limit, setLimit] = useState(true);
+
+  const updateSubscriptionToFree = async (userName) => {
+    try {
+      const usersCollection = collection(db, "user");
+      const userQuery = query(usersCollection, where("name", "==", userName));
+      const querySnapshot = await getDocs(userQuery);
+
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        const userRef = doc(db, "user", userDoc.id);
+
+        await updateDoc(userRef, { subscription_type: "free" });
+      } else {
+        alert("Foydalanuvchi topilmadi.");
+      }
+    } catch (error) {
+      console.error("Subscription turini o'zgartirishda xatolik:", error);
+      alert("Xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
+    }
+  };
+
+  const fetchSubscriptionData = async (userName) => {
+    try {
+      const usersCollection = collection(db, "user");
+      const userQuery = query(usersCollection, where("name", "==", userName));
+      const querySnapshot = await getDocs(userQuery);
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0].data();
+        const expirationDate =
+          userDoc.subscription_expiration_date.seconds * 1000;
+        setSubscriptionDateEnd(expirationDate);
+      } else {
+        alert("Foydalanuvchi topilmadi.");
+      }
+    } catch (error) {
+      console.error("Subscription ma'lumotlarini olishda xatolik:", error);
+    }
+  };
 
   useEffect(() => {
     if (isLogined) {
-      let registeredTime = localStorage.getItem("registeredTime");
-      let alertShownState = JSON.parse(
-        localStorage.getItem("alertShownState")
-      ) || {
-        oneMinute: false,
-        twoMinutes: false,
-      };
+      fetchSubscriptionData(isUser);
+    }
+  }, [isLogined, isUser, subscriptionDateEnd]);
 
-      // Agar ro'yxatdan o'tgan vaqt yo'q bo'lsa, hozirgi vaqtni yozib qo'yamiz
-      if (!registeredTime) {
-        registeredTime = Date.now();
-        localStorage.setItem("registeredTime", registeredTime);
-      } else {
-        registeredTime = parseInt(registeredTime, 10);
-      }
-
-      const currentTime = Date.now();
-
-      // 1 daqiqadan keyin alert ko'rsatish
+  useEffect(() => {
+    const currentTime = new Date().getTime();
+    let alertShowState = localStorage.getItem("alert1") || false;
+    let alertShowState2 = localStorage.getItem("alert2") || false;
+    console.log(alertShowState2);
+    
+    if (subscriptionDateEnd) {
       if (
-        currentTime - registeredTime >= ONE_MINUTE &&
-        currentTime - registeredTime < TWO_MINUTES &&
-        !alertShownState.oneMinute
+        currentTime > subscriptionDateEnd - 7 * 24 * 60 * 60 * 1000 &&
+        !alertShowState
       ) {
         setAlertShown(true);
         setLimit(false);
       }
-
-      // 2 daqiqadan keyin alert ko'rsatish
       if (
-        currentTime - registeredTime >= TWO_MINUTES &&
-        currentTime - registeredTime < FIVE_MINUTES &&
-        !alertShownState.twoMinutes
+        currentTime > subscriptionDateEnd - 1 * 24 * 60 * 60 * 1000 &&
+        !alertShowState2
       ) {
         setAlertShown(true);
         setLimit(true);
-       
       }
-
-      // 5 daqiqadan keyin logout qilish
-      if (currentTime - registeredTime >= FIVE_MINUTES) {
-        setIsLogined(false);
-        localStorage.setItem("isLogined", "false");
+      if (currentTime > subscriptionDateEnd) {
+        updateSubscriptionToFree(isUser);
       }
     }
-  }, [isLogined, setAlertShown, setLimit, setIsLogined]);
+  }, [
+    isLogined,
+    subscriptionDateEnd,
+    alertShown,
+    setAlertShown,
+    setLimit,
+    setIsLogined,
+  ]);
 
   const handleCloseAlert = () => {
-    if (isLogined) {
-      let alertShownState = JSON.parse(
-        localStorage.getItem("alertShownState")
-      ) || {
-        oneMinute: false,
-        twoMinutes: false,
-      };
-      alertShownState.oneMinute = true;
-      localStorage.setItem("alertShownState", JSON.stringify(alertShownState));
-      
-      if (isLogined && alertShownState.oneMinute) {
-        alertShownState.twoMinutes = true;
-        localStorage.setItem(
-          "alertShownState",
-          JSON.stringify(alertShownState)
-        );
-      }
-      setAlertShown(false);
-      
+    setAlertShown(false);
+    let alert1 = JSON.parse(localStorage.getItem("alert1")) || false;
+    if (alert1 === false) {
+      localStorage.setItem("alert2", false);
     }
+    localStorage.setItem("alert1", false);
   };
 
   return (

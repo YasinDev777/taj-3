@@ -4,20 +4,19 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import { RiKey2Line } from "react-icons/ri";
 import { FiArrowRightCircle } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/pagination";
 
 const Login = ({
   setIsLogined,
   setIsUser,
-  setPrimimumTaken,
-  PrimimumTaken,
+  setPrimimumTaken, 
+  handleLogin
 }) => {
   const [inputValue, setInputValue] = useState("");
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   useEffect(() => {
     const storedLogin = localStorage.getItem("isLogined");
@@ -43,38 +42,7 @@ const Login = ({
     setInputValue(event.target.value);
   };
 
-  const handleLogin = async () => {
-    try {
-      const usersCollection = collection(db, "user");
-      const querySnapshot = await getDocs(usersCollection);
-
-      let foundUser = null;
-
-      querySnapshot.forEach((doc) => {
-        const userData = doc.data();
-        if (userData.user_id == inputValue) {
-          foundUser = userData;
-        }
-      });
-      if (foundUser) {
-        setIsLogined(true);
-        setIsUser(foundUser.name);
-        console.log(PrimimumTaken);
-
-        // Сохраняем данные в localStorage
-        localStorage.clear()
-        localStorage.setItem("isLogined", "true");
-        localStorage.setItem("userName", foundUser.name);
-        navigate("/");
-        window.location.reload();
-      } else {
-        alert("Пароль неверный или пользователь не найден.");
-      }
-    } catch (error) {
-      console.error("Ошибка при проверке данных:", error);
-      alert("Произошла ошибка. Попробуйте снова.");
-    }
-  };
+ 
   return (
     <div className="login">
       <div className="container">
@@ -150,7 +118,7 @@ const Login = ({
                   <RiKey2Line onClick={handlePaste} />
                 </div>
               </div>
-              <button onClick={handleLogin}>
+              <button onClick={()=>handleLogin(inputValue)}>
                 Kirish <FiArrowRightCircle />
               </button>
               <p>
