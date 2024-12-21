@@ -13,6 +13,7 @@ import "swiper/css/pagination";
 const Login = ({
   setIsLogined,
   setIsUser,
+  isUser,
   setPrimimumTaken,
   PrimimumTaken,
 }) => {
@@ -49,30 +50,35 @@ const Login = ({
       const querySnapshot = await getDocs(usersCollection);
 
       let foundUser = null;
+      let is_blocked = null
 
       querySnapshot.forEach((doc) => {
         const userData = doc.data();
+        const userBlock = doc.data().is_blocked
         if (userData.user_id === inputValue) {
           foundUser = userData;
+          is_blocked = userBlock
         }
       });
-      if (foundUser) {
+      if (foundUser && is_blocked === false) {
         setIsLogined(true);
         setIsUser(foundUser.name);
         console.log(PrimimumTaken);
 
-        // Сохраняем данные в localStorage
         localStorage.clear()
         localStorage.setItem("isLogined", "true");
         localStorage.setItem("userName", foundUser.name);
         navigate("/");
         window.location.reload();
-      } else {
-        alert("Пароль неверный или пользователь не найден.");
+      } else if(foundUser && is_blocked === true){
+        alert(`Hurmatli ${isUser}, siz bloklangansiz iltimos admin bilan bog'laning`)
+      }
+       else {
+        alert("Parol noto‘g‘ri yoki foydalanuvchi topilmadi, iltimos, yana urinib ko‘ring.");
       }
     } catch (error) {
       console.error("Ошибка при проверке данных:", error);
-      alert("Произошла ошибка. Попробуйте снова.");
+      alert("Xatolik yuz berdi. Iltimos, yana urinib ko‘ring.");
     }
   };
   return (

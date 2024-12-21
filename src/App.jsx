@@ -12,8 +12,8 @@ import { db } from "./firebase";
 
 
 const App = () => {
-  const [selectedPreset, setSelectedPreset] = useState("Pattern");
-  const [selectedTicker, setSelectedTicker] = useState("Ticker");
+  const [selectedPreset, setSelectedPreset] = useState(null);
+  const [selectedTicker, setSelectedTicker] = useState(null);
   const [selectedTime, setSelectedTime] = useState("1d");
   const [isGrid, setIsGrid] = useState(6);
   const [isCard, setIsCard] = useState(false);
@@ -30,34 +30,105 @@ const App = () => {
   const [DiffTime, setDiffTime] = useState(null)
   
   const [alertShown, setAlertShown] = useState(false);
-  const timers = useRef([]);  
-
 
   useEffect(() => {
     const storedLogin = localStorage.getItem("isLogined");
     const storedUser = localStorage.getItem("userName");
-    const storedStartDate = localStorage.getItem("premiumStartDate");
 
     if (storedLogin === "true" && storedUser) {
       setIsLogined(true);
       setIsUser(storedUser);
       setFilterLimit(3);
     }
-
-   
   }, []);
 
  
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const usersCollection = collection(db, "screening_type");
+        const querySnapshot = await getDocs(usersCollection);
+        const documents = [];
+        querySnapshot.forEach(doc => {
+          documents.push(doc.data());
+        });
+  
+        if (documents.length >= 2) {
+          setSelectedPreset(documents[1].name);
+        }
+      } catch (error) {
+        console.error("Ошибка при получении данных пользователей:", error);
+      }
+    };
+  
+    fetchOptions();
+
+
+    const fetchOptions2 = async () => {
+      try {
+        const usersCollection = collection(db, "screening_type_value");
+        const querySnapshot = await getDocs(usersCollection);
+        const documents = [];
+        querySnapshot.forEach(doc => {
+          documents.push(doc.data());
+        });
+  
+        if (documents.length >= 2) {
+          setSelectedTicker(documents[0].name);
+        }
+      } catch (error) {
+        console.error("Ошибка при получении данных пользователей:", error);
+      }
+    };
+  
+    fetchOptions2();
+
+  }, []);
+  
+
   const closeAlert = () => {
     setAlertShown(false);
     localStorage.setItem("alertShown", "false");
   };
 
-  // useEffect для управления переполнением страницы
   useEffect(() => {
     document.body.style.overflow = isAlert || isVideo ? "hidden" : "auto";
   }, [isAlert, isVideo]);
 
+
+  const handle_block = async () => {
+    try {
+      const userCollection = collection(db, "user");
+      const querySnapshot = await getDocs(userCollection);
+      let isBlocked = false;
+
+      querySnapshot.forEach((doc) => {
+        const userBlock = doc.data().is_blocked;
+        if (userBlock === true) {
+          isBlocked = true;
+        }
+      });
+
+      if (isBlocked) {
+        setIsLogined(false);
+      }
+    } catch (error) {
+      console.error("Ошибка проверки блокировки пользователя:", error);
+    }
+  };
+
+  useEffect(() => {
+    handle_block();
+  }, [isLogined]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handle_block();
+    }, 5000); // Проверять каждые 5 секунд
+
+    return () => clearInterval(interval); // Очистить таймер при размонтировании
+  }, []);
+  
   return (
     <div className="app">
       {location.pathname === "/chart" || location.pathname === "/login" ? null : (
@@ -126,7 +197,7 @@ const App = () => {
         setIsAlert={setIsAlert}
         isVideo={isVideo}
         setIsVideo={setIsVideo}
-        closeAlert={closeAlert} // Передаем функцию закрытия в Popav
+        closeAlert={closeAlert}
       />
     </div>
   );
