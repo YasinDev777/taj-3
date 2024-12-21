@@ -69,8 +69,6 @@ const Navbar = ({
   alertShown,
   setAlertShown,
   setIsLogined,
-  setLimit,
-  limit,  
 }) => {
   const presetOptions = [
     { value: "Pattern", label: "Pattern", id: 1},
@@ -143,8 +141,7 @@ const Navbar = ({
         isUser={isUser} 
         setAlertShown={setAlertShown} 
         setIsLogined={setIsLogined}
-        setLimit={setLimit}
-        limit={limit}
+        
         />
       <div className="nav-bar">
         <div className="texsss">
