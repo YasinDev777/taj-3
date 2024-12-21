@@ -269,8 +269,6 @@ const Navbar = ({
         isUser={isUser}
         setAlertShown={setAlertShown}
         setIsLogined={setIsLogined}
-        setLimit={setLimit}
-        limit={limit}
       />
       <div className="nav-bar">
         <div className="texsss">
