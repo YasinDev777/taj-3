@@ -7,7 +7,14 @@ import "./styles/App.css";
 import array from "./array";
 import Popav from "./components/Popav";
 import Login from "./pages/Login";
-import { collection, getDocs, doc, updateDoc ,query, where, } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "./firebase";
 
 const App = () => {
@@ -27,82 +34,81 @@ const App = () => {
   const [StartTime, setStartTime] = useState(null);
   const [DiffTime, setDiffTime] = useState(null);
   const [alertShown, setAlertShown] = useState(false);
- 
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // const handleLogin = async (inputValue) => {
-  //   let foundUser = null;
-  //   let is_blocked = null
-  //   try {
-  //     const usersCollection = collection(db, "user");
-  //     const querySnapshot = await getDocs(usersCollection);
+  const handleLogin = async (inputValue) => {
+    let foundUser = null;
+    // let is_blocked = null;
+    try {
+      const usersCollection = collection(db, "user");
+      const querySnapshot = await getDocs(usersCollection);
 
-  //     querySnapshot.forEach((docs) => {
-  //       const userData = docs.data();
-  //       const userBlock = docs.data().is_block
-  //       if (inputValue) {
-  //         if (userData.user_id === inputValue) {
-  //           foundUser = userData;
-  //           is_blocked = userBlock
-  //         }
-  //         if (foundUser && is_blocked === false) {
-  //           setIsLogined(true);
-  //           localStorage.clear();
-  //           localStorage.setItem("isLogined", "true");
-  //           localStorage.setItem("userName", foundUser.name);
-  //           navigate("/");
-  //           window.location.reload();
-  //         } else if(foundUser && is_blocked === true){
-  //           alert(`Hurmatli ${isUser}, siz bloklangansiz iltimos admin bilan bog'laning`)
-  //         }
-  //         else {
-  //           alert("Siz hali ma'lumotlar omboriga qo'shilganingiz yo'q. Iltimos Admin bilan bog'langan holda ro'yxatdan o'tishingizni so'raymiz");
-  //         }
-  //       }
-  //       if (userData.name === isUser) {
-  //         console.log(userData.subscription_type);
-          
-  //         switch (userData.subscription_type) {
-  //           case "pro":
-  //             setFilterLimit(20);
-  //             break;
-  //           case "basic":
-  //             setFilterLimit(10);
-  //             break;
-  //           case "free":
-  //             setFilterLimit(3);
-  //             break;
-  //           default:
-  //             setFilterLimit(1);
-  //         }
-  //       }
-  //     });
-  //   } catch (error) {
-  //     console.error("Ошибка при проверке данных:", error);
-  //   }
-  // };
+      querySnapshot.forEach((docs) => {
+        const userData = docs.data();
+        if (userData.is_blocked === true) {
+          alert(
+            `Hurmatli ${isUser}, siz bloklangansiz iltimos admin bilan bog'laning`
+          );
+          localStorage.clear();
+          return 
+        }
+          if (inputValue) {
+          if (userData.user_id === inputValue) {
+            foundUser = userData;
+            console.log(inputValue);
+            localStorage.clear();
+            setIsLogined(true);
+            localStorage.setItem("userName", foundUser.name);
+            localStorage.setItem("isLogined", "true");
+            navigate("/");
+            window.location.reload();
+          }
+
+        }
+          if (userData.name === isUser) {
+            
+            switch (userData.subscription_type) {
+              case "pro":
+                setFilterLimit(20);
+                break;
+              case "basic":
+                setFilterLimit(10);
+                break;
+              case "free":
+                setFilterLimit(3);
+                break;
+              default:
+                setFilterLimit(1);
+            }
+          }
+         
+      });
+    } catch (error) {
+      console.error("xatolik:", error);
+    }
+  };
 
   useEffect(() => {
-    // handleLogin();
+    handleLogin();
     const storedLogin = localStorage.getItem("isLogined");
     const storedUser = localStorage.getItem("userName");
     if (storedLogin === "true" && storedUser) {
       setIsLogined(true);
       setIsUser(storedUser);
     }
-  }, [setIsLogined]);
- 
+  }, [isLogined]);
+
   useEffect(() => {
     const fetchOptions = async () => {
       try {
         const usersCollection = collection(db, "screening_type");
         const querySnapshot = await getDocs(usersCollection);
         const documents = [];
-        querySnapshot.forEach(doc => {
+        querySnapshot.forEach((doc) => {
           documents.push(doc.data());
         });
-  
+
         if (documents.length >= 2) {
           setSelectedPreset(documents[1].name);
         }
@@ -110,19 +116,18 @@ const App = () => {
         console.error("Ошибка при получении данных пользователей:", error);
       }
     };
-    
-    fetchOptions();
 
+    fetchOptions();
 
     const fetchOptions2 = async () => {
       try {
         const usersCollection = collection(db, "screening_type_value");
         const querySnapshot = await getDocs(usersCollection);
         const documents = [];
-        querySnapshot.forEach(doc => {
+        querySnapshot.forEach((doc) => {
           documents.push(doc.data());
         });
-  
+
         if (documents.length >= 2) {
           setSelectedTicker(documents[0].name);
         }
@@ -130,11 +135,9 @@ const App = () => {
         console.error("Ошибка при получении данных пользователей:", error);
       }
     };
-  
+
     fetchOptions2();
   }, []);
-
-  
 
   const closeAlert = () => {
     setAlertShown(false);
@@ -144,8 +147,6 @@ const App = () => {
   useEffect(() => {
     document.body.style.overflow = isAlert || isVideo ? "hidden" : "auto";
   }, [isAlert, isVideo]);
-
-
 
   const handle_block = async () => {
     try {
@@ -179,10 +180,9 @@ const App = () => {
 
     return () => clearInterval(interval); // Очистить таймер при размонтировании
   }, []);
-  
+
   return (
     <div className="app">
-
       {location.pathname === "/chart" ||
       location.pathname === "/login" ? null : (
         <Navbar
@@ -240,6 +240,7 @@ const App = () => {
               PrimiumTaken={PrimiumTaken}
               setPrimiumTaken={setPrimiumTaken}
               setFilterLimit={setFilterLimit}
+              handleLogin={handleLogin}
             />
           }
         />
