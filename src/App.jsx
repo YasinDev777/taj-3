@@ -6,7 +6,15 @@ import Chart from "./components/LineChart";
 import "./styles/App.css";
 import Popav from "./components/Popav";
 import Login from "./pages/Login";
-import { collection, getDocs } from "firebase/firestore";
+import Filter from "./components/Filter"
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "./firebase";
 
 const App = () => {
@@ -168,6 +176,7 @@ const App = () => {
     <div className="app">
       {location.pathname.includes("/chart") ||
       location.pathname === "/login" ? null : (
+
         <Navbar
           selectedPreset={selectedPreset}
           setSelectedPreset={setSelectedPreset}
@@ -190,8 +199,9 @@ const App = () => {
           setStartTime={setStartTime}
           setDiffTime={setDiffTime}
           DiffTime={DiffTime}
-        />
-      )}
+          />
+        ) }
+        <Filter/> 
       <Routes>
         <Route
           path="/"
@@ -234,8 +244,9 @@ const App = () => {
         isVideo={isVideo}
         setIsVideo={setIsVideo}
         closeAlert={closeAlert}
-      />
+        />
     </div>
+  // </>
   );
 };
 

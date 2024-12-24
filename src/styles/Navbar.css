@@ -266,11 +266,19 @@ nav {
     justify-content: space-between;
     align-items: center;
 }
+/* 
+.custom-option > svg{
+    display: none ;
+} */
 
 .disabled{
     opacity: 0.6;
     pointer-events: none;
 }
+
+/* .disabled > svg{
+    display: block !important;
+} */
 
 .custom-option:hover {
     background-color: var(--hover-color);
