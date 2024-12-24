@@ -46,7 +46,7 @@
 
 .card {
     width: 100%;
-    height: calc(var(--index)*16.15);
+    height: calc(var(--index)*18.15);
     display: flex;
     flex-direction: column;
     justify-content: space-between;

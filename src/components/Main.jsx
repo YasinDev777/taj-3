@@ -1,41 +1,65 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import Chart from '../components/LineChart';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import Chart from "../components/LineChart";
 import { BiLockOpen } from "react-icons/bi";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { LuScanSearch } from "react-icons/lu";
-import Loader from './Loader';
+import Loader from "./Loader";
 
-const Main = ({ 
-  filtered, 
+const Main = ({
   isCard,
-  setIsCard, 
-  isGrid, 
-  isAlert, 
+  analysis,
+  isGrid,
+  isAlert,
   setIsAlert,
   isLogined,
   filterLimit,
+  pointsState,
+  isUser,
 }) => {
-  
-  const [Charts, setCharts] = useState(filtered);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [ChartsPerPage, setChartPerPage] = useState(isGrid);
-
-  const totalPages = Math.ceil(Charts.length / ChartsPerPage);
+  const [analysisData, setAnalysisData] = useState([]);
 
   useEffect(() => {
-    setCharts(filtered); 
-    
-  }, [filtered,isLogined]);
+    const fetchAnalysisData = async () => {
+      if (analysis) {
+        const fetchedData = [];
+
+        let number = 0;
+        analysis.forEach((doc) => {
+          const analysisId = doc.id;
+          const analysisMain = doc.data();
+          const index = number++;
+          const lines =
+            pointsState &&
+            pointsState.filter((state) => state.analysis_id === analysisId);
+
+          fetchedData.push({
+            lines,
+            ...analysisMain,
+            analysisId,
+            index,
+          });
+        });
+
+        setAnalysisData(fetchedData);
+        console.log(fetchedData);
+      }
+    };
+
+    fetchAnalysisData();
+  }, [analysis, filterLimit, pointsState, isLogined]);
 
   useEffect(() => {
     setChartPerPage(Number(isGrid));
   }, [isGrid]);
 
+  const totalPages = Math.ceil(analysisData.length / ChartsPerPage);
   const lastChartIndex = currentPage * ChartsPerPage;
   const firstChartIndex = lastChartIndex - ChartsPerPage;
-  const currentChart = Charts.slice(firstChartIndex, lastChartIndex);
+  const currentChart = analysisData.slice(firstChartIndex, lastChartIndex);
 
   const getVisiblePages = () => {
     const pages = [];
@@ -43,17 +67,24 @@ const Main = ({
       for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
       if (currentPage <= 3) {
-        pages.push(1, 2, 3, 4, '...', totalPages);
+        pages.push(1, 2, 3, 4, "...", totalPages);
       } else if (currentPage >= totalPages - 2) {
-        pages.push(1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+        pages.push(
+          1,
+          "...",
+          totalPages - 3,
+          totalPages - 2,
+          totalPages - 1,
+          totalPages
+        );
       } else {
         pages.push(
           1,
-          '...',
+          "...",
           currentPage - 1,
           currentPage,
           currentPage + 1,
-          '...',
+          "...",
           totalPages
         );
       }
@@ -62,8 +93,7 @@ const Main = ({
   };
 
   const paginate = (number) => setCurrentPage(number);
-
-  const nextPgae = () => {
+  const nextPage = () => {
     if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
   };
 
@@ -71,10 +101,9 @@ const Main = ({
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
 
-  const handleScroll = () =>{
-    window.scrollTo({top: 0})
-  }
-
+  const handleScroll = () => {
+    window.scrollTo({ top: 0 });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -82,20 +111,26 @@ const Main = ({
       await new Promise((resolve) => setTimeout(resolve, 1500));
       setLoading(false);
     };
-  
     fetchData();
+  }, []);
+
+  const calculateTimeDifference = (targetTime) => {
+      const targetDate = targetTime.seconds * 1000; // Maqsad vaqtni millisekundga aylantirish
+      const now = new Date().getTime(); // Hozirgi vaqt
+      const timeDifference = now - targetDate; // Vaqt farqi
+    
+      const totalHours = Math.floor(timeDifference / (1000 * 60 * 60)); // Umumiy soatlarni hisoblash
+      const days = Math.floor(totalHours / 24); // Kunlarni hisoblash
+      const hours = totalHours % 24; // Qoldiq soatlarni hisoblash
+    
+      // Natijani qaytarish
+      if (days > 0) {
+        return `${days} kun ${hours}`;
+      } else {
+        return hours;
+      }
+    };
   
-    if (isLogined === true) {
-      const updatedCharts = filtered.map((item, index) => {
-        return {
-          ...item,
-          login: index < filterLimit ? true : false,
-        };
-      });
-  
-      setCharts(updatedCharts);
-    }
-  }, [isLogined, filtered, filterLimit]);  
 
   return (
     <div className="main1">
@@ -103,123 +138,143 @@ const Main = ({
         {loading ? (
           <Loader />
         ) : (
-          currentChart.map((item, index) => (
-            <div className="card" key={index}>
-              <div
-                className="nav-card"
-                style={
-                  item.login === true ?
-                    { background: "var(--main-color)" }
-                    : {background: "var(--block-card-color)"}
-                }
+          <>
+            {currentChart.map((item) => {
+              console.log(filterLimit);
+
+              return (
+                <div className="card" key={item.index}>
+                  {filterLimit > item.index ? (
+                    <>
+                      <div
+                        className="nav-card"
+                        style={{ background: "var(--main-color)" }}
+                      >
+                        <div className="infors">
+                          <div className="info">
+                            <img src="/images/icon.png" alt="fullScreenIcon" />
+                            <big>{item.symbol}</big>
+                          </div>
+                          <div className="salary">
+                            <i>$0,2648</i>
+                            <i>1,19%</i>
+                          </div>
+                        </div>
+                        <Link
+                          className="navCardLink"
+                          to={"/chart/" + item.analysisId}
+                          style={{ pointerEvents: "auto", cursor: "pointer" }}
+                        >
+                          <LuScanSearch className="scanIcon" />
+                        </Link>
+                      </div>
+                      <div className="image">
+                        <Chart
+                          isCard={isCard}
+                          isUser={isUser}
+                          isLogined={isLogined}
+                          lines={item.lines}
+                        />
+                      </div>
+                      <div className="texx">
+                        <p>
+                          Aniqlandi:  
+                          <span> {calculateTimeDifference(item.created_at)} </span> 
+                          soat oldin
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div
+                        className="nav-card"
+                        style={{ background: "var(--block-card-color)" }}
+                      >
+                        <div className="infors">
+                          <div className="info">
+                            <img src="/images/icon.png" alt="fullScreenIcon" />
+                            <big>{item.symbol}</big>
+                          </div>
+                          <div className="salary">
+                            <i>$0,2648</i>
+                            <p style={{ color: "var(--card-other-text)" }} >1.19%</p>
+                          </div>
+                        </div>
+                        <Link
+                          to="./Main"
+                          className="navCardLink"
+                          style={{ pointerEvents: "none", cursor: "default" }}
+                        >
+                          <LuScanSearch className="scanIcon" />
+                        </Link>
+                      </div>
+                      <div className="image">
+                        <div className="dont-show" style={{ display: "flex" }}>
+                          <button onClick={() => setIsAlert(!isAlert)}>
+                            Qo’lga kiritish <BiLockOpen />
+                          </button>
+                        </div>
+                        <img src="/images/chartimg.jpg" alt="" />
+                      </div>
+                      <div className="texx">
+                        <p>
+                          Aniqlandi:
+                          <span> {calculateTimeDifference(item.created_at)} </span>soat oldin
+                        </p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              );
+            })}
+          </>
+        )}
+      </div>
+
+      {loading ? (
+        ""
+      ) : (
+        <div className="btns">
+          <button
+            className="prev-btn"
+            onClick={() => {
+              prevPage();
+              handleScroll();
+            }}
+            disabled={currentPage === 1}
+          >
+            <GrFormPrevious />
+          </button>
+          {getVisiblePages().map((page, index) =>
+            typeof page === "number" ? (
+              <button
+                key={index}
+                onClick={() => {
+                  paginate(page);
+                  handleScroll();
+                }}
+                className={page === currentPage ? "active" : ""}
               >
-                <div className="infors">
-                  <div className="info">
-                    <img src="/images/icon.png" alt="fullScreenIcon" />
-                    <big>BMX</big>
-                    <p>BitMart Token</p>
-                  </div>
-                  <div className="salary">
-                    <i>$0,2648</i>
-                    <i
-                      style={
-                        item.salarys === "-"
-                          ? { color: "var(--card-other-text)" }
-                          : { color: "var(--salary-plus)" }
-                      }
-                    >
-                      {item.salarys}1,19%
-                    </i>
-                  </div>
-                </div>
-                  <Link
-                   className='navCardLink'
-                    to="/chart"
-                    style={
-                      item.login === false
-                        ? { pointerEvents: "none", cursor: "default" }
-                        : { pointerEvents: "auto", cursor: "pointer" }
-                    }
-                  >
-                    <LuScanSearch className='scanIcon' />
-                  </Link>
-              </div>
-              <div className="image">
-                <div
-                  className="dont-show"
-                  style={
-                    item.login === false
-                      ? { display: "flex", cursor: "default" }
-                      : { display: "none", pointerEvents: "auto" }
-                  }
-                >
-                  <button onClick={() => setIsAlert(!isAlert)}>
-                    Qo’lga kiritish <BiLockOpen />
-                  </button>
-                </div>
-                {
-                  item.login === true ? 
-
-
-                  <Chart isCard={isCard} setIsCard={setIsCard} />
-                  
-                  
-                  : <img src="/images/chartimg.jpg" alt="" />
-                }
-                {
-                  item.openfor === "basic" && isLogined === true ?
-                  item.login = true : ""
-                }
-              </div>
-              <div className="texx">
-                <p>Aniqlandi: {item.searched} oldin</p>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-      {loading ? "" :
-      <div className="btns">
-        <button
-          className="prev-btn"
-          onClick={() => {
-            prevPage();
-            handleScroll();
-          }}
-          disabled={currentPage === 1}
-        >
-          <GrFormPrevious />
-        </button>
-        {getVisiblePages().map((page, index) =>
-          typeof page === "number" ? (
-            <button
-              key={index}
-              onClick={() => {
-                paginate(page);
-                handleScroll();
-              }}
-              className={page === currentPage ? "active" : ""}
-            >
-              {page}
-            </button>
-          ) : (
-            <span key={index} className="dots">
-              ...
-            </span>
-          )
-        )}
-        <button
-          className="next-btn"
-          onClick={() => {
-            nextPgae();
-            handleScroll();
-          }}
-          disabled={currentPage === totalPages}
-        >
-          <GrFormNext />
-        </button>
-      </div>
-  }
+                {page}
+              </button>
+            ) : (
+              <span key={index} className="dots">
+                ...
+              </span>
+            )
+          )}
+          <button
+            className="next-btn"
+            onClick={() => {
+              nextPage();
+              handleScroll();
+            }}
+            disabled={currentPage === totalPages}
+          >
+            <GrFormNext />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

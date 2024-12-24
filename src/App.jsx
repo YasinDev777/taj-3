@@ -4,17 +4,9 @@ import Navbar from "./components/Navbar";
 import Main from "./components/Main";
 import Chart from "./components/LineChart";
 import "./styles/App.css";
-import array from "./array";
 import Popav from "./components/Popav";
 import Login from "./pages/Login";
-import {
-  collection,
-  getDocs,
-  doc,
-  updateDoc,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
 
 const App = () => {
@@ -29,34 +21,59 @@ const App = () => {
   const [isUser, setIsUser] = useState("");
   const [isLogined, setIsLogined] = useState(false);
   const [filterLimit, setFilterLimit] = useState(1);
-  const [PrimiumTaken, setPrimiumTaken] = useState(null);
-  const [filteredArray] = useState(array);
+  // const [filteredArray] = useState(array);
   const [StartTime, setStartTime] = useState(null);
   const [DiffTime, setDiffTime] = useState(null);
   const [alertShown, setAlertShown] = useState(false);
 
+  const [analysis, setAnalysis] = useState([]);
   const navigate = useNavigate();
+
+  const [pointsState, setPointsState] = useState([]);
 
   const handleLogin = async (inputValue) => {
     let foundUser = null;
-    // let is_blocked = null;
     try {
       const usersCollection = collection(db, "user");
       const querySnapshot = await getDocs(usersCollection);
 
+      const analysis = collection(db, "analysis");
+      const allAnalysis = await getDocs(analysis);
+      setAnalysis(allAnalysis);
+
+      // const analysisId = await getDocs(collection(db, "analysis"));
+      // const allAnalysisId = analysisId.docs.map((doc) => doc.id);
+
+      const points = collection(db, "points");
+      const allPoints = await getDocs(points);
+      let pointNew = [];
+      allPoints.forEach((docs) => {
+        const data = docs.data(); 
+        pointNew.push({ ...data });        
+      });
+      setPointsState(pointNew);
+
       querySnapshot.forEach((docs) => {
         const userData = docs.data();
-        if (userData.is_blocked === true) {
+        if (userData.user_id === inputValue && userData.is_blocked === true) {
           alert(
             `Hurmatli ${isUser}, siz bloklangansiz iltimos admin bilan bog'laning`
           );
           localStorage.clear();
-          return 
+          return;
         }
-          if (inputValue) {
+        if (isUser && isUser === userData.name) {
+          if (userData.is_blocked === true) {
+            alert(
+              `Hurmatli ${isUser}, siz bloklangansiz iltimos admin bilan bog'laning`
+            );
+            localStorage.clear();
+            return;
+          }
+        }
+        if (inputValue) {
           if (userData.user_id === inputValue) {
             foundUser = userData;
-            console.log(inputValue);
             localStorage.clear();
             setIsLogined(true);
             localStorage.setItem("userName", foundUser.name);
@@ -64,25 +81,22 @@ const App = () => {
             navigate("/");
             window.location.reload();
           }
-
         }
-          if (userData.name === isUser) {
-            
-            switch (userData.subscription_type) {
-              case "pro":
-                setFilterLimit(20);
-                break;
-              case "basic":
-                setFilterLimit(10);
-                break;
-              case "free":
-                setFilterLimit(3);
-                break;
-              default:
-                setFilterLimit(1);
-            }
+        if (userData.name === isUser) {
+          switch (userData.subscription_type) {
+            case "pro":
+              setFilterLimit(Infinity);
+              break;
+            case "basic":
+              setFilterLimit(6);
+              break;
+            case "free":
+              setFilterLimit(3);
+              break;
+            default:
+              setFilterLimit(1);
           }
-         
+        }
       });
     } catch (error) {
       console.error("xatolik:", error);
@@ -91,13 +105,14 @@ const App = () => {
 
   useEffect(() => {
     handleLogin();
+    // handle_block();
     const storedLogin = localStorage.getItem("isLogined");
     const storedUser = localStorage.getItem("userName");
     if (storedLogin === "true" && storedUser) {
       setIsLogined(true);
       setIsUser(storedUser);
     }
-  }, [isLogined]);
+  }, [filterLimit,isLogined]);
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -135,9 +150,9 @@ const App = () => {
         console.error("Ошибка при получении данных пользователей:", error);
       }
     };
-
     fetchOptions2();
   }, []);
+
 
   const closeAlert = () => {
     setAlertShown(false);
@@ -148,42 +163,10 @@ const App = () => {
     document.body.style.overflow = isAlert || isVideo ? "hidden" : "auto";
   }, [isAlert, isVideo]);
 
-  const handle_block = async () => {
-    try {
-      const userCollection = collection(db, "user");
-      const querySnapshot = await getDocs(userCollection);
-      let isBlocked = false;
-
-      querySnapshot.forEach((doc) => {
-        const userBlock = doc.data().is_blocked;
-        if (userBlock === true) {
-          isBlocked = true;
-        }
-      });
-
-      if (isBlocked) {
-        setIsLogined(false);
-      }
-    } catch (error) {
-      console.error("Ошибка проверки блокировки пользователя:", error);
-    }
-  };
-
-  useEffect(() => {
-    handle_block();
-  }, [isLogined]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      handle_block();
-    }, 5000); // Проверять каждые 5 секунд
-
-    return () => clearInterval(interval); // Очистить таймер при размонтировании
-  }, []);
 
   return (
     <div className="app">
-      {location.pathname === "/chart" ||
+      {location.pathname.includes("/chart") ||
       location.pathname === "/login" ? null : (
         <Navbar
           selectedPreset={selectedPreset}
@@ -214,7 +197,7 @@ const App = () => {
           path="/"
           element={
             <Main
-              filtered={filteredArray}
+              analysis={analysis}
               isCard={isCard}
               setIsCard={setIsCard}
               isGrid={isGrid}
@@ -222,12 +205,14 @@ const App = () => {
               setIsAlert={setIsAlert}
               isLogined={isLogined}
               filterLimit={filterLimit}
+              pointsState={pointsState}
+              isUser={isUser}
             />
           }
         />
         <Route
-          path="/chart"
-          element={<Chart isUser={isUser} isLogined={isLogined} />}
+          path="/chart/:id"
+          element={<Chart isUser={isUser} isLogined={isLogined} pointsState={pointsState} />}
         />
         <Route
           path="/login"
@@ -237,8 +222,6 @@ const App = () => {
               setIsUser={setIsUser}
               isLogined={isLogined}
               setIsLogined={setIsLogined}
-              PrimiumTaken={PrimiumTaken}
-              setPrimiumTaken={setPrimiumTaken}
               setFilterLimit={setFilterLimit}
               handleLogin={handleLogin}
             />

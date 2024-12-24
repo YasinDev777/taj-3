@@ -416,3 +416,9 @@ const array = [
 ]
 
 export default array
+
+
+
+// const array1 = ["id1","id2","id3" , ...]
+
+// const array2 = [{id:"id1",id:"id11",id:"id1",...}]

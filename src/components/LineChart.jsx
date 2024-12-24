@@ -1,17 +1,40 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createChart } from 'lightweight-charts';
 import { PiHeadsetBold } from "react-icons/pi";
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { FiArrowRightCircle } from "react-icons/fi";
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import axios from 'axios';
 
-const Chart = ({ isCard, isUser, isLogined }) => {
+const Chart = ({ isCard, isUser, isLogined , pointsState ,lines}) => {
+
+  const [analysisData, setAnalysisData] = useState([])
+  
+
+  const {id} = useParams()
+
+   useEffect(() => {
+      const fetchAnalysisData = async () => {
+        if (!lines && pointsState && id) {
+            const lines =
+              pointsState &&
+              pointsState.filter((state) => state.analysis_id === id);
+              setAnalysisData(lines);
+            } else if(lines.length > 0) {
+              setAnalysisData(lines)
+            }
+          };
+          
+      fetchAnalysisData();
+    }, [isLogined, pointsState, id ,lines]);
+  
+  
+  
   
   const chartContainerRef = useRef(null);
   const [candlestickData, setCandlestickData] = useState([]);
   const [isMouseDown, setIsMouseDown] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode] = useState(true);
 
   const handleMouseDown = () => setIsMouseDown(true);
   const handleMouseUp = () => setIsMouseDown(false);
@@ -71,7 +94,7 @@ const Chart = ({ isCard, isUser, isLogined }) => {
 
   useEffect(() => {
     if (chartContainerRef.current && candlestickData.length > 0) {
-      // Создание графика
+
       const chart = createChart(chartContainerRef.current, {
         width: chartContainerRef.current.clientWidth,
         height: chartContainerRef.current.clientHeight,
@@ -108,44 +131,53 @@ const Chart = ({ isCard, isUser, isLogined }) => {
 
       const lineSeries1 = chart.addLineSeries({
         color: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : '#000000',
-        lineWidth: 2,
+        lineWidth: 1, 
         priceLineVisible: false,
         lastValueVisible: false,
       });
-      lineSeries1.setData([
-        { time: new Date('2021-08-27').getTime() / 1000, value: 46307 },
-        { time: new Date('2021-09-06').getTime() / 1000, value: 52751 },
-      ]);
+      
+      // analysisData && lineSeries1.setData(analysisData.map((item) => ({
+      //   time: item.date.seconds,
+      //   value: item.price
+      // })));
+      
+    
+      if (analysisData) {
+        // lineSeries1 ga  upper yoki lower bo'lgan ma'lumotlarni jo'natish
+        const upperLowerData = analysisData
+          .filter(item => item.position === 'upper' || item.position === 'lower')
+          .map(item => ({
+            time: item.date.seconds, // vaqt qiymati
+            value: item.price        // narx qiymati
+          }));
+      
+        // lineSeries2 ga single bo'lgan ma'lumotlarni jo'natish
+        const singleData = analysisData
+          .filter(item => item.position === 'single')
+          .map(item => ({
+            value: item.price        // narx qiymati
+          }));
+      
+        // lineSeries1 uchun setData
+        lineSeries1.setData(upperLowerData);
+      
+        // lineSeries2 uchun setData
+        // lineSeries2.setData(singleData);
+        console.log();
+        
+        candlestickSeries.createPriceLine({
+          price: singleData.length > 0 ? singleData[0].value : 0,
+          color: 'rgba(255, 0, 0, 0.8)',
+          lineWidth: 2,
+          lineStyle: 0,
+          axisLabelVisible: true,
+        });
+      }
+      
 
-      const lineSeries2 = chart.addLineSeries({
-        color: isDarkMode ? 'rgba(28, 75, 228, 0.8)' : '#888888',
-        lineWidth: 2,
-        priceLineVisible: false,
-        lastValueVisible: false,
-      });
-      lineSeries2.setData([
-        { time: new Date('2021-09-07').getTime() / 1000, value: 43000 },
-        { time: new Date('2021-09-22').getTime() / 1000, value: 49730 },
-      ]);
+      
+     
 
-      const lineSeries3 = chart.addLineSeries({
-        color: isDarkMode ? 'rgba(21, 255, 0, 0.8)' : '#888888',
-        lineWidth: 2,
-        priceLineVisible: false,
-        lastValueVisible: false,
-      });
-      lineSeries3.setData([
-        { time: new Date('2021-09-07').getTime() / 1000, value: 52900 },
-        { time: new Date('2021-09-20').getTime() / 1000, value: 43200 },
-      ]);
-
-      candlestickSeries.createPriceLine({
-        price: candlestickData[13]?.low || 0,
-        color: 'rgba(255, 0, 0, 0.8)',
-        lineWidth: 2,
-        lineStyle: 0,
-        axisLabelVisible: true,
-      });
 
       chart.timeScale().fitContent();
 
@@ -168,7 +200,7 @@ const Chart = ({ isCard, isUser, isLogined }) => {
       };
     }
 
-  }, [candlestickData, isDarkMode]);
+  }, [analysisData , candlestickData,lines]);
 
 
   const darkMode = {
@@ -221,6 +253,8 @@ const Chart = ({ isCard, isUser, isLogined }) => {
       chartContainerRef.current.style.cursor = "crosshair";
     }
   }, [isMouseDown]);
+
+  
 
   return (
     <div>
