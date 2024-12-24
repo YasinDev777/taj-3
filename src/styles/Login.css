@@ -266,11 +266,15 @@
     font-weight: 400;
     text-decoration: underline;
     text-align: center;
-    width: 70%;
 }
 
 .logining a>span {
     font-weight: 700;
+}
+
+.logining p,
+.logining a:hover{
+    text-decoration: none;
 }
 
 .p {
