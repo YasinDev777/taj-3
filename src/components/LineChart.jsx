@@ -6,7 +6,7 @@ import { FiArrowRightCircle } from "react-icons/fi";
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import axios from 'axios';
 
-const Chart = ({ isCard, isUser, isLogined , pointsState ,lines}) => {
+const Chart = ({ isCard, isUser, isLogedIn , pointsState ,lines}) => {
 
   const [analysisData, setAnalysisData] = useState([])
   
@@ -26,7 +26,7 @@ const Chart = ({ isCard, isUser, isLogined , pointsState ,lines}) => {
           };
           
       fetchAnalysisData();
-    }, [isLogined, pointsState, id ,lines]);
+    }, [isLogedIn, pointsState, id ,lines]);
   
   
   
@@ -269,7 +269,7 @@ const Chart = ({ isCard, isUser, isLogined , pointsState ,lines}) => {
             <PiHeadsetBold />
           </Link>
           {
-            isLogined === false ?
+            isLogedIn === false ?
               <Link to="/login">
                 <button>
                   Kirish <FiArrowRightCircle />
@@ -283,7 +283,7 @@ const Chart = ({ isCard, isUser, isLogined , pointsState ,lines}) => {
       <div
         ref={chartContainerRef}
         className={`chart-container ${isCard === false ? "chart-container-mobile" : ""}`}
-        style={isCard === false ? { width: 'calc(var(--index)*20)', height: 'calc(var(--index)*13.5)', transform: "translateY(0)" } : { width: '100%', height: '77.6dvh' }}
+        style={isCard === false ? { width: 'calc(var(--index)*20)', height: 'calc(var(--index)*15.5)', transform: "translateY(0)" } : { width: '100%', height: '77.6dvh' }}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
       >

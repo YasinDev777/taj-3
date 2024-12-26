@@ -1,57 +1,14 @@
-
-import {useEffect} from 'react'
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase";
 import { Link } from "react-router-dom"
 import { PiHeadsetBold } from "react-icons/pi"
 import { RxVideo } from "react-icons/rx"
 import { FiArrowRightCircle } from "react-icons/fi"
 const Navbar = ({
-  setSelectedPreset,
-  setSelectedTicker,
-  selectedPreset,
-  selectedTicker,
-  isGrid,
-  setIsGrid,
-  selectedTime,
-  setSelectedTime,
   isVideo,
   setIsVideo,
   setIsAlert,
   isUser,
-  isLogined,
-  alertShown,
-  setAlertShown,
-  setIsLogined
+  isLogedIn,
 }) => {
-
-  useEffect(()=>{
-
-    const fetchs = async () => {
-      try{
-        const screeningTypes = collection(db,"screening_type")
-        const screeningTypesGet = await getDocs(screeningTypes)
-  
-  
-        const screeningTypesValue = collection(db , "screening_type_value")
-        const screeningTypesValueGet = await getDocs(screeningTypesValue)
-  
-  
-        screeningTypesGet.forEach((docs)=> {
-           const data = docs.data()
-           console.log(data);
-           
-        })
-      }
-
-      catch(error){
-        console.log(error);
-      }
-    }
-
-    fetchs()
-  },[])
-
 
   return (
     <>
@@ -71,7 +28,7 @@ const Navbar = ({
             <PiHeadsetBold />
           </Link>
           {
-            isLogined === false ?
+            isLogedIn === false ?
               <Link to="/login" onClick={() => setIsVideo(false)}>
                 <button onClick={() => setIsAlert(false)}>
                   Kirish <FiArrowRightCircle />

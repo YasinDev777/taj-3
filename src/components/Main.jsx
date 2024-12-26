@@ -16,6 +16,7 @@ const Main = ({
   filterLimit,
   pointsState,
   isUser,
+  selectedPreset
 }) => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,7 +46,6 @@ const Main = ({
         });
 
         setAnalysisData(fetchedData);
-        console.log(fetchedData);
       }
     };
 
@@ -140,7 +140,6 @@ const Main = ({
         ) : (
           <>
             {currentChart.map((item) => {
-              console.log(filterLimit);
 
               return (
                 <div className="card" key={item.index}>
@@ -152,7 +151,6 @@ const Main = ({
                       >
                         <div className="infors">
                           <div className="info">
-                            <img src="/images/icon.png" alt="fullScreenIcon" />
                             <big>{item.symbol}</big>
                           </div>
                           <div className="salary">
@@ -192,7 +190,6 @@ const Main = ({
                       >
                         <div className="infors">
                           <div className="info">
-                            <img src="/images/icon.png" alt="fullScreenIcon" />
                             <big>{item.symbol}</big>
                           </div>
                           <div className="salary">

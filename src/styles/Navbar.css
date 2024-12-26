@@ -159,6 +159,95 @@ nav {
     font-size: calc(var(--index)*1);
 }
 
+
+.main-select{
+    display: flex;
+    align-items: center;
+    gap: calc(var(--index)*0.8);
+}
+
+.option{
+    position: relative;
+}
+
+.main-select{
+    user-select: none;
+}
+
+.selected-option{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(var(--index)*0.4);
+    padding: calc(var(--index)*0.4) calc(var(--index)*0.45);
+    cursor: pointer;
+    border: calc(var(--index)*0.05) solid var(--border-color);
+    border-radius: calc(var(--index)*0.25);
+}
+
+.selected-option > span{
+    color: var(--text-color) !important;
+    font-size: calc(var(--index)*0.8);
+    font-weight: 300;
+}
+
+.selected-option > svg{
+    font-size: calc(var(--index)*1);
+    color: var(--border-color) !important;
+}
+
+.select-options{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: calc(var(--index)*0.3);
+    border: calc(var(--index)*0.05) solid var(--border-color);
+    border-radius: calc(var(--index)*0.25);
+    transform: translateY(4%);
+    padding: 0 calc(var(--index)*0.3);
+    position: absolute;
+    background-color: var(--other-main-color);
+    z-index: 100;
+    left: 0;
+    box-shadow: 0 0 calc(var(--index)*0.25) rgba(0, 0, 0, 0.048);
+}
+
+.opt > span{
+    color: var(--text-color) !important;
+}
+
+.opt{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: calc(var(--index)*0.4) calc(var(--index)*0.2);
+    border-bottom: calc(var(--index)*0.05) solid var(--border-color);
+    cursor: pointer;
+}
+
+.opt-lock{
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+.opt-lock > svg{
+    font-size: calc(var(--index)*0.8);
+}
+
+.select-one{
+    width: calc(var(--index)*6.2) !important;
+}
+
+.select-two{
+    width: calc(var(--index)*6.1);
+}
+
+.select-three{
+    width: calc(var(--index)*3.5);
+}
+
 .nav h3{
     font-size: calc(var(--index)*1.2);
     font-weight: 600;
@@ -171,7 +260,7 @@ nav {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    color: var(--other-main-color);
+    color: red;
     border-radius: calc(var(--index)*0.5);
     -webkit-box-shadow: 0 0 calc(var(--index)*0.4) calc(var(--index)*-0.2) rgba(0, 0, 0, 1);
     -moz-box-shadow: 0 0 calc(var(--index)*0.4) calc(var(--index)*-0.2) rgba(0, 0, 0, 1);
@@ -185,91 +274,7 @@ nav {
     cursor: pointer;
 }
 
-.custom-select {
-    width: calc(var(--index)*5);
-    position: relative;
-    display: flex;
-    left: 0;
-    gap: calc(var(--index)*0.3);
-    align-items: center;
-}
 
-.custom-select:nth-child(1) {
-    width: calc(var(--index)*9);
-}
-
-.custom-select:nth-child(2) {
-    width: calc(var(--index)*9);
-}
-
-.div:nth-child(3) {
-    width: calc(var(--index)*5);
-}
-
-.div:nth-child(4) {
-    width: calc(var(--index)*7.5);
-}
-
-.div:nth-child(2) {
-    width: calc(var(--index)*13);
-}
-
-.custom-select-label {
-    display: block;
-    color: var(--text-color);
-    font-size: calc(var(--index)*0.75);
-    font-weight: 500;
-}
-
-.custom-select-trigger {
-    padding: calc(var(--index)*0.5);
-    border: calc(var(--index)*0.05) solid var(--border-color);
-    background-color: var(--other-main-color);
-    color: var(--text-color);
-    border-radius: calc(var(--index)*0.25);
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    height: calc(var(--index)*1.8);
-    position: relative;
-}
-
-.custom-select-trigger span {
-    color: var(--text-color) !important;
-}
-
-.custom-options {
-    position: absolute;
-    top: calc(var(--index)*2.25);
-    left: 0;
-    width: 100%;
-    border: calc(var(--index)*0.05) solid var(--border-color);
-    background-color: var(--other-main-color);
-    z-index: 100;
-    overflow: hidden;
-    border-radius: calc(var(--index)*0.25);
-    padding: 0 calc(var(--index)*0.5);
-    transform: translateY(0);
-    font-size: calc(var(--index)*0.75);
-
-}
-
-.custom-option {
-    padding: calc(var(--index)*0.5) 0;
-    cursor: pointer;
-    border-bottom: calc(var(--index)*0.05) solid var(--border-color);
-    color: var(--text-color);
-    background-color: transparent;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-/* 
-.custom-option > svg{
-    display: none ;
-} */
 
 .disabled{
     opacity: 0.6;
@@ -280,10 +285,6 @@ nav {
     display: block !important;
 } */
 
-.custom-option:hover {
-    background-color: var(--hover-color);
-}
-
 .nav-bar span {
     color: var(--other-text-color);
     font-weight: 300;
@@ -292,14 +293,6 @@ nav {
 
 .nav-bar svg {
     color: var(--other-text-color);
-}
-
-.div {
-    display: flex;
-    gap: calc(var(--index)*0.4);
-    align-items: center;
-    justify-content: center;
-    text-transform: capitalize;
 }
 
 .video-btn {
@@ -392,53 +385,10 @@ nav {
     .options-div{
         justify-content: space-between;
     }
-    .custom-select {
-        width: 100% !important;
-        position: relative;
-        display: flex;
-        left: 0;
-        gap: calc(var(--index)*0.3);
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .div {
-        justify-content: center;
-        width: calc(var(--index)*3.7) !important;
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
     .options-div {
         justify-content: space-around !important;
         align-items: center;
         padding: calc(var(--index)*0.5) calc(var(--index)*0.5);
-    }
-
-    .custom-select-trigger{
-        width: 100%;
-        height: calc(var(--index)*2);
-        padding: calc(var(--index)*1) calc(var(--index)*0.4);
-    }
-    
-    .custom-select-trigger > span{
-        font-size: calc(var(--index)*0.87);
-    }
-
-    .div:nth-child(1){
-        width: calc(var(--index)*9) !important;
-    }
-
-    .div:nth-child(2){
-        width: calc(var(--index)*9.3) !important;
-    }
-
-    .custom-option{
-        font-size: calc(var(--index)*0.9);
-    }
-
-    .dropdown-icon{
-        font-size: calc(var(--index)*1.1);
     }
 
     .filter-svg{
@@ -449,13 +399,6 @@ nav {
         height: calc(var(--index)*4);
     }
 
-    .div > span{
-        display: none;
-    }
-
-    .custom-select-label{
-        display: none;
-    }
     .texsss{
         width: 100%;
         display: flex;
@@ -483,6 +426,10 @@ nav {
 
     .video-btn{
         display: none !important;
+    }
+
+    .name{
+        display: none;
     }
 }
 

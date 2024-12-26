@@ -4,40 +4,33 @@ import Navbar from "./components/Navbar";
 import Main from "./components/Main";
 import Chart from "./components/LineChart";
 import "./styles/App.css";
-import Popav from "./components/Popav";
+import Popup from "./components/Popup";
 import Login from "./pages/Login";
 import Filter from "./components/Filter"
 import {
   collection,
   getDocs,
-  doc,
-  updateDoc,
-  query,
-  where,
 } from "firebase/firestore";
 import { db } from "./firebase";
 
 const App = () => {
-  const [selectedPreset, setSelectedPreset] = useState(null);
-  const [selectedTicker, setSelectedTicker] = useState(null);
-  const [selectedTime, setSelectedTime] = useState("1d");
+  const [selectedPreset, setSelectedPreset] = useState("Type");
+  const [selectedTicker, setSelectedTicker] = useState("Type");
+  const [selectedTime, setSelectedTime] = useState("All");
   const [isGrid, setIsGrid] = useState(6);
   const [isCard, setIsCard] = useState(false);
-  const location = useLocation();
   const [isAlert, setIsAlert] = useState(false);
   const [isVideo, setIsVideo] = useState(false);
   const [isUser, setIsUser] = useState("");
-  const [isLogined, setIsLogined] = useState(false);
+  const [isLogedIn, setIsLogedIn] = useState(false);
   const [filterLimit, setFilterLimit] = useState(1);
-  // const [filteredArray] = useState(array);
   const [StartTime, setStartTime] = useState(null);
   const [DiffTime, setDiffTime] = useState(null);
   const [alertShown, setAlertShown] = useState(false);
-
   const [analysis, setAnalysis] = useState([]);
   const navigate = useNavigate();
-
   const [pointsState, setPointsState] = useState([]);
+  const location = useLocation();
 
   const handleLogin = async (inputValue) => {
     let foundUser = null;
@@ -83,9 +76,9 @@ const App = () => {
           if (userData.user_id === inputValue) {
             foundUser = userData;
             localStorage.clear();
-            setIsLogined(true);
+            setIsLogedIn(true);
             localStorage.setItem("userName", foundUser.name);
-            localStorage.setItem("isLogined", "true");
+            localStorage.setItem("isLogedIn", "true");
             navigate("/");
             window.location.reload();
           }
@@ -113,53 +106,13 @@ const App = () => {
 
   useEffect(() => {
     handleLogin();
-    // handle_block();
-    const storedLogin = localStorage.getItem("isLogined");
+    const storedLogin = localStorage.getItem("isLogedIn");
     const storedUser = localStorage.getItem("userName");
     if (storedLogin === "true" && storedUser) {
-      setIsLogined(true);
+      setIsLogedIn(true);
       setIsUser(storedUser);
     }
-  }, [filterLimit,isLogined]);
-
-  useEffect(() => {
-    const fetchOptions = async () => {
-      try {
-        const usersCollection = collection(db, "screening_type");
-        const querySnapshot = await getDocs(usersCollection);
-        const documents = [];
-        querySnapshot.forEach((doc) => {
-          documents.push(doc.data());
-        });
-
-        if (documents.length >= 2) {
-          setSelectedPreset(documents[1].name);
-        }
-      } catch (error) {
-        console.error("Ошибка при получении данных пользователей:", error);
-      }
-    };
-
-    fetchOptions();
-
-    const fetchOptions2 = async () => {
-      try {
-        const usersCollection = collection(db, "screening_type_value");
-        const querySnapshot = await getDocs(usersCollection);
-        const documents = [];
-        querySnapshot.forEach((doc) => {
-          documents.push(doc.data());
-        });
-
-        if (documents.length >= 2) {
-          setSelectedTicker(documents[0].name);
-        }
-      } catch (error) {
-        console.error("Ошибка при получении данных пользователей:", error);
-      }
-    };
-    fetchOptions2();
-  }, []);
+  }, [filterLimit,isLogedIn]);
 
 
   const closeAlert = () => {
@@ -176,32 +129,28 @@ const App = () => {
     <div className="app">
       {location.pathname.includes("/chart") ||
       location.pathname === "/login" ? null : (
-
         <Navbar
-          selectedPreset={selectedPreset}
-          setSelectedPreset={setSelectedPreset}
-          selectedTicker={selectedTicker}
-          setSelectedTicker={setSelectedTicker}
-          selectedTime={selectedTime}
-          setSelectedTime={setSelectedTime}
-          setIsGrid={setIsGrid}
-          isGrid={isGrid}
           isVideo={isVideo}
           setIsVideo={setIsVideo}
           setIsAlert={setIsAlert}
           isAlert={isAlert}
           isUser={isUser}
-          isLogined={isLogined}
-          alertShown={alertShown}
-          setAlertShown={setAlertShown}
-          setIsLogined={setIsLogined}
-          StartTime={StartTime}
-          setStartTime={setStartTime}
-          setDiffTime={setDiffTime}
-          DiffTime={DiffTime}
+          isLogedIn={isLogedIn}
           />
         ) }
-        <Filter/> 
+          {location.pathname.includes("/chart") ||
+          location.pathname === "/login" ? null :
+         <Filter 
+          setIsGrid={setIsGrid}
+          isGrid={isGrid} 
+          selectedPreset={selectedPreset} 
+          setSelectedPreset={setSelectedPreset}
+          selectedTicker={selectedTicker}
+          setSelectedTicker={setSelectedTicker}
+          selectedTime={selectedTime}
+          setSelectedTime={setSelectedTime}
+          /> 
+          }
       <Routes>
         <Route
           path="/"
@@ -213,16 +162,17 @@ const App = () => {
               isGrid={isGrid}
               isAlert={isAlert}
               setIsAlert={setIsAlert}
-              isLogined={isLogined}
+              isLogedIn={isLogedIn}
               filterLimit={filterLimit}
               pointsState={pointsState}
               isUser={isUser}
+              selectedPreset={selectedPreset}
             />
           }
         />
         <Route
           path="/chart/:id"
-          element={<Chart isUser={isUser} isLogined={isLogined} pointsState={pointsState} />}
+          element={<Chart isUser={isUser} isLogedIn={isLogedIn} pointsState={pointsState} />}
         />
         <Route
           path="/login"
@@ -230,15 +180,15 @@ const App = () => {
             <Login
               isUser={isUser}
               setIsUser={setIsUser}
-              isLogined={isLogined}
-              setIsLogined={setIsLogined}
+              isLogedIn={isLogedIn}
+              setisLogedIn={setIsLogedIn}
               setFilterLimit={setFilterLimit}
               handleLogin={handleLogin}
             />
           }
         />
       </Routes>
-      <Popav
+      <Popup
         isAlert={isAlert}
         setIsAlert={setIsAlert}
         isVideo={isVideo}
