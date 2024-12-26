@@ -4,40 +4,37 @@ import Navbar from "./components/Navbar";
 import Main from "./components/Main";
 import Chart from "./components/LineChart";
 import "./styles/App.css";
-import Popav from "./components/Popav";
+import Popup from "./components/Popup";
 import Login from "./pages/Login";
+
 import Filter from "./components/Filter"
 import {
   collection,
   getDocs,
-  doc,
-  updateDoc,
-  query,
-  where,
 } from "firebase/firestore";
 import { db } from "./firebase";
+import axios from "axios";
 
 const App = () => {
-  const [selectedPreset, setSelectedPreset] = useState(null);
-  const [selectedTicker, setSelectedTicker] = useState(null);
-  const [selectedTime, setSelectedTime] = useState("1d");
+  const [selectedPreset, setSelectedPreset] = useState("Type");
+  const [selectedTicker, setSelectedTicker] = useState("Type");
+  const [selectedTime, setSelectedTime] = useState("All");
   const [isGrid, setIsGrid] = useState(6);
   const [isCard, setIsCard] = useState(false);
-  const location = useLocation();
   const [isAlert, setIsAlert] = useState(false);
   const [isVideo, setIsVideo] = useState(false);
   const [isUser, setIsUser] = useState("");
   const [isLogined, setIsLogined] = useState(false);
   const [filterLimit, setFilterLimit] = useState(1);
-  // const [filteredArray] = useState(array);
   const [StartTime, setStartTime] = useState(null);
   const [DiffTime, setDiffTime] = useState(null);
   const [alertShown, setAlertShown] = useState(false);
-
   const [analysis, setAnalysis] = useState([]);
   const navigate = useNavigate();
-
   const [pointsState, setPointsState] = useState([]);
+  const location = useLocation();
+
+
 
   const handleLogin = async (inputValue) => {
     let foundUser = null;
@@ -47,17 +44,43 @@ const App = () => {
 
       const analysis = collection(db, "analysis");
       const allAnalysis = await getDocs(analysis);
-      setAnalysis(allAnalysis);
 
-      // const analysisId = await getDocs(collection(db, "analysis"));
-      // const allAnalysisId = analysisId.docs.map((doc) => doc.id);
+        const fetchedData = [];
+
+        let number = 0;
+        allAnalysis.forEach((doc) => {
+          const analysisId = doc.id;
+          const analysisMain = doc.data();
+          const index = number++;
+          const lines =
+            pointsState &&
+            pointsState.filter((state) => state.analysis_id === analysisId);
+
+          fetchedData.push({
+            lines,
+            ...analysisMain,
+            analysisId,
+            index,
+          });
+        });
+
+        setAnalysis(fetchedData);
+        
+
+      
+      
+      
+      
+      
+      
+      
 
       const points = collection(db, "points");
       const allPoints = await getDocs(points);
       let pointNew = [];
       allPoints.forEach((docs) => {
-        const data = docs.data(); 
-        pointNew.push({ ...data });        
+        const data = docs.data();
+        pointNew.push({ ...data });
       });
       setPointsState(pointNew);
 
@@ -85,7 +108,7 @@ const App = () => {
             localStorage.clear();
             setIsLogined(true);
             localStorage.setItem("userName", foundUser.name);
-            localStorage.setItem("isLogined", "true");
+            localStorage.setItem("isLogedIn", "true");
             navigate("/");
             window.location.reload();
           }
@@ -111,8 +134,90 @@ const App = () => {
     }
   };
 
+ 
+
+
+  
+
+  
+  const [data, setData] = useState({});
+  const [setError] = useState(null);
+
+  const fetchKlines = async (symbol) => {
+    const API_URL = `https://api.binance.com/api/v3/klines`;
+    try {
+      const response = await axios.get(API_URL, {
+        params: {
+          symbol: symbol,
+          interval: '1h',
+          limit: 10,
+        },
+      });
+
+      // let lastClosePrice =""
+      // if (response.data) {
+      //   const formattedData = response.data.map((item) => ({
+      //     time: item[0] / 1000,
+      //     open: parseFloat(item[1]),
+      //     high: parseFloat(item[2]),
+      //     low: parseFloat(item[3]),
+      //     close: parseFloat(item[4]),
+      //   }));
+
+      //   if (formattedData.length > 0) {
+      //     lastClosePrice = formattedData[formattedData.length - 1].close;
+      //   }}
+      let lastClosePrice = ""
+
+      if (response.data) {
+        const formattedData = response.data.map(item => ({
+          time: item[0] / 1000,
+          open: parseFloat(item[1]),
+          high: parseFloat(item[2]),
+          low: parseFloat(item[3]),
+          close: parseFloat(item[4])
+        }));
+  
+        if (formattedData.length > 0) {
+        lastClosePrice = formattedData[formattedData.length - 1].close;
+        }
+      }
+      // Update state with fetched data grouped by symbol
+      setData((prevData) => ({
+        ...prevData,
+        [symbol]: response.data,
+        formattedData: lastClosePrice
+      }));
+
+     
+  
+  
+     
+
+    } catch (err) {
+      setError(`Muammo: ${err.message}`);
+    }
+  };
+
   useEffect(() => {
-    handleLogin();
+    const activeSymbols = analysis.filter((item) => !item.inactive).map((item) => item.symbol);
+    activeSymbols.forEach((symbol) => fetchKlines(symbol));
+   
+
+  }, [filterLimit,isLogined]);
+
+    
+
+  
+
+
+  
+  
+
+
+
+  useEffect(() => {
+    handleLogin()
     // handle_block();
     const storedLogin = localStorage.getItem("isLogined");
     const storedUser = localStorage.getItem("userName");
@@ -120,7 +225,7 @@ const App = () => {
       setIsLogined(true);
       setIsUser(storedUser);
     }
-  }, [filterLimit,isLogined]);
+  }, [filterLimit, isLogined]);
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -159,49 +264,45 @@ const App = () => {
       }
     };
     fetchOptions2();
-  }, []);
-
+  }, [filterLimit,isLogined]);
 
   const closeAlert = () => {
     setAlertShown(false);
     localStorage.setItem("alertShown", "false");
   };
 
+
+
   useEffect(() => {
     document.body.style.overflow = isAlert || isVideo ? "hidden" : "auto";
   }, [isAlert, isVideo]);
-
 
   return (
     <div className="app">
       {location.pathname.includes("/chart") ||
       location.pathname === "/login" ? null : (
-
         <Navbar
-          selectedPreset={selectedPreset}
-          setSelectedPreset={setSelectedPreset}
-          selectedTicker={selectedTicker}
-          setSelectedTicker={setSelectedTicker}
-          selectedTime={selectedTime}
-          setSelectedTime={setSelectedTime}
-          setIsGrid={setIsGrid}
-          isGrid={isGrid}
           isVideo={isVideo}
           setIsVideo={setIsVideo}
           setIsAlert={setIsAlert}
           isAlert={isAlert}
           isUser={isUser}
           isLogined={isLogined}
-          alertShown={alertShown}
-          setAlertShown={setAlertShown}
-          setIsLogined={setIsLogined}
-          StartTime={StartTime}
-          setStartTime={setStartTime}
-          setDiffTime={setDiffTime}
-          DiffTime={DiffTime}
-          />
-        ) }
-        <Filter/> 
+        />
+      )}
+          {location.pathname.includes("/chart") ||
+          location.pathname === "/login" ? null :
+         <Filter 
+          setIsGrid={setIsGrid}
+          isGrid={isGrid} 
+          selectedPreset={selectedPreset} 
+          setSelectedPreset={setSelectedPreset}
+          selectedTicker={selectedTicker}
+          setSelectedTicker={setSelectedTicker}
+          selectedTime={selectedTime}
+          setSelectedTime={setSelectedTime}
+          /> 
+          }
       <Routes>
         <Route
           path="/"
@@ -217,12 +318,20 @@ const App = () => {
               filterLimit={filterLimit}
               pointsState={pointsState}
               isUser={isUser}
+              data={data}
             />
           }
         />
         <Route
           path="/chart/:id"
-          element={<Chart isUser={isUser} isLogined={isLogined} pointsState={pointsState} />}
+          element={
+            <Chart
+              isUser={isUser}
+              isLogined={isLogined}
+              pointsState={pointsState}
+              analysis={analysis}
+            />
+          }
         />
         <Route
           path="/login"
@@ -231,22 +340,22 @@ const App = () => {
               isUser={isUser}
               setIsUser={setIsUser}
               isLogined={isLogined}
-              setIsLogined={setIsLogined}
+              setIsLogedIn={setIsLogined}
               setFilterLimit={setFilterLimit}
               handleLogin={handleLogin}
             />
           }
         />
       </Routes>
-      <Popav
+      <Popup
         isAlert={isAlert}
         setIsAlert={setIsAlert}
         isVideo={isVideo}
         setIsVideo={setIsVideo}
         closeAlert={closeAlert}
-        />
+      />
     </div>
-  // </>
+    // </>
   );
 };
 

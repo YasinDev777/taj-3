@@ -16,6 +16,8 @@ const Main = ({
   filterLimit,
   pointsState,
   isUser,
+  data,
+  selectedPreset
 }) => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -23,6 +25,9 @@ const Main = ({
   const [analysisData, setAnalysisData] = useState([]);
 
   useEffect(() => {
+    if (analysis) {
+      setAnalysisData(analysis);
+    }
     const fetchAnalysisData = async () => {
       if (analysis) {
         const fetchedData = [];
@@ -30,7 +35,7 @@ const Main = ({
         let number = 0;
         analysis.forEach((doc) => {
           const analysisId = doc.id;
-          const analysisMain = doc.data();
+          const analysisMain = doc;
           const index = number++;
           const lines =
             pointsState &&
@@ -45,7 +50,6 @@ const Main = ({
         });
 
         setAnalysisData(fetchedData);
-        console.log(fetchedData);
       }
     };
 
@@ -115,22 +119,21 @@ const Main = ({
   }, []);
 
   const calculateTimeDifference = (targetTime) => {
-      const targetDate = targetTime.seconds * 1000; // Maqsad vaqtni millisekundga aylantirish
-      const now = new Date().getTime(); // Hozirgi vaqt
-      const timeDifference = now - targetDate; // Vaqt farqi
-    
-      const totalHours = Math.floor(timeDifference / (1000 * 60 * 60)); // Umumiy soatlarni hisoblash
-      const days = Math.floor(totalHours / 24); // Kunlarni hisoblash
-      const hours = totalHours % 24; // Qoldiq soatlarni hisoblash
-    
-      // Natijani qaytarish
-      if (days > 0) {
-        return `${days} kun ${hours}`;
-      } else {
-        return hours;
-      }
-    };
-  
+    const targetDate = targetTime.seconds * 1000; // Maqsad vaqtni millisekundga aylantirish
+    const now = new Date().getTime(); // Hozirgi vaqt
+    const timeDifference = now - targetDate; // Vaqt farqi
+
+    const totalHours = Math.floor(timeDifference / (1000 * 60 * 60)); // Umumiy soatlarni hisoblash
+    const days = Math.floor(totalHours / 24); // Kunlarni hisoblash
+    const hours = totalHours % 24; // Qoldiq soatlarni hisoblash
+
+    // Natijani qaytarish
+    if (days >= 0) {
+      return `${days} kun ${hours}`;
+    } else {
+      return hours;
+    }
+  };
 
   return (
     <div className="main1">
@@ -140,49 +143,58 @@ const Main = ({
         ) : (
           <>
             {currentChart.map((item) => {
-              console.log(filterLimit);
+              const symbol = Object.entries(data)
+                .filter(([symbol, klines]) => symbol === item.symbol)
+                .map(([symbol, klines]) => symbol);
 
               return (
                 <div className="card" key={item.index}>
                   {filterLimit > item.index ? (
                     <>
-                      <div
+                      <Link
+                        to={"/chart/" + item.analysisId}
                         className="nav-card"
-                        style={{ background: "var(--main-color)" }}
+                        style={{
+                          background: "var(--main-color)",
+                          pointerEvents: "auto",
+                          cursor: "pointer",
+                        }}
                       >
                         <div className="infors">
                           <div className="info">
-                            <img src="/images/icon.png" alt="fullScreenIcon" />
                             <big>{item.symbol}</big>
                           </div>
                           <div className="salary">
-                            <i>$0,2648</i>
-                            <i>1,19%</i>
+                            <i>453453.23</i>
                           </div>
                         </div>
                         <Link
-                          className="navCardLink"
                           to={"/chart/" + item.analysisId}
-                          style={{ pointerEvents: "auto", cursor: "pointer" }}
+                          className="navCardLink"
                         >
                           <LuScanSearch className="scanIcon" />
                         </Link>
-                      </div>
-                      <div className="image">
-                        <Chart
-                          isCard={isCard}
-                          isUser={isUser}
-                          isLogined={isLogined}
-                          lines={item.lines}
-                        />
-                      </div>
-                      <div className="texx">
-                        <p>
-                          Aniqlandi:  
-                          <span> {calculateTimeDifference(item.created_at)} </span> 
-                          soat oldin
-                        </p>
-                      </div>
+
+                        <div className="image">
+                          <Chart
+                            isCard={isCard}
+                            isUser={isUser}
+                            isLogined={isLogined}
+                            analysis={analysis}
+                            data={symbol}
+                          />
+                        </div>
+                        <div className="texx">
+                          <p>
+                            Aniqlandi:
+                            <span>
+                              {" "}
+                              {calculateTimeDifference(item.created_at)}{" "}
+                            </span>
+                            soat oldin
+                          </p>
+                        </div>
+                      </Link>
                     </>
                   ) : (
                     <>
@@ -192,12 +204,13 @@ const Main = ({
                       >
                         <div className="infors">
                           <div className="info">
-                            <img src="/images/icon.png" alt="fullScreenIcon" />
                             <big>{item.symbol}</big>
                           </div>
                           <div className="salary">
                             <i>$0,2648</i>
-                            <p style={{ color: "var(--card-other-text)" }} >1.19%</p>
+                            <p style={{ color: "var(--card-other-text)" }}>
+                              1.19%
+                            </p>
                           </div>
                         </div>
                         <Link
@@ -219,7 +232,11 @@ const Main = ({
                       <div className="texx">
                         <p>
                           Aniqlandi:
-                          <span> {calculateTimeDifference(item.created_at)} </span>soat oldin
+                          <span>
+                            {" "}
+                            {calculateTimeDifference(item.created_at)}{" "}
+                          </span>
+                          soat oldin
                         </p>
                       </div>
                     </>

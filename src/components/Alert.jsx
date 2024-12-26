@@ -13,8 +13,8 @@ import {
 import { db } from "../firebase";
 
 const Alert = ({
-  setIsLogined,
-  isLogined,
+  setIsLogedIn,
+  isLogedIn,
   isUser,
   setAlertShown,
   alertShown,
@@ -61,10 +61,10 @@ const Alert = ({
   };
 
   useEffect(() => {
-    if (isLogined) {
+    if (isLogedIn) {
       fetchSubscriptionData(isUser);
     }
-  }, [isLogined, isUser, subscriptionDateEnd]);
+  }, [isLogedIn, isUser, subscriptionDateEnd]);
 
   useEffect(() => {
     const currentTime = new Date().getTime();
@@ -97,12 +97,12 @@ const Alert = ({
       }
     }
   }, [
-    isLogined,
+    isLogedIn,
     subscriptionDateEnd,
     alertShown,
     setAlertShown,
     setLimit,
-    setIsLogined,
+    setIsLogedIn,
   ]);
 
   const handleCloseAlert = () => {

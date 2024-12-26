@@ -27,7 +27,7 @@
 .infors {
     display: flex;
     align-items: center;
-    gap: calc(var(--index)*0.5);
+    gap: calc(var(--index)*2.5);
 }
 
 .info {
@@ -62,19 +62,13 @@
 .nav-card {
     width: 100%;
     height: calc(var(--index)*1.75);
-    display: flex;
+    /* display: flex; */
     align-items: center;
     justify-content: space-between;
     padding: calc(var(--index)*0.25) calc(var(--index)*0.5);
     border-radius: calc(var(--index)*0.3) calc(var(--index)*0.3) 0 0;
     gap: calc(var(--index)*0.25);
 }
-
-.nav-card img {
-    width: calc(var(--index)*1);
-    height: calc(var(--index)*1);
-}
-
 
 .nav-card big {
     font-size: calc(var(--index)*0.8);
@@ -114,16 +108,7 @@
     color: var(--card-other-text);
 }
 
-.salary::after {
-    content: "";
-    position: absolute;
-    width: calc(var(--index)*0.05);
-    height: 50%;
-    background-color: var(--text-color);
-    top: 50%;
-    left: 52%;
-    transform: translate(-60%, -50%);
-}
+
 
 .navCardLink {
     font-size: var(--index);
