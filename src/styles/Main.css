@@ -70,12 +70,6 @@
     gap: calc(var(--index)*0.25);
 }
 
-.nav-card img {
-    width: calc(var(--index)*1);
-    height: calc(var(--index)*1);
-}
-
-
 .nav-card big {
     font-size: calc(var(--index)*0.8);
     color: var(--card-text);

@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import { BsArrowLeftCircle } from "react-icons/bs";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
-import { RiKey2Line } from "react-icons/ri";
+import { LuClipboardCopy } from "react-icons/lu";
 import { FiArrowRightCircle } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/pagination";
 
 const Login = ({
-  setIsLogined,
+  setIsLogedIn,
   setIsUser,
   handleLogin
 }) => {
@@ -22,8 +22,8 @@ const Login = ({
       const text = await navigator.clipboard.readText();
       setInputValue(text);
     } catch (err) {
-      console.error("Ошибка доступа к буферу обмена:", err);
-      alert("Не удалось вставить текст. Проверьте разрешения.");
+      console.error("Xatolik yuz berdi:", err);
+      alert("Text quyishda xatolik yuz berdi. Ruxsat borligini tekshiring.");
     }
   };
 
@@ -34,14 +34,14 @@ const Login = ({
  
 
   useEffect(() => {
-    const storedLogin = localStorage.getItem("isLogined");
+    const storedLogin = localStorage.getItem("isLogedIn");
     const storedUser = localStorage.getItem("userName");
     if (storedLogin === "true" && storedUser) {
-      setIsLogined(true);
+      setIsLogedIn(true);
       setIsUser(storedUser);
       navigate("/");
     }
-  }, [setIsLogined, setIsUser, navigate]);
+  }, [setIsLogedIn, setIsUser, navigate]);
 
 
   return (
@@ -116,7 +116,7 @@ const Login = ({
                     onChange={handleChange}
                   />
 
-                  <RiKey2Line onClick={handlePaste} />
+                  <LuClipboardCopy onClick={handlePaste} />
                 </div>
               </div>
               <button onClick={() => handleLogin(inputValue)}>

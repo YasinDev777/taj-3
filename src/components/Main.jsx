@@ -17,6 +17,7 @@ const Main = ({
   pointsState,
   isUser,
   data,
+  selectedPreset
 }) => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,6 +28,32 @@ const Main = ({
     if (analysis) {
       setAnalysisData(analysis);
     }
+    const fetchAnalysisData = async () => {
+      if (analysis) {
+        const fetchedData = [];
+
+        let number = 0;
+        analysis.forEach((doc) => {
+          const analysisId = doc.id;
+          const analysisMain = doc;
+          const index = number++;
+          const lines =
+            pointsState &&
+            pointsState.filter((state) => state.analysis_id === analysisId);
+
+          fetchedData.push({
+            lines,
+            ...analysisMain,
+            analysisId,
+            index,
+          });
+        });
+
+        setAnalysisData(fetchedData);
+      }
+    };
+
+    fetchAnalysisData();
   }, [analysis, filterLimit, pointsState, isLogined]);
 
   useEffect(() => {
@@ -119,6 +146,7 @@ const Main = ({
               const symbol = Object.entries(data)
                 .filter(([symbol, klines]) => symbol === item.symbol)
                 .map(([symbol, klines]) => symbol);
+
               return (
                 <div className="card" key={item.index}>
                   {filterLimit > item.index ? (
@@ -134,8 +162,7 @@ const Main = ({
                       >
                         <div className="infors">
                           <div className="info">
-                            <img src="/images/icon.png" alt="fullScreenIcon" />
-                            <big>{symbol}</big>
+                            <big>{item.symbol}</big>
                           </div>
                           <div className="salary">
                             <i>453453.23</i>
@@ -177,7 +204,6 @@ const Main = ({
                       >
                         <div className="infors">
                           <div className="info">
-                            <img src="/images/icon.png" alt="fullScreenIcon" />
                             <big>{item.symbol}</big>
                           </div>
                           <div className="salary">

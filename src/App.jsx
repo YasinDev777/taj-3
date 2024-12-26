@@ -4,20 +4,23 @@ import Navbar from "./components/Navbar";
 import Main from "./components/Main";
 import Chart from "./components/LineChart";
 import "./styles/App.css";
-import Popav from "./components/Popav";
+import Popup from "./components/Popup";
 import Login from "./pages/Login";
-import Filter from "./components/Filter";
-import { collection, getDocs } from "firebase/firestore";
+
+import Filter from "./components/Filter"
+import {
+  collection,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "./firebase";
 import axios from "axios";
 
 const App = () => {
-  const [selectedPreset, setSelectedPreset] = useState(null);
-  const [selectedTicker, setSelectedTicker] = useState(null);
-  const [selectedTime, setSelectedTime] = useState("1d");
+  const [selectedPreset, setSelectedPreset] = useState("Type");
+  const [selectedTicker, setSelectedTicker] = useState("Type");
+  const [selectedTime, setSelectedTime] = useState("All");
   const [isGrid, setIsGrid] = useState(6);
   const [isCard, setIsCard] = useState(false);
-  const location = useLocation();
   const [isAlert, setIsAlert] = useState(false);
   const [isVideo, setIsVideo] = useState(false);
   const [isUser, setIsUser] = useState("");
@@ -29,6 +32,7 @@ const App = () => {
   const [analysis, setAnalysis] = useState([]);
   const navigate = useNavigate();
   const [pointsState, setPointsState] = useState([]);
+  const location = useLocation();
 
 
 
@@ -104,7 +108,7 @@ const App = () => {
             localStorage.clear();
             setIsLogined(true);
             localStorage.setItem("userName", foundUser.name);
-            localStorage.setItem("isLogined", "true");
+            localStorage.setItem("isLogedIn", "true");
             navigate("/");
             window.location.reload();
           }
@@ -196,14 +200,8 @@ const App = () => {
   };
 
   useEffect(() => {
-    // Filter analysis to get only active (inactive: false) symbols
     const activeSymbols = analysis.filter((item) => !item.inactive).map((item) => item.symbol);
-
-    
-    // Fetch data for each active symbol
     activeSymbols.forEach((symbol) => fetchKlines(symbol));
-
-    
    
 
   }, [filterLimit,isLogined]);
@@ -266,7 +264,7 @@ const App = () => {
       }
     };
     fetchOptions2();
-  }, []);
+  }, [filterLimit,isLogined]);
 
   const closeAlert = () => {
     setAlertShown(false);
@@ -284,30 +282,27 @@ const App = () => {
       {location.pathname.includes("/chart") ||
       location.pathname === "/login" ? null : (
         <Navbar
-          selectedPreset={selectedPreset}
-          setSelectedPreset={setSelectedPreset}
-          selectedTicker={selectedTicker}
-          setSelectedTicker={setSelectedTicker}
-          selectedTime={selectedTime}
-          setSelectedTime={setSelectedTime}
-          setIsGrid={setIsGrid}
-          isGrid={isGrid}
           isVideo={isVideo}
           setIsVideo={setIsVideo}
           setIsAlert={setIsAlert}
           isAlert={isAlert}
           isUser={isUser}
           isLogined={isLogined}
-          alertShown={alertShown}
-          setAlertShown={setAlertShown}
-          setIsLogined={setIsLogined}
-          StartTime={StartTime}
-          setStartTime={setStartTime}
-          setDiffTime={setDiffTime}
-          DiffTime={DiffTime}
         />
       )}
-      <Filter />
+          {location.pathname.includes("/chart") ||
+          location.pathname === "/login" ? null :
+         <Filter 
+          setIsGrid={setIsGrid}
+          isGrid={isGrid} 
+          selectedPreset={selectedPreset} 
+          setSelectedPreset={setSelectedPreset}
+          selectedTicker={selectedTicker}
+          setSelectedTicker={setSelectedTicker}
+          selectedTime={selectedTime}
+          setSelectedTime={setSelectedTime}
+          /> 
+          }
       <Routes>
         <Route
           path="/"
@@ -345,14 +340,14 @@ const App = () => {
               isUser={isUser}
               setIsUser={setIsUser}
               isLogined={isLogined}
-              setIsLogined={setIsLogined}
+              setIsLogedIn={setIsLogined}
               setFilterLimit={setFilterLimit}
               handleLogin={handleLogin}
             />
           }
         />
       </Routes>
-      <Popav
+      <Popup
         isAlert={isAlert}
         setIsAlert={setIsAlert}
         isVideo={isVideo}

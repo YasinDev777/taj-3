@@ -298,6 +298,7 @@ const Chart = ({ isCard, isUser, isLogined, pointsState, analysis, data }) => {
           ) : (
             <h3>{isUser}</h3>
           )}
+
         </div>
       </div>
       <div
