@@ -25,9 +25,10 @@
 }
 
 .infors {
+    width: 100%;
     display: flex;
     align-items: center;
-    gap: calc(var(--index)*0.5);
+    gap: calc(var(--index)*1.2);
 }
 
 .info {
@@ -102,21 +103,18 @@
     font-family: var(--main-front);
     font-weight: 600;
     font-style: normal;
+    position: relative;
 }
 
-.salary i:nth-child(2) {
-    color: var(--card-other-text);
-}
-
-.salary::after {
+.salary i::after{
     content: "";
     position: absolute;
-    width: calc(var(--index)*0.05);
-    height: 50%;
-    background-color: var(--text-color);
     top: 50%;
-    left: 52%;
-    transform: translate(-60%, -50%);
+    left: 133.5%;
+    transform: translate(-50%, -50%);
+    background-color: var(--main-color);
+    height: 100%;
+    width: calc(var(--index)*0.05);
 }
 
 .navCardLink {

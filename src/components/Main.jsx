@@ -12,10 +12,11 @@ const Main = ({
   isGrid,
   isAlert,
   setIsAlert,
-  isLogined,
+  isLogedIn,
   filterLimit,
   pointsState,
   isUser,
+  data,
   selectedPreset
 }) => {
   const [loading, setLoading] = useState(true);
@@ -24,33 +25,10 @@ const Main = ({
   const [analysisData, setAnalysisData] = useState([]);
 
   useEffect(() => {
-    const fetchAnalysisData = async () => {
-      if (analysis) {
-        const fetchedData = [];
-
-        let number = 0;
-        analysis.forEach((doc) => {
-          const analysisId = doc.id;
-          const analysisMain = doc.data();
-          const index = number++;
-          const lines =
-            pointsState &&
-            pointsState.filter((state) => state.analysis_id === analysisId);
-
-          fetchedData.push({
-            lines,
-            ...analysisMain,
-            analysisId,
-            index,
-          });
-        });
-
-        setAnalysisData(fetchedData);
-      }
-    };
-
-    fetchAnalysisData();
-  }, [analysis, filterLimit, pointsState, isLogined]);
+    if (analysis) {
+      setAnalysisData(analysis);
+    }
+  }, [analysis, filterLimit, pointsState, isLogedIn]);
 
   useEffect(() => {
     setChartPerPage(Number(isGrid));
@@ -115,21 +93,22 @@ const Main = ({
   }, []);
 
   const calculateTimeDifference = (targetTime) => {
-      const targetDate = targetTime.seconds * 1000; // Maqsad vaqtni millisekundga aylantirish
-      const now = new Date().getTime(); // Hozirgi vaqt
-      const timeDifference = now - targetDate; // Vaqt farqi
-    
-      const totalHours = Math.floor(timeDifference / (1000 * 60 * 60)); // Umumiy soatlarni hisoblash
-      const days = Math.floor(totalHours / 24); // Kunlarni hisoblash
-      const hours = totalHours % 24; // Qoldiq soatlarni hisoblash
-    
-      // Natijani qaytarish
-      if (days > 0) {
-        return `${days} kun ${hours}`;
-      } else {
-        return hours;
-      }
-    };
+    const targetDate = targetTime.seconds * 1000; // Maqsad vaqtni millisekundga aylantirish
+    const now = new Date().getTime(); // Hozirgi vaqt
+    const timeDifference = now - targetDate; // Vaqt farqi
+
+    const totalHours = Math.floor(timeDifference / (1000 * 60 * 60)); // Umumiy soatlarni hisoblash
+    const days = Math.floor(totalHours / 24); // Kunlarni hisoblash
+    const hours = totalHours % 24; // Qoldiq soatlarni hisoblash
+
+    // Natijani qaytarish
+    if (days >= 0) {
+      return `${days} kun ${hours}`;
+    } else {
+      return hours;
+    }
+  };
+
   
 
   return (
@@ -140,47 +119,63 @@ const Main = ({
         ) : (
           <>
             {currentChart.map((item) => {
-
+              const symbol = Object.entries(data)
+                .filter(([symbol]) => symbol === item.symbol)
+                .map(([symbol]) => symbol);
+                
+                const lastClosePrice = Object.entries(data).filter(([symbol]) => symbol === item.symbol).map(item => item.lastClosePrice)
+                
               return (
                 <div className="card" key={item.index}>
                   {filterLimit > item.index ? (
                     <>
-                      <div
-                        className="nav-card"
-                        style={{ background: "var(--main-color)" }}
-                      >
+                      {/* <Link
+                        to={"/chart/" + item.analysisId}
+                        style={{
+                          background: "var(--main-color)",
+                          pointerEvents: "auto",
+                          cursor: "pointer",
+                        }}
+                      > */}
+                      <div className="nav-card" style={{background: "var(--main-color)", width: "100%"}}>
                         <div className="infors">
                           <div className="info">
                             <big>{item.symbol}</big>
                           </div>
                           <div className="salary">
                             <i>$0,2648</i>
-                            <i>1,19%</i>
+                            <p style={{ color: "var(--card-other-text)" }}>
+                              1.19%
+                            </p>
                           </div>
                         </div>
                         <Link
-                          className="navCardLink"
                           to={"/chart/" + item.analysisId}
-                          style={{ pointerEvents: "auto", cursor: "pointer" }}
-                        >
+                          className="navCardLink"
+                          >
                           <LuScanSearch className="scanIcon" />
                         </Link>
                       </div>
-                      <div className="image">
-                        <Chart
-                          isCard={isCard}
-                          isUser={isUser}
-                          isLogined={isLogined}
-                          lines={item.lines}
-                        />
-                      </div>
-                      <div className="texx">
-                        <p>
-                          Aniqlandi:  
-                          <span> {calculateTimeDifference(item.created_at)} </span> 
-                          soat oldin
-                        </p>
-                      </div>
+
+                        <div className="image">
+                          <Chart
+                            isCard={isCard}
+                            isUser={isUser}
+                            isLogedIn={isLogedIn}
+                            analysis={analysis}
+                            data={symbol}
+                          />
+                        </div>
+                        <div className="texx">
+                          <p>
+                            Aniqlandi: 
+                            <span> {" "}
+                              { calculateTimeDifference(item.created_at)}{" "}
+                            </span>
+                            soat oldin
+                          </p>
+                        </div>
+                      {/* </Link> */}
                     </>
                   ) : (
                     <>
@@ -194,7 +189,9 @@ const Main = ({
                           </div>
                           <div className="salary">
                             <i>$0,2648</i>
-                            <p style={{ color: "var(--card-other-text)" }} >1.19%</p>
+                            <p style={{ color: "var(--card-other-text)" }}>
+                              1.19%
+                            </p>
                           </div>
                         </div>
                         <Link
@@ -215,8 +212,11 @@ const Main = ({
                       </div>
                       <div className="texx">
                         <p>
-                          Aniqlandi:
-                          <span> {calculateTimeDifference(item.created_at)} </span>soat oldin
+                          Aniqlandi: 
+                          <span> {" "}
+                            { calculateTimeDifference(item.created_at)}{" "}
+                          </span>
+                          soat oldin
                         </p>
                       </div>
                     </>
