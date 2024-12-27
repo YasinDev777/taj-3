@@ -27,33 +27,8 @@ const Main = ({
   useEffect(() => {
     if (analysis) {
       setAnalysisData(analysis);
+      
     }
-    const fetchAnalysisData = async () => {
-      if (analysis) {
-        const fetchedData = [];
-
-        let number = 0;
-        analysis.forEach((doc) => {
-          const analysisId = doc.id;
-          const analysisMain = doc;
-          const index = number++;
-          const lines =
-            pointsState &&
-            pointsState.filter((state) => state.analysis_id === analysisId);
-
-          fetchedData.push({
-            lines,
-            ...analysisMain,
-            analysisId,
-            index,
-          });
-        });
-
-        setAnalysisData(fetchedData);
-      }
-    };
-
-    fetchAnalysisData();
   }, [analysis, filterLimit, pointsState, isLogined]);
 
   useEffect(() => {
@@ -135,6 +110,8 @@ const Main = ({
     }
   };
 
+  
+
   return (
     <div className="main1">
       <div className="main">
@@ -144,8 +121,11 @@ const Main = ({
           <>
             {currentChart.map((item) => {
               const symbol = Object.entries(data)
-                .filter(([symbol, klines]) => symbol === item.symbol)
-                .map(([symbol, klines]) => symbol);
+                .filter(([symbol]) => symbol === item.symbol)
+                .map(([symbol]) => symbol);
+                
+                const lastClosePrice = Object.entries(data).filter(([symbol]) => symbol === item.symbol).map(item => item[1].lastClosePrice)
+                
 
               return (
                 <div className="card" key={item.index}>
@@ -165,7 +145,7 @@ const Main = ({
                             <big>{item.symbol}</big>
                           </div>
                           <div className="salary">
-                            <i>453453.23</i>
+                            <i>{lastClosePrice}</i>
                           </div>
                         </div>
                         <Link

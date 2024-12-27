@@ -42,8 +42,8 @@ const App = () => {
       const usersCollection = collection(db, "user");
       const querySnapshot = await getDocs(usersCollection);
 
-      const analysis = collection(db, "analysis");
-      const allAnalysis = await getDocs(analysis);
+      const analysisGet = collection(db, "analysis");
+      const allAnalysis = await getDocs(analysisGet);
 
         const fetchedData = [];
 
@@ -65,6 +65,8 @@ const App = () => {
         });
 
         setAnalysis(fetchedData);
+        console.log(analysis);
+        
         
 
       
@@ -143,6 +145,61 @@ const App = () => {
   const [data, setData] = useState({});
   const [setError] = useState(null);
 
+  // const fetchKlines = async (symbol) => {
+  //   const API_URL = `https://api.binance.com/api/v3/klines`;
+  //   try {
+  //     const response = await axios.get(API_URL, {
+  //       params: {
+  //         symbol: symbol,
+  //         interval: '1h',
+  //         limit: 10,
+  //       },
+  //     });
+
+  //     // let lastClosePrice =""
+  //     // if (response.data) {
+  //     //   const formattedData = response.data.map((item) => ({
+  //     //     time: item[0] / 1000,
+  //     //     open: parseFloat(item[1]),
+  //     //     high: parseFloat(item[2]),
+  //     //     low: parseFloat(item[3]),
+  //     //     close: parseFloat(item[4]),
+  //     //   }));
+
+  //     //   if (formattedData.length > 0) {
+  //     //     lastClosePrice = formattedData[formattedData.length - 1].close;
+  //     //   }}
+  //     let lastClosePrice = ""
+
+  //     if (response.data) {
+  //       const formattedData = response.data.map(item => ({
+  //         time: item[0] / 1000,
+  //         open: parseFloat(item[1]),
+  //         high: parseFloat(item[2]),
+  //         low: parseFloat(item[3]),
+  //         close: parseFloat(item[4])
+  //       }));
+  
+  //       if (formattedData.length > 0) {
+  //       lastClosePrice = formattedData[formattedData.length - 1].close;
+  //       }
+  //     }
+  //     // Update state with fetched data grouped by symbol
+  //     setData((prevData) => ({
+  //       ...prevData,
+  //       [symbol]: response.data,
+  //     }));
+
+     
+  
+  
+     
+
+  //   } catch (err) {
+  //     setError(`Muammo: ${err.message}`);
+  //   }
+  // };
+
   const fetchKlines = async (symbol) => {
     const API_URL = `https://api.binance.com/api/v3/klines`;
     try {
@@ -153,56 +210,48 @@ const App = () => {
           limit: 10,
         },
       });
-
-      // let lastClosePrice =""
-      // if (response.data) {
-      //   const formattedData = response.data.map((item) => ({
-      //     time: item[0] / 1000,
-      //     open: parseFloat(item[1]),
-      //     high: parseFloat(item[2]),
-      //     low: parseFloat(item[3]),
-      //     close: parseFloat(item[4]),
-      //   }));
-
-      //   if (formattedData.length > 0) {
-      //     lastClosePrice = formattedData[formattedData.length - 1].close;
-      //   }}
-      let lastClosePrice = ""
-
+  
+      let lastClosePrice = "";
+  
       if (response.data) {
         const formattedData = response.data.map(item => ({
           time: item[0] / 1000,
           open: parseFloat(item[1]),
           high: parseFloat(item[2]),
           low: parseFloat(item[3]),
-          close: parseFloat(item[4])
+          close: parseFloat(item[4]),
         }));
   
         if (formattedData.length > 0) {
-        lastClosePrice = formattedData[formattedData.length - 1].close;
+          lastClosePrice = formattedData[formattedData.length - 1].close;
         }
       }
-      // Update state with fetched data grouped by symbol
-      setData((prevData) => ({
-        ...prevData,
-        [symbol]: response.data,
-        formattedData: lastClosePrice
-      }));
-
-     
   
-  
-     
-
+      // Agar activeSymbols ichida symbol bo'lsa, lastClosePrice qo'shamiz
+      if (symbol) {
+        setData((prevData) => ({
+          ...prevData,
+          [symbol]: {
+            data: response.data,
+            lastClosePrice: lastClosePrice, // lastClosePrice qiymatini qo'shish
+          },
+        }));
+      } else {
+        setData((prevData) => ({
+          ...prevData,
+          [symbol]: response.data, // Faqat data
+        }));
+      }
     } catch (err) {
       setError(`Muammo: ${err.message}`);
     }
   };
+  
 
   useEffect(() => {
-    const activeSymbols = analysis.filter((item) => !item.inactive).map((item) => item.symbol);
+    const activeSymbols = new Set(analysis.map((item) => item.symbol));
     activeSymbols.forEach((symbol) => fetchKlines(symbol));
-   
+    
 
   }, [filterLimit,isLogined]);
 
@@ -276,6 +325,9 @@ const App = () => {
   useEffect(() => {
     document.body.style.overflow = isAlert || isVideo ? "hidden" : "auto";
   }, [isAlert, isVideo]);
+
+
+  
 
   return (
     <div className="app">
