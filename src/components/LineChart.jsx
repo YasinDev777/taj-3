@@ -47,7 +47,7 @@ const Chart = ({ isCard, isUser, isLogined, pointsState, analysis, data }) => {
         const filteredItems = analysis && analysis.filter(item => item.analysisId === id);
         setAnalysisSymbols(filteredItems[0].symbol);
       } else {
-        setAnalysisSymbols(data[0])
+        setAnalysisSymbols(data.toString())
       }
 
       try {
