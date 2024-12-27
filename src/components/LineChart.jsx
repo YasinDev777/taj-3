@@ -77,7 +77,7 @@ const Chart = ({ isCard, isUser, isLogedIn , pointsState ,lines}) => {
             console.error('No valid data available');
           }
         } else {
-          console.error('No data in response');
+          console.error('No data in response ');
         }
       } catch (error) {
         console.error('Error fetching data:', error.message);
