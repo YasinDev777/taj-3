@@ -17,6 +17,7 @@ const Main = ({
   pointsState,
   isUser,
   data,
+  filterCards,
   selectedPreset
 }) => {
   const [loading, setLoading] = useState(true);
@@ -110,7 +111,6 @@ const Main = ({
   };
 
   
-
   return (
     <div className="main1">
       <div className="main">
@@ -122,9 +122,10 @@ const Main = ({
               const symbol = Object.entries(data)
                 .filter(([symbol]) => symbol === item.symbol)
                 .map(([symbol]) => symbol);
-                
                 const lastClosePrice = Object.entries(data).filter(([symbol]) => symbol === item.symbol).map(item => item.lastClosePrice)
-                
+                filterCards.filter((item) => {
+                  // console.log(item.timeframe_id);
+                  
               return (
                 <div className="card" key={item.index}>
                   {filterLimit > item.index ? (
@@ -223,6 +224,7 @@ const Main = ({
                   )}
                 </div>
               );
+            })
             })}
           </>
         )}

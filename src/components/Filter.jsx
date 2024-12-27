@@ -24,7 +24,9 @@ const Filter = ({
     setIsGrid,
     isGrid,
     setSelectedTime,
-    selectedTime
+    selectedTime,
+    setSelectedTime_id,
+    selectedTime_id
 }) => {
     const [forFilterData, setForFilterData] = useState([])
     const [forTimeData, setForTimeData] = useState([])
@@ -54,15 +56,15 @@ const Filter = ({
                     setForFilterData(screeningTypesGetMain)
                 })
 
+                const Timeframe = []
                 const timeFrameData = collection(db, "timeframe")
                 const timeFrameDataGet = await getDocs(timeFrameData)
                 timeFrameDataGet.forEach((docs) =>{
                     const data = docs.data()
-                    forTimeData.push(data)
+                    Timeframe.push(data)
                 })
 
-                console.log(forTimeData);
-
+                console.log(forFilterData);
             }
             catch (error) {
                 console.log(error);
@@ -83,12 +85,18 @@ const Filter = ({
 
     useEffect(() => {
         const foundData = forFilterData.find((item) => item.data.name === selectedPreset)
+        const foundDataTime = forTimeData.find((item) => item.name === selectedTime)
         if (foundData) {
             const foundTypeId = foundData.data.type_id;
             setSelectValues(foundTypeId)
         }
-    }, [selectedPreset])
 
+        if (foundDataTime) {
+            setSelectedTime_id(foundDataTime.id)
+            console.log(selectedTime_id);
+        }
+        
+    }, [selectedPreset, selectedTime])
 
     const handleToDefoult = () =>{
         setOpen(false)

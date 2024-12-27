@@ -19,6 +19,7 @@ const App = () => {
   const [selectedPreset, setSelectedPreset] = useState("Type");
   const [selectedTicker, setSelectedTicker] = useState("Type");
   const [selectedTime, setSelectedTime] = useState("All");
+  const [selectedTime_id, setSelectedTime_id] = useState("")
   const [isGrid, setIsGrid] = useState(6);
   const [isCard, setIsCard] = useState(false);
   const [isAlert, setIsAlert] = useState(false);
@@ -26,6 +27,7 @@ const App = () => {
   const [isUser, setIsUser] = useState("");
   const [isLogedIn, setIsLogedIn] = useState(false);
   const [filterLimit, setFilterLimit] = useState(1);
+  const [filterCards, setFilterCards] = useState([])
   const [alertShown, setAlertShown] = useState(false);
   const [analysis, setAnalysis] = useState([]);
   const navigate = useNavigate();
@@ -60,7 +62,17 @@ const App = () => {
             analysisId,
             index,
           });
+
+          const filterCards = fetchedData.filter((item) => {
+            const matchesTime = selectedTime_id ? item.timeframe_id === selectedTime_id : true
+            return matchesTime
+          })
+
+          setFilterCards(filterCards)
+          // console.log(fetchedData);
+          // console.log(selectedTime_id)
         });
+
 
         setAnalysis(fetchedData);
         console.log(analysis);
@@ -314,6 +326,8 @@ const App = () => {
           setSelectedTicker={setSelectedTicker}
           selectedTime={selectedTime}
           setSelectedTime={setSelectedTime}
+          setSelectedTime_id={setSelectedTime_id}
+          selectedTime_id={selectedTime_id}
           /> 
           }
       <Routes>
@@ -332,6 +346,8 @@ const App = () => {
               pointsState={pointsState}
               isUser={isUser}
               data={data}
+              filterCards={filterCards}
+              setFilterCards={setFilterCards}
             />
           }
         />
