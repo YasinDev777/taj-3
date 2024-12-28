@@ -19,6 +19,8 @@ const App = () => {
   const [selectedPreset, setSelectedPreset] = useState("Type");
   const [selectedTicker, setSelectedTicker] = useState("Type");
   const [selectedTime, setSelectedTime] = useState("All");
+  const [selectValues, setSelectValues] = useState("")
+  const [foundTimeId, setFoundTimeId] = useState("salom")
   const [isGrid, setIsGrid] = useState(6);
   const [isCard, setIsCard] = useState(false);
   const [isAlert, setIsAlert] = useState(false);
@@ -26,10 +28,11 @@ const App = () => {
   const [isUser, setIsUser] = useState("");
   const [isLogedIn, setIsLogedIn] = useState(false);
   const [filterLimit, setFilterLimit] = useState(1);
+  const [filterCards, setFilterCards] = useState([])
   const [alertShown, setAlertShown] = useState(false);
   const [analysis, setAnalysis] = useState([]);
-  const navigate = useNavigate();
   const [pointsState, setPointsState] = useState([]);
+  const navigate = useNavigate();
   const location = useLocation();
 
 
@@ -43,27 +46,41 @@ const App = () => {
       const analysisGet = collection(db, "analysis");
       const allAnalysis = await getDocs(analysisGet);
 
-        const fetchedData = [];
+      const fetchedData = [];
 
-        let number = 0;
-        allAnalysis.forEach((doc) => {
-          const analysisId = doc.id;
-          const analysisMain = doc.data();
-          const index = number++;
-          const lines =
-            pointsState &&
-            pointsState.filter((state) => state.analysis_id === analysisId);
+      let number = 0;
+      allAnalysis.forEach((doc) => {
+        const analysisId = doc.id;
+        const analysisMain = doc.data();
+        const index = number++;
+        const lines =
+          pointsState &&
+          pointsState.filter((state) => state.analysis_id === analysisId);
 
-          fetchedData.push({
-            lines,
-            ...analysisMain,
-            analysisId,
-            index,
-          });
+        fetchedData.push({
+          lines,
+          ...analysisMain,
+          analysisId,
+          index,
         });
 
-        setAnalysis(fetchedData);
-        console.log(analysis);
+        const filteredCards = fetchedData.filter((card) => {
+          // Проверяем фильтры на соответствие
+          const matchesPreset = !selectedPreset || card.screening_type_id === selectValues; // Условие для анализа
+          const matchesTicker = !selectedTicker || card.screening_type_value_id === selectedTicker; // Условие для тикера
+          const matchesTime = !selectedTime || card.timeframe_id === foundTimeId; // Условие для времени
+
+          return matchesPreset && matchesTicker && matchesTime;
+        });
+
+        setFilterCards(filteredCards);
+        // console.log(filteredCards);
+        // console.log(selectedTime_id)
+      });
+
+
+      setAnalysis(fetchedData);
+      // console.log(analysis);
       const points = collection(db, "points");
       const allPoints = await getDocs(points);
       let pointNew = [];
@@ -122,7 +139,14 @@ const App = () => {
       console.error("xatolik:", error);
     }
   };
-  
+
+//   useEffect(() => {
+//     console.log("forFilterData:", forFilterData);
+//     console.log("forTimeData:", forTimeData);
+//     console.log("cardsData:", cardsData);
+// }, [forFilterData, forTimeData, cardsData]);
+
+
   const [data, setData] = useState({});
   const [setError] = useState(null);
 
@@ -160,7 +184,7 @@ const App = () => {
   //         low: parseFloat(item[3]),
   //         close: parseFloat(item[4])
   //       }));
-  
+
   //       if (formattedData.length > 0) {
   //       lastClosePrice = formattedData[formattedData.length - 1].close;
   //       }
@@ -186,9 +210,9 @@ const App = () => {
           limit: 10,
         },
       });
-  
+
       let lastClosePrice = "";
-  
+
       if (response.data) {
         const formattedData = response.data.map(item => ({
           time: item[0] / 1000,
@@ -197,12 +221,12 @@ const App = () => {
           low: parseFloat(item[3]),
           close: parseFloat(item[4]),
         }));
-  
+
         if (formattedData.length > 0) {
           lastClosePrice = formattedData[formattedData.length - 1].close;
         }
       }
-  
+
       // Agar activeSymbols ichida symbol bo'lsa, lastClosePrice qo'shamiz
       if (symbol) {
         setData((prevData) => ({
@@ -222,12 +246,12 @@ const App = () => {
       setError(`Muammo: ${err.message}`);
     }
   };
-  
+
 
   useEffect(() => {
     const activeSymbols = new Set(analysis.map((item) => item.symbol));
     activeSymbols.forEach((symbol) => fetchKlines(symbol));
-    
+
 
   }, [filterLimit, isLogedIn]);
 
@@ -293,7 +317,7 @@ const App = () => {
   return (
     <div className="app">
       {location.pathname.includes("/chart") ||
-      location.pathname === "/login" ? null : (
+        location.pathname === "/login" ? null : (
         <Navbar
           isVideo={isVideo}
           setIsVideo={setIsVideo}
@@ -303,19 +327,23 @@ const App = () => {
           isLogedIn={isLogedIn}
         />
       )}
-          {location.pathname.includes("/chart") ||
-          location.pathname === "/login" ? null :
-         <Filter 
+      {location.pathname.includes("/chart") ||
+        location.pathname === "/login" ? null :
+        <Filter
           setIsGrid={setIsGrid}
-          isGrid={isGrid} 
-          selectedPreset={selectedPreset} 
+          isGrid={isGrid}
+          selectedPreset={selectedPreset}
           setSelectedPreset={setSelectedPreset}
           selectedTicker={selectedTicker}
           setSelectedTicker={setSelectedTicker}
           selectedTime={selectedTime}
           setSelectedTime={setSelectedTime}
-          /> 
-          }
+          setSelectValues={setSelectValues}
+          selectValues={selectValues}
+          foundTimeId={foundTimeId}
+          setFoundTimeId={setFoundTimeId}
+        />
+      }
       <Routes>
         <Route
           path="/"
@@ -332,6 +360,8 @@ const App = () => {
               pointsState={pointsState}
               isUser={isUser}
               data={data}
+              filterCards={filterCards}
+              setFilterCards={setFilterCards}
             />
           }
         />
