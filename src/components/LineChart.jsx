@@ -6,18 +6,20 @@ import { FiArrowRightCircle } from "react-icons/fi";
 import { BsArrowLeftCircle } from "react-icons/bs";
 import axios from "axios";
 
-const Chart = ({ isCard, isUser, isLogedIn, pointsState, analysis, data }) => {
+const Chart = ({ isCard, isUser, isLogedIn, pointsState, analysis, data,line }) => {
   const [analysisData, setAnalysisData] = useState([]);
   const [analysisSymbols, setAnalysisSymbols] = useState("");
   const { id } = useParams();
 
+  
+
   useEffect(() => {
     const fetchAnalysisData = async () => {
-      if (!data && pointsState && id) {
+      if (!line && pointsState && id) {
         const lines = pointsState.filter((state) => state.analysis_id === id);
         setAnalysisData(lines);
       } else if (data) {
-        setAnalysisData(data);
+        setAnalysisData(line);
       }
     };
 
@@ -134,11 +136,18 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, analysis, data }) => {
 
       if (analysisData.length > 0) {
         const upperLowerData = analysisData
-          .filter(item => item.position === "upper" || item.position === "lower")
-          .map(item => ({
-            time: item.date.seconds,
-            value: item.price,
-          }));
+        .filter(item => item.position === "upper" || item.position === "lower")
+        .map(item => ({
+          time: item.date.seconds,
+          value: item.price,
+          position: item.position,
+        }))
+        .sort((a, b) => {
+          // "lower" elementlarni yuqoriga ko‘tarish
+          if (a.position === "lower" && b.position === "upper") return -1;
+          if (a.position === "upper" && b.position === "lower") return 1;
+          return 0; // Asosiy tartibni saqlash
+        });
 
         const singleData = analysisData
           .filter(item => item.position === "single")
