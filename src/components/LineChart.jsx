@@ -6,32 +6,24 @@ import { FiArrowRightCircle } from "react-icons/fi";
 import { BsArrowLeftCircle } from "react-icons/bs";
 import axios from "axios";
 
-const Chart = ({ isCard, isUser, isLogined, pointsState, analysis, data }) => {
-  const [analysisData, setAnalysisData] = useState("");
+const Chart = ({ isCard, isUser, isLogedIn, pointsState, analysis, data }) => {
+  const [analysisData, setAnalysisData] = useState([]);
+  const [analysisSymbols, setAnalysisSymbols] = useState("");
+  const { id } = useParams();
 
-  const [analysisSymbols, setAnalysisSymbols] = useState("")
-  
+  useEffect(() => {
+    const fetchAnalysisData = async () => {
+      if (!data && pointsState && id) {
+        const lines = pointsState.filter((state) => state.analysis_id === id);
+        setAnalysisData(lines);
+      } else if (data) {
+        setAnalysisData(data);
+      }
+    };
 
-  const {id} = useParams()
+    fetchAnalysisData();
+  }, [isLogedIn, pointsState, id, data]);
 
-   useEffect(() => {
-      const fetchAnalysisData = async () => {
-        if (!data && pointsState && id) {
-            const lines =
-              pointsState &&
-              pointsState.filter((state) => state.analysis_id === id);
-              setAnalysisData(lines);
-            } else if(data) {
-              setAnalysisData(data)
-            }
-          };
-          
-      fetchAnalysisData();
-    }, [isLogined, pointsState, id ,data]);
-  
-  
-  
-  
   const chartContainerRef = useRef(null);
   const [candlestickData, setCandlestickData] = useState([]);
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -42,19 +34,22 @@ const Chart = ({ isCard, isUser, isLogined, pointsState, analysis, data }) => {
 
   useEffect(() => {
     const fetchBitCoinData = async () => {
-
       if (!data && analysis) {
-        const filteredItems = analysis && analysis.filter(item => item.analysisId === id);
-        setAnalysisSymbols(filteredItems[0].symbol);
+        const filteredItems = analysis.filter(item => item.analysisId === id);
+        if (filteredItems.length > 0) {
+          setAnalysisSymbols(filteredItems[0].symbol);
+        } else {
+          console.error('No analysis symbols found');
+          return;
+        }
       } else {
-        setAnalysisSymbols(data.toString())
+        setAnalysisSymbols(data.toString());
       }
 
       try {
-        const response = await axios.get(
-          'https://api.binance.com/api/v3/klines', {
+        const response = await axios.get('https://api.binance.com/api/v3/klines', {
           params: {
-            symbol: analysisSymbols && analysisSymbols,
+            symbol: analysisSymbols,
             interval: '1h',
             limit: 1000
           },
@@ -62,14 +57,12 @@ const Chart = ({ isCard, isUser, isLogined, pointsState, analysis, data }) => {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
-
           proxy: {
             protocol: 'https',
             host: 'cors-anywhere.herokuapp.com',
             port: 443
           }
-        }
-        );
+        });
 
         if (response.data) {
           const formattedData = response.data.map(item => ({
@@ -94,8 +87,7 @@ const Chart = ({ isCard, isUser, isLogined, pointsState, analysis, data }) => {
     };
 
     fetchBitCoinData();
-    
-  }, [analysisSymbols, isLogined,data]);
+  }, [analysisSymbols, isLogedIn, data]);
 
   useEffect(() => {
     if (chartContainerRef.current && candlestickData.length > 0) {
@@ -107,16 +99,14 @@ const Chart = ({ isCard, isUser, isLogined, pointsState, analysis, data }) => {
         timeScale: {
           ...(isDarkMode ? darkMode.timeScale : lightMode.timeScale),
           scrollable: isCard,
-          rightOffset: 10, 
+          rightOffset: 10,
           barSpacing: 12,
           leftOffset: -10,
         },
         handleScale: isCard,
         handleScroll: isCard,
         rightPriceScale: {
-          ...(isDarkMode
-            ? darkMode.rightPriceScale
-            : lightMode.rightPriceScale),
+          ...(isDarkMode ? darkMode.rightPriceScale : lightMode.rightPriceScale),
           scaleMargins: { top: 0.1, bottom: 0.1 },
         },
         crosshair: isDarkMode ? darkMode.crosshair : lightMode.crosshair,
@@ -142,30 +132,21 @@ const Chart = ({ isCard, isUser, isLogined, pointsState, analysis, data }) => {
         lastValueVisible: false,
       });
 
-     
-
-      if (analysisData) {
+      if (analysisData.length > 0) {
         const upperLowerData = analysisData
-          .filter(
-            (item) => item.position === "upper" || item.position === "lower"
-          )
-          .map((item) => ({
-            time: item.date.seconds, // vaqt qiymati
-            value: item.price, // narx qiymati
+          .filter(item => item.position === "upper" || item.position === "lower")
+          .map(item => ({
+            time: item.date.seconds,
+            value: item.price,
           }));
 
-        // lineSeries2 ga single bo'lgan ma'lumotlarni jo'natish
         const singleData = analysisData
-          .filter((item) => item.position === "single")
-          .map((item) => ({
-            value: item.price, // narx qiymati
+          .filter(item => item.position === "single")
+          .map(item => ({
+            value: item.price,
           }));
 
-        // lineSeries1 uchun setData
         lineSeries1.setData(upperLowerData);
-
-        // lineSeries2 uchun setData
-        // lineSeries2.setData(singleData);
 
         candlestickSeries.createPriceLine({
           price: singleData.length > 0 ? singleData[0].value : NaN,
@@ -186,10 +167,7 @@ const Chart = ({ isCard, isUser, isLogined, pointsState, analysis, data }) => {
       };
 
       chart.timeScale().setVisibleRange({
-        from:
-          candlestickData[
-            candlestickData.length - (isCard === false ? 50 : 260)
-          ]?.time || candlestickData[0]?.time,
+        from: candlestickData[candlestickData.length - (isCard === false ? 50 : 260)]?.time || candlestickData[0]?.time,
         to: candlestickData[candlestickData.length - 1]?.time,
       });
 
@@ -199,7 +177,7 @@ const Chart = ({ isCard, isUser, isLogined, pointsState, analysis, data }) => {
         chart.remove();
       };
     }
-  }, [analysisData, candlestickData,isMouseDown]);
+  }, [analysisData, candlestickData, isMouseDown]);
 
   const darkMode = {
     layout: {
@@ -289,7 +267,7 @@ const Chart = ({ isCard, isUser, isLogined, pointsState, analysis, data }) => {
           <Link to="https://t.me/ahsanlabs_admin" target="blank">
             <PiHeadsetBold />
           </Link>
-          {isLogined === false ? (
+          {isLogedIn === false ? (
             <Link to="/login">
               <button>
                 Kirish <FiArrowRightCircle />
@@ -298,19 +276,16 @@ const Chart = ({ isCard, isUser, isLogined, pointsState, analysis, data }) => {
           ) : (
             <h3>{isUser}</h3>
           )}
-
         </div>
       </div>
       <div
         ref={chartContainerRef}
-        className={`chart-container ${
-          isCard === false ? "chart-container-mobile" : ""
-        }`}
+        className={`chart-container ${isCard === false ? "chart-container-mobile" : ""}`}
         style={
           isCard === false
             ? {
                 width: "calc(var(--index)*20)",
-                height: "calc(var(--index)*13.5)",
+                height: "calc(var(--index)*15.5)",
                 transform: "translateY(0)",
               }
             : { width: "100%", height: "77.6dvh" }

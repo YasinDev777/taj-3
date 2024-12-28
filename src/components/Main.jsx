@@ -12,7 +12,7 @@ const Main = ({
   isGrid,
   isAlert,
   setIsAlert,
-  isLogined,
+  isLogedIn,
   filterLimit,
   pointsState,
   isUser,
@@ -27,9 +27,8 @@ const Main = ({
   useEffect(() => {
     if (analysis) {
       setAnalysisData(analysis);
-      
     }
-  }, [analysis, filterLimit, pointsState, isLogined]);
+  }, [analysis, filterLimit, pointsState, isLogedIn]);
 
   useEffect(() => {
     setChartPerPage(Number(isGrid));
@@ -124,57 +123,59 @@ const Main = ({
                 .filter(([symbol]) => symbol === item.symbol)
                 .map(([symbol]) => symbol);
                 
-                const lastClosePrice = Object.entries(data).filter(([symbol]) => symbol === item.symbol).map(item => item[1].lastClosePrice)
+                const lastClosePrice = Object.entries(data).filter(([symbol]) => symbol === item.symbol).map(item => item.lastClosePrice)
                 
-
               return (
                 <div className="card" key={item.index}>
                   {filterLimit > item.index ? (
                     <>
-                      <Link
+                      {/* <Link
                         to={"/chart/" + item.analysisId}
-                        className="nav-card"
                         style={{
                           background: "var(--main-color)",
                           pointerEvents: "auto",
                           cursor: "pointer",
                         }}
-                      >
+                      > */}
+                      <div className="nav-card" style={{background: "var(--main-color)", width: "100%"}}>
                         <div className="infors">
                           <div className="info">
                             <big>{item.symbol}</big>
                           </div>
                           <div className="salary">
-                            <i>{lastClosePrice}</i>
+                            <i>$0,2648</i>
+                            <p style={{ color: "var(--card-other-text)" }}>
+                              1.19%
+                            </p>
                           </div>
                         </div>
                         <Link
                           to={"/chart/" + item.analysisId}
                           className="navCardLink"
-                        >
+                          >
                           <LuScanSearch className="scanIcon" />
                         </Link>
+                      </div>
 
                         <div className="image">
                           <Chart
                             isCard={isCard}
                             isUser={isUser}
-                            isLogined={isLogined}
+                            isLogedIn={isLogedIn}
                             analysis={analysis}
                             data={symbol}
                           />
                         </div>
                         <div className="texx">
                           <p>
-                            Aniqlandi:
-                            <span>
-                              {" "}
-                              {calculateTimeDifference(item.created_at)}{" "}
+                            Aniqlandi: 
+                            <span> {" "}
+                              { calculateTimeDifference(item.created_at)}{" "}
                             </span>
                             soat oldin
                           </p>
                         </div>
-                      </Link>
+                      {/* </Link> */}
                     </>
                   ) : (
                     <>
@@ -211,10 +212,9 @@ const Main = ({
                       </div>
                       <div className="texx">
                         <p>
-                          Aniqlandi:
-                          <span>
-                            {" "}
-                            {calculateTimeDifference(item.created_at)}{" "}
+                          Aniqlandi: 
+                          <span> {" "}
+                            { calculateTimeDifference(item.created_at)}{" "}
                           </span>
                           soat oldin
                         </p>

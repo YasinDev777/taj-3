@@ -24,10 +24,8 @@ const App = () => {
   const [isAlert, setIsAlert] = useState(false);
   const [isVideo, setIsVideo] = useState(false);
   const [isUser, setIsUser] = useState("");
-  const [isLogined, setIsLogined] = useState(false);
+  const [isLogedIn, setIsLogedIn] = useState(false);
   const [filterLimit, setFilterLimit] = useState(1);
-  const [StartTime, setStartTime] = useState(null);
-  const [DiffTime, setDiffTime] = useState(null);
   const [alertShown, setAlertShown] = useState(false);
   const [analysis, setAnalysis] = useState([]);
   const navigate = useNavigate();
@@ -66,17 +64,6 @@ const App = () => {
 
         setAnalysis(fetchedData);
         console.log(analysis);
-        
-        
-
-      
-      
-      
-      
-      
-      
-      
-
       const points = collection(db, "points");
       const allPoints = await getDocs(points);
       let pointNew = [];
@@ -108,7 +95,7 @@ const App = () => {
           if (userData.user_id === inputValue) {
             foundUser = userData;
             localStorage.clear();
-            setIsLogined(true);
+            setIsLogedIn(true);
             localStorage.setItem("userName", foundUser.name);
             localStorage.setItem("isLogedIn", "true");
             navigate("/");
@@ -135,12 +122,6 @@ const App = () => {
       console.error("xatolik:", error);
     }
   };
-
- 
-
-
-  
-
   
   const [data, setData] = useState({});
   const [setError] = useState(null);
@@ -188,12 +169,7 @@ const App = () => {
   //     setData((prevData) => ({
   //       ...prevData,
   //       [symbol]: response.data,
-  //     }));
-
-     
-  
-  
-     
+  //     }));   
 
   //   } catch (err) {
   //     setError(`Muammo: ${err.message}`);
@@ -233,7 +209,7 @@ const App = () => {
           ...prevData,
           [symbol]: {
             data: response.data,
-            lastClosePrice: lastClosePrice, // lastClosePrice qiymatini qo'shish
+            lastClosePrice: lastClosePrice,
           },
         }));
       } else {
@@ -253,28 +229,18 @@ const App = () => {
     activeSymbols.forEach((symbol) => fetchKlines(symbol));
     
 
-  }, [filterLimit,isLogined]);
-
-    
-
-  
-
-
-  
-  
-
-
+  }, [filterLimit, isLogedIn]);
 
   useEffect(() => {
     handleLogin()
     // handle_block();
-    const storedLogin = localStorage.getItem("isLogined");
+    const storedLogin = localStorage.getItem("isLogedIn");
     const storedUser = localStorage.getItem("userName");
     if (storedLogin === "true" && storedUser) {
-      setIsLogined(true);
+      setIsLogedIn(true);
       setIsUser(storedUser);
     }
-  }, [filterLimit, isLogined]);
+  }, [filterLimit, isLogedIn]);
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -290,7 +256,7 @@ const App = () => {
           setSelectedPreset(documents[1].name);
         }
       } catch (error) {
-        console.error("Ошибка при получении данных пользователей:", error);
+        console.error("error:", error);
       }
     };
 
@@ -309,25 +275,20 @@ const App = () => {
           setSelectedTicker(documents[0].name);
         }
       } catch (error) {
-        console.error("Ошибка при получении данных пользователей:", error);
+        console.error("error:", error);
       }
     };
     fetchOptions2();
-  }, [filterLimit,isLogined]);
+  }, [filterLimit, isLogedIn]);
 
   const closeAlert = () => {
     setAlertShown(false);
     localStorage.setItem("alertShown", "false");
   };
 
-
-
   useEffect(() => {
     document.body.style.overflow = isAlert || isVideo ? "hidden" : "auto";
   }, [isAlert, isVideo]);
-
-
-  
 
   return (
     <div className="app">
@@ -339,7 +300,7 @@ const App = () => {
           setIsAlert={setIsAlert}
           isAlert={isAlert}
           isUser={isUser}
-          isLogined={isLogined}
+          isLogedIn={isLogedIn}
         />
       )}
           {location.pathname.includes("/chart") ||
@@ -366,7 +327,7 @@ const App = () => {
               isGrid={isGrid}
               isAlert={isAlert}
               setIsAlert={setIsAlert}
-              isLogined={isLogined}
+              isLogedIn={isLogedIn}
               filterLimit={filterLimit}
               pointsState={pointsState}
               isUser={isUser}
@@ -379,7 +340,7 @@ const App = () => {
           element={
             <Chart
               isUser={isUser}
-              isLogined={isLogined}
+              isLogedIn={isLogedIn}
               pointsState={pointsState}
               analysis={analysis}
             />
@@ -391,8 +352,8 @@ const App = () => {
             <Login
               isUser={isUser}
               setIsUser={setIsUser}
-              isLogined={isLogined}
-              setIsLogedIn={setIsLogined}
+              isLogedIn={isLogedIn}
+              setIsLogedIn={setIsLogedIn}
               setFilterLimit={setFilterLimit}
               handleLogin={handleLogin}
             />

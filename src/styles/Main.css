@@ -25,9 +25,10 @@
 }
 
 .infors {
+    width: 100%;
     display: flex;
     align-items: center;
-    gap: calc(var(--index)*2.5);
+    gap: calc(var(--index)*1.2);
 }
 
 .info {
@@ -62,7 +63,7 @@
 .nav-card {
     width: 100%;
     height: calc(var(--index)*1.75);
-    /* display: flex; */
+    display: flex;
     align-items: center;
     justify-content: space-between;
     padding: calc(var(--index)*0.25) calc(var(--index)*0.5);
@@ -102,13 +103,19 @@
     font-family: var(--main-front);
     font-weight: 600;
     font-style: normal;
+    position: relative;
 }
 
-.salary i:nth-child(2) {
-    color: var(--card-other-text);
+.salary i::after{
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 133.5%;
+    transform: translate(-50%, -50%);
+    background-color: var(--main-color);
+    height: 100%;
+    width: calc(var(--index)*0.05);
 }
-
-
 
 .navCardLink {
     font-size: var(--index);
