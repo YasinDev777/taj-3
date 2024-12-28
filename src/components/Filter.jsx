@@ -25,11 +25,14 @@ const Filter = ({
     isGrid,
     setSelectedTime,
     selectedTime,
-    setSelectedTime_id,
-    selectedTime_id
+    selectValues,
+    setSelectValues,
+    setFoundTimeId,
+    foundTimeId
 }) => {
     const [forFilterData, setForFilterData] = useState([])
     const [forTimeData, setForTimeData] = useState([])
+    const [forFilterTimeData, setFilterTimeData] = useState([])
 
     useEffect(() => {
         const fetchs = async () => {
@@ -37,9 +40,15 @@ const Filter = ({
                 const screeningTypes = collection(db, "screening_type")
                 const screeningTypesGet = await getDocs(screeningTypes)
 
-
                 const screeningTypesValue = collection(db, "screening_type_value")
                 const screeningTypesValueGet = await getDocs(screeningTypesValue)
+
+                const analysis = collection(db, "analysis")
+                const analysisGet = await getDocs(analysis)
+
+                const timeFrameData = collection(db, "timeframe")
+                const timeFrameDataGet = await getDocs(timeFrameData)
+
                 const screeningTypesValueGetMain = []
                 screeningTypesValueGet.forEach((docs) => {
                     const data = docs.data()
@@ -52,19 +61,28 @@ const Filter = ({
 
                     let addScreenTypeAndValue = screeningTypesValueGetMain && screeningTypesValueGetMain
                         .filter(item => item.value_id === data.type_id)
-                    screeningTypesGetMain.push({ data, addScreenTypeAndValue })
+                    screeningTypesGetMain.push({ data, addScreenTypeAndValue, })
                     setForFilterData(screeningTypesGetMain)
                 })
 
-                const Timeframe = []
-                const timeFrameData = collection(db, "timeframe")
-                const timeFrameDataGet = await getDocs(timeFrameData)
+                const timeframeGetMain = []
                 timeFrameDataGet.forEach((docs) =>{
                     const data = docs.data()
-                    Timeframe.push(data)
+                    timeframeGetMain.push(data)
+                    forFilterTimeData.push(data)
                 })
 
-                console.log(forFilterData);
+                const analysisGetMain = []
+                analysisGet.forEach((docs) => {
+                    const data = docs.data()
+
+                    let addAnalsisAndTimeframe = timeframeGetMain && timeframeGetMain
+                        .filter(item => item.id === data.timeframe_id)
+                    analysisGetMain.push({ data, addAnalsisAndTimeframe })
+                    setForTimeData(analysisGetMain);
+                    console.log(analysisGetMain);
+                })
+
             }
             catch (error) {
                 console.log(error);
@@ -74,9 +92,6 @@ const Filter = ({
         fetchs()
     }, [])
 
-
-
-    const [selectValues, setSelectValues] = useState("")
     const [open, setOpen] = useState(false)
     const [open1, setOpen1] = useState(false)
     const [open2, setOpen2] = useState(false)
@@ -84,19 +99,24 @@ const Filter = ({
     const gridOptions = [6, 12, 24]
 
     useEffect(() => {
-        const foundData = forFilterData.find((item) => item.data.name === selectedPreset)
-        const foundDataTime = forTimeData.find((item) => item.name === selectedTime)
-        if (foundData) {
-            const foundTypeId = foundData.data.type_id;
-            setSelectValues(foundTypeId)
+        // Фильтрация на основе selectedPreset
+        const foundPresetData = forFilterData.find((item) => item.data.name === selectedPreset);
+        if (foundPresetData) {
+            setSelectValues(foundPresetData.data.type_id);
+        } else {
+            setSelectValues(null); // Сбрасываем значение, если ничего не найдено
         }
-
-        if (foundDataTime) {
-            setSelectedTime_id(foundDataTime.id)
-            console.log(selectedTime_id);
+    
+        const foundTimeData = forTimeData.find((item) => item.addAnalsisAndTimeframe.name === selectedTime);
+        if (foundTimeData) {
+            const foundTypeIdTime = foundTimeData.addAnalsisAndTimeframe.id;
+            // Включаем обновление для времени
+            setFoundTimeId(foundTypeIdTime); 
+        } else {
+            setFoundTimeId(null); // Сбрасываем значение, если ничего не найдено
         }
-        
-    }, [selectedPreset, selectedTime])
+    }, [selectedPreset, selectedTime, forFilterData, forTimeData]); // Убедись, что зависимости указаны корректно
+    
 
     const handleToDefoult = () =>{
         setOpen(false)
@@ -152,8 +172,8 @@ const Filter = ({
                                     <div className="opt" onClick={() => { setOpen(!open); setSelectedPreset("All"); setSelectValues(""); setSelectedTicker("All") }}>
                                         <span>All</span>   
                                     </div>
-                                        {forFilterData && forFilterData.map(item =>
-                                            <div className={`opt ${item.data.is_locked === true ? "opt-lock" : ""} `} onClick={() => { setOpen(!open); setSelectedPreset(item.data.name); setSelectValues(item.data.type_id); setSelectedTicker("All") }}>
+                                        {forFilterData && forFilterData.map((item, index) =>
+                                            <div key={index} className={`opt ${item.data.is_locked === true ? "opt-lock" : ""} `} onClick={() => { setOpen(!open); setSelectedPreset(item.data.name); setSelectValues(item.data.type_id); setSelectedTicker("All") }}>
                                                 <span>
                                                     {item.data.name}
                                                 </span>
@@ -182,9 +202,9 @@ const Filter = ({
                                     <div className="opt" onClick={() => { setOpen1(!open1); setSelectedTicker("All") }}>
                                         <span>All</span>   
                                     </div>
-                                        {forFilterData && forFilterData.map(item =>
-                                            item.addScreenTypeAndValue.filter(item => item.value_id === selectValues).map(item =>
-                                                <div className={`opt ${item.is_locked === true ? "opt-lock" : ""}`} onClick={() => { setOpen1(!open1); setSelectedTicker(item.name) }}>
+                                        {forFilterData && forFilterData.map((item) =>
+                                            item.addScreenTypeAndValue.filter(item => item.value_id === selectValues).map((item, idx) =>
+                                                <div key={`${item.name}-${idx}`} className={`opt ${item.is_locked === true ? "opt-lock" : ""}`} onClick={() => { setOpen1(!open1); setSelectedTicker(item.name) }}>
                                                 <span>
                                                     {item.name}
                                                 </span>
@@ -209,8 +229,8 @@ const Filter = ({
                                         <FiChevronDown />
                                     </div>
                                     <div className="select-options" style={open2 === false ? {display: "none"} : {display: "flex"}}>
-                                        {gridOptions.map(item => (
-                                           <div className="opt" onClick={() => {setOpen2(!open2); setIsGrid(item)}}>
+                                        {gridOptions.map((item, index) => (
+                                           <div key={index} className="opt" onClick={() => {setOpen2(!open2); setIsGrid(item)}}>
                                             <span>{item}</span>
                                            </div> 
                                         ))}
@@ -234,11 +254,11 @@ const Filter = ({
                                     <div className="opt" onClick={() => { setOpen3(!open3); setSelectedTime("All"); }}>
                                         <span>All</span>   
                                     </div>
-                                        {forTimeData.map(item => (
-                                            <div className="opt" onClick={() => {setOpen3(!open3); setSelectedTime(item.name)}}>
+                                        {forFilterTimeData.map((item, index) =>
+                                            <div key={`${item.name}-${index}`} className="opt" onClick={() => {setOpen3(!open3); setSelectedTime(item.name)}}>
                                                 <span>{item.name}</span>
                                             </div>
-                                        ))}
+                                        )}
                                     </div>
                                 </div>
                             </div>

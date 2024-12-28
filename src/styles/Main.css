@@ -231,12 +231,6 @@
 
 @media (max-width: 650px) {
 
-    .btns>button {
-        width: calc(var(--index)*3);
-        height: calc(var(--index)*3);
-        font-size: calc(var(--index)*1.1);
-    }
-
     .btns {
         gap: calc(var(--index)*1);
     }
