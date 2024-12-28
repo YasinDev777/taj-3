@@ -6,21 +6,18 @@ import Chart from "./components/LineChart";
 import "./styles/App.css";
 import Popup from "./components/Popup";
 import Login from "./pages/Login";
-
-import Filter from "./components/Filter"
-import {
-  collection,
-  getDocs,
-} from "firebase/firestore";
+import Filter from "./components/Filter";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
 import axios from "axios";
 
 const App = () => {
-  const [selectedPreset, setSelectedPreset] = useState("Type");
-  const [selectedTicker, setSelectedTicker] = useState("Type");
-  const [selectedTime, setSelectedTime] = useState("All");
-  const [selectValues, setSelectValues] = useState("")
-  const [foundTimeId, setFoundTimeId] = useState("salom")
+  const [selectValues, setSelectValues] = useState(null);
+  const [screeningTypeValueId, setScreeningTypeValueId] = useState(null)
+  const [timeFrameId, setTimeFrameId] = useState(null)
+
+
+  const [foundTimeId, setFoundTimeId] = useState("salom");
   const [isGrid, setIsGrid] = useState(6);
   const [isCard, setIsCard] = useState(false);
   const [isAlert, setIsAlert] = useState(false);
@@ -28,14 +25,15 @@ const App = () => {
   const [isUser, setIsUser] = useState("");
   const [isLogedIn, setIsLogedIn] = useState(false);
   const [filterLimit, setFilterLimit] = useState(1);
-  const [filterCards, setFilterCards] = useState([])
-  const [alertShown, setAlertShown] = useState(false);
+  // const [filterCards, setFilterCards] = useState([])
+  const [setAlertShown] = useState(false);
   const [analysis, setAnalysis] = useState([]);
   const [pointsState, setPointsState] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
 
 
+  const [mains, setMains] = useState([])
 
   const handleLogin = async (inputValue) => {
     let foundUser = null;
@@ -55,8 +53,8 @@ const App = () => {
         const index = number++;
         const lines =
           pointsState &&
-          pointsState.filter((state) => state.analysis_id === analysisId);
-
+          pointsState.filter((state) =>  state.analysis_id === analysisId );
+          
         fetchedData.push({
           lines,
           ...analysisMain,
@@ -64,23 +62,10 @@ const App = () => {
           index,
         });
 
-        const filteredCards = fetchedData.filter((card) => {
-          // Проверяем фильтры на соответствие
-          const matchesPreset = !selectedPreset || card.screening_type_id === selectValues; // Условие для анализа
-          const matchesTicker = !selectedTicker || card.screening_type_value_id === selectedTicker; // Условие для тикера
-          const matchesTime = !selectedTime || card.timeframe_id === foundTimeId; // Условие для времени
-
-          return matchesPreset && matchesTicker && matchesTime;
-        });
-
-        setFilterCards(filteredCards);
-        // console.log(filteredCards);
-        // console.log(selectedTime_id)
+        setMains(fetchedData);
+        setAnalysis(fetchedData);
       });
 
-
-      setAnalysis(fetchedData);
-      // console.log(analysis);
       const points = collection(db, "points");
       const allPoints = await getDocs(points);
       let pointNew = [];
@@ -140,65 +125,42 @@ const App = () => {
     }
   };
 
-//   useEffect(() => {
-//     console.log("forFilterData:", forFilterData);
-//     console.log("forTimeData:", forTimeData);
-//     console.log("cardsData:", cardsData);
-// }, [forFilterData, forTimeData, cardsData]);
+  //   useEffect(() => {
+  //     console.log("forFilterData:", forFilterData);
+  //     console.log("forTimeData:", forTimeData);
+  //     console.log("cardsData:", cardsData);
+  // }, [forFilterData, forTimeData, cardsData]);
 
+  useEffect(() => {
+    const main = [...mains]
+    const selectFilter = () => {
+      const filtered = main.filter((item) => {
+        console.log(item.timeframe_id);
+        // 1. Birinchi dropdown bo'yicha filter
+        const isTypeMatch = !selectValues || item.screening_type_id === selectValues;
+    
+        // 2. Ikkinchi dropdown bo'yicha filter
+        const isValueMatch = !screeningTypeValueId || item.screening_type_value_id === screeningTypeValueId;
+
+        const forTimeFrameId = !timeFrameId || item.timeframe_id === timeFrameId
+    
+        // Ikkala shartdan birini yoki ikkalasini bajarish kerak
+        return isTypeMatch && isValueMatch && forTimeFrameId;
+      });
+    
+      // Natijalarni yangilash
+      setAnalysis(filtered);
+    
+    
+        setAnalysis(filtered); 
+    };
+    selectFilter();
+  }, [selectValues,screeningTypeValueId, timeFrameId]);
 
   const [data, setData] = useState({});
   const [setError] = useState(null);
 
-  // const fetchKlines = async (symbol) => {
-  //   const API_URL = `https://api.binance.com/api/v3/klines`;
-  //   try {
-  //     const response = await axios.get(API_URL, {
-  //       params: {
-  //         symbol: symbol,
-  //         interval: '1h',
-  //         limit: 10,
-  //       },
-  //     });
-
-  //     // let lastClosePrice =""
-  //     // if (response.data) {
-  //     //   const formattedData = response.data.map((item) => ({
-  //     //     time: item[0] / 1000,
-  //     //     open: parseFloat(item[1]),
-  //     //     high: parseFloat(item[2]),
-  //     //     low: parseFloat(item[3]),
-  //     //     close: parseFloat(item[4]),
-  //     //   }));
-
-  //     //   if (formattedData.length > 0) {
-  //     //     lastClosePrice = formattedData[formattedData.length - 1].close;
-  //     //   }}
-  //     let lastClosePrice = ""
-
-  //     if (response.data) {
-  //       const formattedData = response.data.map(item => ({
-  //         time: item[0] / 1000,
-  //         open: parseFloat(item[1]),
-  //         high: parseFloat(item[2]),
-  //         low: parseFloat(item[3]),
-  //         close: parseFloat(item[4])
-  //       }));
-
-  //       if (formattedData.length > 0) {
-  //       lastClosePrice = formattedData[formattedData.length - 1].close;
-  //       }
-  //     }
-  //     // Update state with fetched data grouped by symbol
-  //     setData((prevData) => ({
-  //       ...prevData,
-  //       [symbol]: response.data,
-  //     }));   
-
-  //   } catch (err) {
-  //     setError(`Muammo: ${err.message}`);
-  //   }
-  // };
+  
 
   const fetchKlines = async (symbol) => {
     const API_URL = `https://api.binance.com/api/v3/klines`;
@@ -206,7 +168,7 @@ const App = () => {
       const response = await axios.get(API_URL, {
         params: {
           symbol: symbol,
-          interval: '1h',
+          interval: "1h",
           limit: 10,
         },
       });
@@ -214,7 +176,7 @@ const App = () => {
       let lastClosePrice = "";
 
       if (response.data) {
-        const formattedData = response.data.map(item => ({
+        const formattedData = response.data.map((item) => ({
           time: item[0] / 1000,
           open: parseFloat(item[1]),
           high: parseFloat(item[2]),
@@ -247,16 +209,13 @@ const App = () => {
     }
   };
 
-
   useEffect(() => {
     const activeSymbols = new Set(analysis.map((item) => item.symbol));
     activeSymbols.forEach((symbol) => fetchKlines(symbol));
-
-
   }, [filterLimit, isLogedIn]);
 
   useEffect(() => {
-    handleLogin()
+    handleLogin();
     // handle_block();
     const storedLogin = localStorage.getItem("isLogedIn");
     const storedUser = localStorage.getItem("userName");
@@ -266,44 +225,44 @@ const App = () => {
     }
   }, [filterLimit, isLogedIn]);
 
-  useEffect(() => {
-    const fetchOptions = async () => {
-      try {
-        const usersCollection = collection(db, "screening_type");
-        const querySnapshot = await getDocs(usersCollection);
-        const documents = [];
-        querySnapshot.forEach((doc) => {
-          documents.push(doc.data());
-        });
+  // useEffect(() => {
+  //   const fetchOptions = async () => {
+  //     try {
+  //       const usersCollection = collection(db, "screening_type");
+  //       const querySnapshot = await getDocs(usersCollection);
+  //       const documents = [];
+  //       querySnapshot.forEach((doc) => {
+  //         documents.push(doc.data());
+  //       });
 
-        if (documents.length >= 2) {
-          setSelectedPreset(documents[1].name);
-        }
-      } catch (error) {
-        console.error("error:", error);
-      }
-    };
+  //       if (documents.length >= 2) {
+  //         setSelectedPreset(documents[1].name);
+  //       }
+  //     } catch (error) {
+  //       console.error("error:", error);
+  //     }
+  //   };
 
-    fetchOptions();
+  //   fetchOptions();
 
-    const fetchOptions2 = async () => {
-      try {
-        const usersCollection = collection(db, "screening_type_value");
-        const querySnapshot = await getDocs(usersCollection);
-        const documents = [];
-        querySnapshot.forEach((doc) => {
-          documents.push(doc.data());
-        });
+  //   const fetchOptions2 = async () => {
+  //     try {
+  //       const usersCollection = collection(db, "screening_type_value");
+  //       const querySnapshot = await getDocs(usersCollection);
+  //       const documents = [];
+  //       querySnapshot.forEach((doc) => {
+  //         documents.push(doc.data());
+  //       });
 
-        if (documents.length >= 2) {
-          setSelectedTicker(documents[0].name);
-        }
-      } catch (error) {
-        console.error("error:", error);
-      }
-    };
-    fetchOptions2();
-  }, [filterLimit, isLogedIn]);
+  //       if (documents.length >= 2) {
+  //         setSelectedTicker(documents[0].name);
+  //       }
+  //     } catch (error) {
+  //       console.error("error:", error);
+  //     }
+  //   };
+  //   fetchOptions2();
+  // }, [filterLimit, isLogedIn]);
 
   const closeAlert = () => {
     setAlertShown(false);
@@ -317,7 +276,7 @@ const App = () => {
   return (
     <div className="app">
       {location.pathname.includes("/chart") ||
-        location.pathname === "/login" ? null : (
+      location.pathname === "/login" ? null : (
         <Navbar
           isVideo={isVideo}
           setIsVideo={setIsVideo}
@@ -328,22 +287,19 @@ const App = () => {
         />
       )}
       {location.pathname.includes("/chart") ||
-        location.pathname === "/login" ? null :
+      location.pathname === "/login" ? null : (
         <Filter
           setIsGrid={setIsGrid}
           isGrid={isGrid}
-          selectedPreset={selectedPreset}
-          setSelectedPreset={setSelectedPreset}
-          selectedTicker={selectedTicker}
-          setSelectedTicker={setSelectedTicker}
-          selectedTime={selectedTime}
-          setSelectedTime={setSelectedTime}
           setSelectValues={setSelectValues}
           selectValues={selectValues}
           foundTimeId={foundTimeId}
           setFoundTimeId={setFoundTimeId}
+          screeningTypeValueId={screeningTypeValueId}
+          setScreeningTypeValueId={setScreeningTypeValueId}
+          setTimeFrameId={setTimeFrameId}
         />
-      }
+      )}
       <Routes>
         <Route
           path="/"
@@ -360,8 +316,8 @@ const App = () => {
               pointsState={pointsState}
               isUser={isUser}
               data={data}
-              filterCards={filterCards}
-              setFilterCards={setFilterCards}
+              // filterCards={filterCards}
+              // setFilterCards={setFilterCards}
             />
           }
         />
@@ -398,7 +354,6 @@ const App = () => {
         closeAlert={closeAlert}
       />
     </div>
-    // </>
   );
 };
 

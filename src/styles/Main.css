@@ -106,7 +106,7 @@
     position: relative;
 }
 
-.salary i::after{
+/* .salary i::after{
     content: "";
     position: absolute;
     top: 50%;
@@ -115,7 +115,7 @@
     background-color: var(--main-color);
     height: 100%;
     width: calc(var(--index)*0.05);
-}
+} */
 
 .navCardLink {
     font-size: var(--index);

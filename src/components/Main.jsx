@@ -18,7 +18,6 @@ const Main = ({
   isUser,
   data,
   filterCards,
-  selectedPreset
 }) => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -119,15 +118,14 @@ const Main = ({
         ) : (
           <>
             {
-              currentChart.map((item) => {
+              currentChart.filter(item => item.inactive === false).map((item) => {
+                
                 const symbol = Object.entries(data)
                   .filter(([symbol]) => symbol === item.symbol)
                   .map(([symbol]) => symbol);
-                filterCards.filter((item) => {
-                  const lastClosePrice = Object.entries(data).filter(([symbol]) => symbol === item.symbol).map(item => item.lastClosePrice)
-                  // console.log(item.timeframe_id);
+                  const lastClosePrice = Object.entries(data).filter(([symbol]) => symbol === item.symbol).map(item => item[1].lastClosePrice)                  
                   return (
-                    <div className="card" key={item.index}>
+                    <Link to={"/chart/" + item.analysisId} className="card" key={item.index}>
                       {filterLimit > item.index ? (
                         <>
                           {/* <Link
@@ -144,10 +142,10 @@ const Main = ({
                                 <big>{item.symbol}</big>
                               </div>
                               <div className="salary">
-                                <i>$0,2648</i>
-                                <p style={{ color: "var(--card-other-text)" }}>
+                                <i>{lastClosePrice}</i>
+                                {/* <p style={{ color: "var(--card-other-text)" }}>
                                   1.19%
-                                </p>
+                                </p> */}
                               </div>
                             </div>
                             <Link
@@ -165,6 +163,7 @@ const Main = ({
                               isLogedIn={isLogedIn}
                               analysis={analysis}
                               data={symbol}
+                              line={item.lines}
                             />
                           </div>
                           <div className="texx">
@@ -222,11 +221,10 @@ const Main = ({
                           </div>
                         </>
                       )}
-                    </div>
+                    </Link>
                   );
                 })
-              })
-            }
+              }
           </>
         )}
       </div>
