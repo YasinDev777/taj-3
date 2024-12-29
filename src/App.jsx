@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Main from "./components/Main";
@@ -10,6 +10,7 @@ import Filter from "./components/Filter";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
 import axios from "axios";
+import { AnalysisContext } from "./context/Context";
 
 const App = () => {
   const [selectValues, setSelectValues] = useState(null);
@@ -125,12 +126,6 @@ const App = () => {
     }
   };
 
-  //   useEffect(() => {
-  //     console.log("forFilterData:", forFilterData);
-  //     console.log("forTimeData:", forTimeData);
-  //     console.log("cardsData:", cardsData);
-  // }, [forFilterData, forTimeData, cardsData]);
-
   useEffect(() => {
     const main = [...mains]
     const selectFilter = () => {
@@ -225,44 +220,7 @@ const App = () => {
     }
   }, [filterLimit, isLogedIn]);
 
-  // useEffect(() => {
-  //   const fetchOptions = async () => {
-  //     try {
-  //       const usersCollection = collection(db, "screening_type");
-  //       const querySnapshot = await getDocs(usersCollection);
-  //       const documents = [];
-  //       querySnapshot.forEach((doc) => {
-  //         documents.push(doc.data());
-  //       });
 
-  //       if (documents.length >= 2) {
-  //         setSelectedPreset(documents[1].name);
-  //       }
-  //     } catch (error) {
-  //       console.error("error:", error);
-  //     }
-  //   };
-
-  //   fetchOptions();
-
-  //   const fetchOptions2 = async () => {
-  //     try {
-  //       const usersCollection = collection(db, "screening_type_value");
-  //       const querySnapshot = await getDocs(usersCollection);
-  //       const documents = [];
-  //       querySnapshot.forEach((doc) => {
-  //         documents.push(doc.data());
-  //       });
-
-  //       if (documents.length >= 2) {
-  //         setSelectedTicker(documents[0].name);
-  //       }
-  //     } catch (error) {
-  //       console.error("error:", error);
-  //     }
-  //   };
-  //   fetchOptions2();
-  // }, [filterLimit, isLogedIn]);
 
   const closeAlert = () => {
     setAlertShown(false);
@@ -277,6 +235,7 @@ const App = () => {
     <div className="app">
       {location.pathname.includes("/chart") ||
       location.pathname === "/login" ? null : (
+        <>
         <Navbar
           isVideo={isVideo}
           setIsVideo={setIsVideo}
@@ -284,10 +243,7 @@ const App = () => {
           isAlert={isAlert}
           isUser={isUser}
           isLogedIn={isLogedIn}
-        />
-      )}
-      {location.pathname.includes("/chart") ||
-      location.pathname === "/login" ? null : (
+          />
         <Filter
           setIsGrid={setIsGrid}
           isGrid={isGrid}
@@ -298,54 +254,57 @@ const App = () => {
           screeningTypeValueId={screeningTypeValueId}
           setScreeningTypeValueId={setScreeningTypeValueId}
           setTimeFrameId={setTimeFrameId}
-        />
+          />
+          </>
       )}
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Main
-              analysis={analysis}
-              isCard={isCard}
-              setIsCard={setIsCard}
-              isGrid={isGrid}
-              isAlert={isAlert}
-              setIsAlert={setIsAlert}
-              isLogedIn={isLogedIn}
-              filterLimit={filterLimit}
-              pointsState={pointsState}
-              isUser={isUser}
-              data={data}
-              // filterCards={filterCards}
-              // setFilterCards={setFilterCards}
-            />
-          }
-        />
-        <Route
-          path="/chart/:id"
-          element={
-            <Chart
-              isUser={isUser}
-              isLogedIn={isLogedIn}
-              pointsState={pointsState}
-              analysis={analysis}
-            />
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <Login
-              isUser={isUser}
-              setIsUser={setIsUser}
-              isLogedIn={isLogedIn}
-              setIsLogedIn={setIsLogedIn}
-              setFilterLimit={setFilterLimit}
-              handleLogin={handleLogin}
-            />
-          }
-        />
-      </Routes>
+      <AnalysisContext.Provider value={analysis}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Main
+                isCard={isCard}
+                setIsCard={setIsCard}
+                isGrid={isGrid}
+                isAlert={isAlert}
+                setIsAlert={setIsAlert}
+                isLogedIn={isLogedIn}
+                filterLimit={filterLimit}
+                pointsState={pointsState}
+                isUser={isUser}
+                data={data}
+                analysis={analysis}
+                // filterCards={filterCards}
+                // setFilterCards={setFilterCards}
+              />
+            }
+          />
+          <Route
+            path="/chart/:id"
+            element={
+              <Chart
+                isUser={isUser}
+                isLogedIn={isLogedIn}
+                pointsState={pointsState}
+                analysis={analysis}
+              />
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <Login
+                isUser={isUser}
+                setIsUser={setIsUser}
+                isLogedIn={isLogedIn}
+                setIsLogedIn={setIsLogedIn}
+                setFilterLimit={setFilterLimit}
+                handleLogin={handleLogin}
+              />
+            }
+          />
+        </Routes>
+      </AnalysisContext.Provider>
       <Popup
         isAlert={isAlert}
         setIsAlert={setIsAlert}
