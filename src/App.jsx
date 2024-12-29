@@ -17,8 +17,7 @@ const App = () => {
   const [screeningTypeValueId, setScreeningTypeValueId] = useState(null)
   const [timeFrameId, setTimeFrameId] = useState(null)
 
-
-  const [foundTimeId, setFoundTimeId] = useState("salom");
+  const [foundTimeId, setFoundTimeId] = useState("");
   const [isGrid, setIsGrid] = useState(6);
   const [isCard, setIsCard] = useState(false);
   const [isAlert, setIsAlert] = useState(false);
