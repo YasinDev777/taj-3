@@ -109,7 +109,6 @@ const Main = ({
     }
   };
 
-
   return (
     <div className="main1">
       <div className="main">
@@ -134,7 +133,6 @@ const Main = ({
                               </div>
                               <div className="salary">
                                 <i>{lastClosePrice}</i>
-
                               </div>
                             <Link
                               to={"/chart/" + item.analysisId}
