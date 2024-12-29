@@ -16,7 +16,6 @@ const App = () => {
   const [selectValues, setSelectValues] = useState(null);
   const [screeningTypeValueId, setScreeningTypeValueId] = useState(null)
   const [timeFrameId, setTimeFrameId] = useState(null)
-
   const [foundTimeId, setFoundTimeId] = useState("");
   const [isGrid, setIsGrid] = useState(6);
   const [isCard, setIsCard] = useState(false);
