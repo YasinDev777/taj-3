@@ -1,16 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { createChart } from "lightweight-charts";
 import { PiHeadsetBold } from "react-icons/pi";
 import { Link, useParams } from "react-router-dom";
 import { FiArrowRightCircle } from "react-icons/fi";
 import { BsArrowLeftCircle } from "react-icons/bs";
 import axios from "axios";
+import { AnalysisContext } from "../context/Context";
 
-const Chart = ({ isCard, isUser, isLogedIn, pointsState, analysis, data,line }) => {
+const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
   const [analysisData, setAnalysisData] = useState([]);
   const [analysisSymbols, setAnalysisSymbols] = useState("");
   const { id } = useParams();
 
+  const analysis = useContext(AnalysisContext)
+    
   
 
   useEffect(() => {
@@ -89,7 +92,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, analysis, data,line }) 
     };
 
     fetchBitCoinData();
-  }, [analysisSymbols, isLogedIn, data]);
+  }, [analysisSymbols, isLogedIn, data,analysis]);
 
   useEffect(() => {
     if (chartContainerRef.current && candlestickData.length > 0) {
