@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Chart from "../components/LineChart";
 import { BiLockOpen } from "react-icons/bi";
@@ -118,93 +118,93 @@ const Main = ({
           <>
             {
               currentChart.filter(item => item.inactive === false).map((item) => {
-                
+
                 const symbol = Object.entries(data)
                   .filter(([symbol]) => symbol === item.symbol)
                   .map(([symbol]) => symbol);
-                  const lastClosePrice = Object.entries(data).filter(([symbol]) => symbol === item.symbol).map(item => item[1].lastClosePrice)                  
-                  return (
-                    <Link to={"/chart/" + item.analysisId} className="card" key={item.index}>
-                      {filterLimit > item.index ? (
-                        <>
-                          <div className="nav-card" style={{ background: "var(--main-color)", width: "100%" }}>
-                              <div className="info">
-                                <big>{item.symbol}</big>
-                              </div>
-                              <div className="salary">
-                                <i>{lastClosePrice}</i>
-                              </div>
-                            <Link
-                              to={"/chart/" + item.analysisId}
-                              className="navCardLink"
-                            >
-                              <LuScanSearch className="scanIcon" />
-                            </Link>
+                const lastClosePrice = Object.entries(data).filter(([symbol]) => symbol === item.symbol).map(item => item[1].lastClosePrice)
+                return (
+                  <Link to={"/chart/" + item.analysisId} className="card">
+                    {filterLimit > item.index ? (
+                      <>
+                        <div className="nav-card" style={{ background: "var(--main-color)", width: "100%" }}>
+                          <div className="info">
+                            <big>{item.symbol}</big>
                           </div>
-
-                          <div className="image">
-                            <Chart
-                              isCard={isCard}
-                              isUser={isUser}
-                              isLogedIn={isLogedIn}
-                              analysis={analysis}
-                              data={symbol}
-                              line={item.lines}
-                            />
+                          <div className="salary">
+                            <i>{lastClosePrice}</i>
                           </div>
-                          <div className="texx">
-                            <p>
-                              Aniqlandi:
-                              <span> {" "}
-                                {calculateTimeDifference(item.created_at)}{" "}
-                              </span>
-                              soat oldin
-                            </p>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div
-                            className="nav-card"
-                            style={{ background: "var(--block-card-color)" }}
+                          <Link
+                            to={"/chart/" + item.analysisId}
+                            className="navCardLink"
                           >
-                              <div className="info">
-                                <big>{item.symbol}</big>
-                              </div>
-                              <div className="salary">
-                                <i>$0,2648</i>
-                              </div>
-                            <Link
-                              to="./Main"
-                              className="navCardLink"
-                              style={{ pointerEvents: "none", cursor: "default" }}
-                              >
-                              <LuScanSearch className="scanIcon" />
-                            </Link>
-                              </div>
-                          <div className="image">
-                            <div className="dont-show" style={{ display: "flex" }}>
-                              <button onClick={() => setIsAlert(!isAlert)}>
-                                Qo’lga kiritish <BiLockOpen />
-                              </button>
-                            </div>
-                            <img src="/images/chartimg.jpg" alt="" />
+                            <LuScanSearch className="scanIcon" />
+                          </Link>
+                        </div>
+
+                        <div className="image">
+                          <Chart
+                            isCard={isCard}
+                            isUser={isUser}
+                            isLogedIn={isLogedIn}
+                            analysis={analysis}
+                            data={symbol}
+                            line={item.lines}
+                          />
+                        </div>
+                        <div className="texx">
+                          <p>
+                            Aniqlandi:
+                            <span> {" "}
+                              {calculateTimeDifference(item.created_at)}{" "}
+                            </span>
+                            soat oldin
+                          </p>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div
+                          className="nav-card"
+                          style={{ background: "var(--block-card-color)" }}
+                        >
+                          <div className="info">
+                            <big>{item.symbol}</big>
                           </div>
-                          <div className="texx">
-                            <p>
-                              Aniqlandi:
-                              <span> {" "}
-                                {calculateTimeDifference(item.created_at)}{" "}
-                              </span>
-                              soat oldin
-                            </p>
+                          <div className="salary">
+                            <i>$0,2648</i>
                           </div>
-                        </>
-                      )}
-                    </Link>
-                  );
-                })
-              }
+                          <Link
+                            to="./Main"
+                            className="navCardLink"
+                            style={{ pointerEvents: "none", cursor: "default" }}
+                          >
+                            <LuScanSearch className="scanIcon" />
+                          </Link>
+                        </div>
+                        <div className="image">
+                          <div className="dont-show" style={{ display: "flex" }}>
+                            <button onClick={() => setIsAlert(!isAlert)}>
+                              Qo’lga kiritish <BiLockOpen />
+                            </button>
+                          </div>
+                          <img src="/images/chartimg.jpg" alt="" />
+                        </div>
+                        <div className="texx">
+                          <p>
+                            Aniqlandi:
+                            <span> {" "}
+                              {calculateTimeDifference(item.created_at)}{" "}
+                            </span>
+                            soat oldin
+                          </p>
+                        </div>
+                      </>
+                    )}
+                  </Link>
+                );
+              })
+            }
           </>
         )}
       </div>
