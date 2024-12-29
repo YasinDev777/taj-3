@@ -12,9 +12,14 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
   const [analysisSymbols, setAnalysisSymbols] = useState("");
   const { id } = useParams();
 
+  const canvasRef = useRef(null);
+  const [cursor, setCursor] = useState("grab");
+
+  const handleMouseDown = () => setCursor("grabbing");
+  const handleMouseUp = () => setCursor("crosshair");
+  const handleMouseLeave = () => setCursor("crosshair");
+
   const analysis = useContext(AnalysisContext)
-    
-  
 
   useEffect(() => {
     const fetchAnalysisData = async () => {
@@ -33,9 +38,6 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
   const [candlestickData, setCandlestickData] = useState([]);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isDarkMode] = useState(true);
-
-  const handleMouseDown = () => setIsMouseDown(true);
-  const handleMouseUp = () => setIsMouseDown(false);
 
   useEffect(() => {
     const fetchBitCoinData = async () => {
@@ -300,10 +302,11 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
                 height: "calc(var(--index)*15.5)",
                 transform: "translateY(0)",
               }
-            : { width: "100%", height: "77.6dvh" }
+            : { width: "100%", height: "77.6dvh", cursor }
         }
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
       >
         <div
           className="exit-svg"
