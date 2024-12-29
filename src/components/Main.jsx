@@ -143,9 +143,6 @@ const Main = ({
                               </div>
                               <div className="salary">
                                 <i>{lastClosePrice}</i>
-                                {/* <p style={{ color: "var(--card-other-text)" }}>
-                                  1.19%
-                                </p> */}
                               </div>
                             </div>
                             <Link
