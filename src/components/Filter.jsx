@@ -106,7 +106,6 @@ const Filter = ({
         }
     }, [selectedPreset, selectedTime, forFilterData, forTimeData]); // Убедись, что зависимости указаны корректно
     
-    console.log(forFilterData.map((item) =>item));
     
 
     const handleToDefoult = () =>{
@@ -249,7 +248,7 @@ const Filter = ({
                                         <span>All</span>   
                                     </div>
                                         {forFilterTimeData.map((item, index) =>
-                                            <div key={`${item.name}-${index}`} className="opt" onClick={() => {setOpen3(!open3); setSelectedTime(item.name); setTimeFrameId(item.id)}}>
+                                            <div key={`${item.name}-${index}`} className="opt" onClick={() => {setOpen3(!open3); setSelectedTime(item.name); setTimeFrameId(item.timeframe_id)}}>
                                                 <span>{item.name}</span>
                                             </div>
                                         )}

@@ -130,7 +130,6 @@ const App = () => {
     const main = [...mains]
     const selectFilter = () => {
       const filtered = main.filter((item) => {
-        console.log(item.timeframe_id);
         // 1. Birinchi dropdown bo'yicha filter
         const isTypeMatch = !selectValues || item.screening_type_id === selectValues;
     
