@@ -54,7 +54,7 @@ const Filter = ({
                 screeningTypesGet.forEach((docs) => {
                     const data = docs.data()
                     let addScreenTypeAndValue = screeningTypesValueGetMain && screeningTypesValueGetMain
-                        .filter(item => item.value_id === data.type_id)
+                        .filter(item => item.screening_type_id === data.type_id)
                     screeningTypesGetMain.push({ data, addScreenTypeAndValue, })
                     setForFilterData(screeningTypesGetMain)
                 })
@@ -87,12 +87,14 @@ const Filter = ({
 
     useEffect(() => {
         // Фильтрация на основе selectedPreset
-        const foundPresetData = forFilterData.find((item) => item.data.name === selectedPreset);
-        if (foundPresetData) {
-            setSelectValues(foundPresetData.data.type_id);
-        } else {
-            setSelectValues(null); // Сбрасываем значение, если ничего не найдено
-        }
+        
+            const foundPresetData = forFilterData.find((item) => item.data.name === selectedPreset);
+            if (foundPresetData) {
+                setSelectValues(foundPresetData.data.type_id);
+                
+            } else {
+                setSelectValues(null);
+            }        
     
         const foundTimeData = forTimeData.find((item) => item.addAnalsisAndTimeframe.name === selectedTime);
         if (foundTimeData) {
@@ -103,6 +105,8 @@ const Filter = ({
             setFoundTimeId(null); // Сбрасываем значение, если ничего не найдено
         }
     }, [selectedPreset, selectedTime, forFilterData, forTimeData]); // Убедись, что зависимости указаны корректно
+    
+    console.log(forFilterData.map((item) =>item));
     
 
     const handleToDefoult = () =>{
@@ -193,7 +197,7 @@ const Filter = ({
                                         <span>All</span>   
                                     </div>
                                         {forFilterData && forFilterData.map((item) =>
-                                            item.addScreenTypeAndValue.filter(item => item.value_id === selectValues).map((item, idx) =>
+                                            item.addScreenTypeAndValue.filter(item => item.screening_type_id === selectValues).map((item, idx) =>
                                                 <div key={`${item.name}-${idx}`} className={`opt ${item.is_locked === true ? "opt-lock" : ""}`} onClick={() => { setOpen1(!open1); setSelectedTicker(item.name); setScreeningTypeValueId(item.value_id) }}>
                                                 <span>
                                                     {item.name}
@@ -246,7 +250,7 @@ const Filter = ({
                                     </div>
                                         {forFilterTimeData.map((item, index) =>
                                             <div key={`${item.name}-${index}`} className="opt" onClick={() => {setOpen3(!open3); setSelectedTime(item.name); setTimeFrameId(item.id)}}>
-                                                <span>{item.id}</span>
+                                                <span>{item.name}</span>
                                             </div>
                                         )}
                                     </div>

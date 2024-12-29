@@ -128,23 +128,13 @@ const Main = ({
                     <Link to={"/chart/" + item.analysisId} className="card" key={item.index}>
                       {filterLimit > item.index ? (
                         <>
-                          {/* <Link
-                          to={"/chart/" + item.analysisId}
-                          style={{
-                            background: "var(--main-color)",
-                            pointerEvents: "auto",
-                            cursor: "pointer",
-                          }}
-                        > */}
                           <div className="nav-card" style={{ background: "var(--main-color)", width: "100%" }}>
-                            <div className="infors">
                               <div className="info">
                                 <big>{item.symbol}</big>
                               </div>
                               <div className="salary">
                                 <i>{lastClosePrice}</i>
                               </div>
-                            </div>
                             <Link
                               to={"/chart/" + item.analysisId}
                               className="navCardLink"
@@ -172,7 +162,6 @@ const Main = ({
                               soat oldin
                             </p>
                           </div>
-                          {/* </Link> */}
                         </>
                       ) : (
                         <>
@@ -180,25 +169,20 @@ const Main = ({
                             className="nav-card"
                             style={{ background: "var(--block-card-color)" }}
                           >
-                            <div className="infors">
                               <div className="info">
                                 <big>{item.symbol}</big>
                               </div>
                               <div className="salary">
                                 <i>$0,2648</i>
-                                <p style={{ color: "var(--card-other-text)" }}>
-                                  1.19%
-                                </p>
                               </div>
-                            </div>
                             <Link
                               to="./Main"
                               className="navCardLink"
                               style={{ pointerEvents: "none", cursor: "default" }}
-                            >
+                              >
                               <LuScanSearch className="scanIcon" />
                             </Link>
-                          </div>
+                              </div>
                           <div className="image">
                             <div className="dont-show" style={{ display: "flex" }}>
                               <button onClick={() => setIsAlert(!isAlert)}>
