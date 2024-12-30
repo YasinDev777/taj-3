@@ -156,7 +156,7 @@ const Filter = ({
                                         <FiChevronDown />
                                     </div>
                                     <div className="select-options" style={open === false ? { display: "none" } : { display: "flex" }}>
-                                    <div className="opt" onClick={() => { setOpen(!open); setSelectedPreset("All"); setSelectValues(null); setSelectedTicker("All") }}>
+                                    <div className="opt" onClick={() => { setOpen(!open);setScreeningTypeValueId(null); setSelectedPreset("All"); setSelectValues(null); setSelectedTicker("All") }}>
                                         <span>All</span>
                                     </div>
                                         {forFilterData && forFilterData.map((item, index) =>

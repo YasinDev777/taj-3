@@ -10,10 +10,18 @@ import { AnalysisContext } from "../context/Context";
 const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
   const [analysisData, setAnalysisData] = useState([]);
   const [analysisSymbols, setAnalysisSymbols] = useState("");
+
+  const [timeFrameIdState, setTimeFrameIdState] = useState("1h")
   const { id } = useParams();
 
+  // const canvasRef = useRef(null);
+  const [cursor, setCursor] = useState("grab");
+
+  const handleMouseDown = () => setCursor("grabbing");
+  const handleMouseUp = () => setCursor("crosshair");
+  const handleMouseLeave = () => setCursor("crosshair");
+
   const analysis = useContext(AnalysisContext)
-    
   
 
   useEffect(() => {
@@ -34,15 +42,20 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isDarkMode] = useState(true);
 
-  const handleMouseDown = () => setIsMouseDown(true);
-  const handleMouseUp = () => setIsMouseDown(false);
-
   useEffect(() => {
     const fetchBitCoinData = async () => {
       if (!data && analysis) {
         const filteredItems = analysis.filter(item => item.analysisId === id);
         if (filteredItems.length > 0) {
           setAnalysisSymbols(filteredItems[0].symbol);
+          if (filteredItems[0].timeframe_id === "four_hours") {
+            setTimeFrameIdState("4h")
+          } else if(filteredItems[0].timeframe_id === "one_hour") {
+            setTimeFrameIdState("1h")
+          } else if(filteredItems[0].timeframe_id === "daily") {
+            setTimeFrameIdState("1d")
+          }
+          
         } else {
           console.error('No analysis symbols found');
           return;
@@ -55,7 +68,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
         const response = await axios.get('https://api.binance.com/api/v3/klines', {
           params: {
             symbol: analysisSymbols,
-            interval: '1h',
+            interval: timeFrameIdState,
             limit: 1000
           },
           headers: {
@@ -300,10 +313,11 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
                 height: "calc(var(--index)*15.5)",
                 transform: "translateY(0)",
               }
-            : { width: "100%", height: "77.6dvh" }
+            : { width: "100%", height: "77.6dvh", cursor }
         }
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
       >
         <div
           className="exit-svg"
