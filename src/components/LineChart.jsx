@@ -14,7 +14,8 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
   const [timeFrameIdState, setTimeFrameIdState] = useState("1h")
   const { id } = useParams();
 
-  // const canvasRef = useRef(null);
+  const canvasRef = useRef(null);
+
   const [cursor, setCursor] = useState("grab");
 
   const handleMouseDown = () => setCursor("grabbing");
@@ -22,7 +23,6 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
   const handleMouseLeave = () => setCursor("crosshair");
 
   const analysis = useContext(AnalysisContext)
-  
 
   useEffect(() => {
     const fetchAnalysisData = async () => {
