@@ -7,8 +7,6 @@ import Alert from "./Alert";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { FaLock } from "react-icons/fa6";
-
-
 const Filter = ({
     setIsVideo,
     isVideo,
@@ -26,8 +24,8 @@ const Filter = ({
     setTimeFrameId
 }) => {
     const [forFilterData, setForFilterData] = useState([])
-    const [forTimeData, setForTimeData] = useState([])
-    const [forFilterTimeData, setFilterTimeData] = useState([])
+    const [forTimeData, ] = useState([])
+    const [forFilterTimeData, ] = useState([])
 
     useEffect(() => {
         const fetchs = async () => {
@@ -37,9 +35,6 @@ const Filter = ({
 
                 const screeningTypesValue = collection(db, "screening_type_value")
                 const screeningTypesValueGet = await getDocs(screeningTypesValue)
-
-                // const analysis = collection(db, "analysis")
-                // const analysisGet = await getDocs(analysis)
 
                 const timeFrameData = collection(db, "timeframe")
                 const timeFrameDataGet = await getDocs(timeFrameData)
@@ -71,7 +66,6 @@ const Filter = ({
                 console.log(error);
             }
         }
-
         fetchs()
     }, [])
 
@@ -162,7 +156,7 @@ const Filter = ({
                                         <FiChevronDown />
                                     </div>
                                     <div className="select-options" style={open === false ? { display: "none" } : { display: "flex" }}>
-                                    <div className="opt" onClick={() => { setOpen(!open); setSelectedPreset("All"); setSelectValues(null); setSelectedTicker("All") }}>
+                                    <div className="opt" onClick={() => { setOpen(!open);setScreeningTypeValueId(null); setSelectedPreset("All"); setSelectValues(null); setSelectedTicker("All") }}>
                                         <span>All</span>
                                     </div>
                                         {forFilterData && forFilterData.map((item, index) =>
