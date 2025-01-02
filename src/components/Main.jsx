@@ -17,7 +17,6 @@ const Main = ({
   pointsState,
   isUser,
   data,
-  filterCards,
 }) => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -102,7 +101,7 @@ const Main = ({
     const hours = totalHours % 24; // Qoldiq soatlarni hisoblash
 
     // Natijani qaytarish
-    if (days >= 0) {
+    if (days > 0) {
       return `${days} kun ${hours}`;
     } else {
       return hours;
