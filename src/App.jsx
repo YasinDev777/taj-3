@@ -271,8 +271,6 @@ const App = () => {
                 isUser={isUser}
                 data={data}
                 analysis={analysis}
-                // filterCards={filterCards}
-                // setFilterCards={setFilterCards}
               />
             }
           />
