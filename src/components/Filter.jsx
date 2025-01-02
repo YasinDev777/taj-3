@@ -85,9 +85,7 @@ const Filter = ({
       const [selectedTime, setSelectedTime] = useState("All");
     const gridOptions = [6, 12, 24]
 
-    useEffect(() => {
-        // Фильтрация на основе selectedPreset
-        
+    useEffect(() => {        
             const foundPresetData = forFilterData.find((item) => item.data.name === selectedPreset);
             if (foundPresetData) {
                 setSelectValues(foundPresetData.data.type_id);
@@ -99,14 +97,11 @@ const Filter = ({
         const foundTimeData = forTimeData.find((item) => item.addAnalsisAndTimeframe.name === selectedTime);
         if (foundTimeData) {
             const foundTypeIdTime = foundTimeData.addAnalsisAndTimeframe.id;
-            // Включаем обновление для времени
             setFoundTimeId(foundTypeIdTime); 
         } else {
-            setFoundTimeId(null); // Сбрасываем значение, если ничего не найдено
+            setFoundTimeId(null);
         }
-    }, [selectedPreset, selectedTime, forFilterData, forTimeData]); // Убедись, что зависимости указаны корректно
-    
-    
+    }, [selectedPreset, selectedTime, forFilterData, forTimeData]);
 
     const handleToDefoult = () =>{
         setOpen(false)
@@ -263,5 +258,4 @@ const Filter = ({
         </>
     )
 }
-
 export default Filter
