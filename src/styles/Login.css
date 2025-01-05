@@ -127,7 +127,7 @@
 .textx img {
     width: calc(var(--index)*11.55);
     left: calc(var(--index)*-2);
-    top: calc(var(--index)*-5);
+    top: calc(var(--index)*-5.5);
     position: absolute;
     animation: img2 3.5s ease infinite;
 }

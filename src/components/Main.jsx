@@ -25,7 +25,7 @@ const Main = ({
 
   useEffect(() => {
     if (analysis) {
-      setAnalysisData(analysis);
+      setAnalysisData(analysis.filter(item => item.inactive === false));
     }
   }, [analysis, filterLimit, pointsState, isLogedIn]);
 
@@ -95,28 +95,35 @@ const Main = ({
     const targetDate = targetTime.seconds * 1000; // Maqsad vaqtni millisekundga aylantirish
     const now = new Date().getTime(); // Hozirgi vaqt
     const timeDifference = now - targetDate; // Vaqt farqi
-
-    const totalHours = Math.floor(timeDifference / (1000 * 60 * 60)); // Umumiy soatlarni hisoblash
+  
+    const totalMinutes = Math.floor(timeDifference / (1000 * 60)); // Umumiy daqiqalarni hisoblash
+    const totalHours = Math.floor(totalMinutes / 60); // Umumiy soatlarni hisoblash
     const days = Math.floor(totalHours / 24); // Kunlarni hisoblash
     const hours = totalHours % 24; // Qoldiq soatlarni hisoblash
-
+    const minutes = totalMinutes % 60; // Qoldiq daqiqalarni hisoblash
+  
     // Natijani qaytarish
     if (days > 0) {
-      return `${days} kun ${hours}`;
+      return `${days} kun ${hours} soat oldin`;
+    } else if (totalHours > 0) {
+      return `${hours} soat ${minutes} minut oldin`;
     } else {
-      return hours;
+      return `${minutes} minut oldin`;
     }
   };
+  
 
   return (
     <div className="main1">
-      <div className="main">
-        {loading ? (
-          <Loader />
-        ) : (
-          <>
+      {loading ? (
+        <Loader />
+      ) : 
+        currentChart.length > 0  ?
+        <>
+          <div className="main">
+
             {
-              currentChart.filter(item => item.inactive === false).map((item) => {
+              currentChart.map((item) => {
 
                 const symbol = Object.entries(data)
                   .filter(([symbol]) => symbol === item.symbol)
@@ -157,7 +164,6 @@ const Main = ({
                             <span> {" "}
                               {calculateTimeDifference(item.created_at)}{" "}
                             </span>
-                            soat oldin
                           </p>
                         </div>
                       </>
@@ -195,7 +201,6 @@ const Main = ({
                             <span> {" "}
                               {calculateTimeDifference(item.created_at)}{" "}
                             </span>
-                            soat oldin
                           </p>
                         </div>
                       </>
@@ -204,54 +209,58 @@ const Main = ({
                 );
               })
             }
-          </>
-        )}
+          </div>
+
+          <div className="btns">
+            <button
+              className="prev-btn"
+              onClick={() => {
+                prevPage();
+                handleScroll();
+              }}
+              disabled={currentPage === 1}
+            >
+              <GrFormPrevious />
+            </button>
+            {getVisiblePages().map((page, index) =>
+              typeof page === "number" ? (
+                <button
+                  key={index}
+                  onClick={() => {
+                    paginate(page);
+                    handleScroll();
+                  }}
+                  className={page === currentPage ? "active" : ""}
+                >
+                  {page}
+                </button>
+              ) : (
+                <span key={index} className="dots">
+                  ...
+                </span>
+              )
+            )}
+            <button
+              className="next-btn"
+              onClick={() => {
+                nextPage();
+                handleScroll();
+              }}
+              disabled={currentPage === totalPages}
+            >
+              <GrFormNext />
+            </button>
+          </div>
+      </>
+       : 
+       <div className="chartNone">
+        <h1>Analiz mavjud emas</h1>
       </div>
 
-      {loading ? (
-        ""
-      ) : (
-        <div className="btns">
-          <button
-            className="prev-btn"
-            onClick={() => {
-              prevPage();
-              handleScroll();
-            }}
-            disabled={currentPage === 1}
-          >
-            <GrFormPrevious />
-          </button>
-          {getVisiblePages().map((page, index) =>
-            typeof page === "number" ? (
-              <button
-                key={index}
-                onClick={() => {
-                  paginate(page);
-                  handleScroll();
-                }}
-                className={page === currentPage ? "active" : ""}
-              >
-                {page}
-              </button>
-            ) : (
-              <span key={index} className="dots">
-                ...
-              </span>
-            )
-          )}
-          <button
-            className="next-btn"
-            onClick={() => {
-              nextPage();
-              handleScroll();
-            }}
-            disabled={currentPage === totalPages}
-          >
-            <GrFormNext />
-          </button>
-        </div>
-      )}
+      }
+      
+
+
     </div>
   );
 };

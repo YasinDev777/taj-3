@@ -160,8 +160,8 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
         }))
         .sort((a, b) => {
           // "lower" elementlarni yuqoriga ko‘tarish
-          if (a.position === "lower" && b.position === "upper") return -1;
-          if (a.position === "upper" && b.position === "lower") return 1;
+          if (a.position === "lower" && b.position === "upper") return 1;
+          if (a.position === "upper" && b.position === "lower") return -1;
           return 0; // Asosiy tartibni saqlash
         });
 
