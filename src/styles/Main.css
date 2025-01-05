@@ -213,7 +213,15 @@
         transform: scale(1.2);
     }
 } */
-
+.chartNone {
+    width: 100%;
+    text-align: center;
+    padding: calc(var(--index)*1.5) 0px calc(var(--index)*2.5);
+}
+.chartNone h1 {
+    font-weight: 400;
+    font-size: calc(var(--index)*1.5);
+}
 @media (max-width: 900px) {
     
     .main{

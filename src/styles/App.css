@@ -40,7 +40,7 @@ html{
 }
 ::-webkit-scrollbar-thumb{
     background-color: var(--main-color);
-    border-radius: 120px;
+    border-radius: calc(var(--index)*6.5);
 }
 
 body{

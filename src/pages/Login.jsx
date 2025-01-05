@@ -31,6 +31,14 @@ const Login = ({
     setInputValue(event.target.value);
   };
 
+  const handleKeyDown = (event) => {
+    console.log("salom");
+    
+    if (event.key === "Enter") {
+      handleLogin(inputValue);
+    }
+  };
+
  
 
   useEffect(() => {
@@ -114,6 +122,7 @@ const Login = ({
                     type="text"
                     value={inputValue}
                     onChange={handleChange}
+                    onKeyDown={handleKeyDown}
                   />
 
                   <LuClipboardCopy onClick={handlePaste} />
