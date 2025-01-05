@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Main from "./components/Main";
@@ -30,8 +30,6 @@ const App = () => {
   const [pointsState, setPointsState] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
-
-
   const [mains, setMains] = useState([])
 
   const handleLogin = async (inputValue) => {
@@ -52,8 +50,8 @@ const App = () => {
         const index = number++;
         const lines =
           pointsState &&
-          pointsState.filter((state) =>  state.analysis_id === analysisId );
-          
+          pointsState.filter((state) => state.analysis_id === analysisId);
+
         fetchedData.push({
           lines,
           ...analysisMain,
@@ -100,7 +98,7 @@ const App = () => {
             localStorage.setItem("userName", foundUser.name);
             localStorage.setItem("isLogedIn", "true");
             navigate("/");
-            window.location.reload();
+            // window.location.reload();
           }
         }
         if (userData.name === isUser) {
@@ -128,32 +126,20 @@ const App = () => {
     const main = [...mains]
     const selectFilter = () => {
       const filtered = main.filter((item) => {
-        // 1. Birinchi dropdown bo'yicha filter
         const isTypeMatch = !selectValues || item.screening_type_id === selectValues;
-    
-        // 2. Ikkinchi dropdown bo'yicha filter
         const isValueMatch = !screeningTypeValueId || item.screening_type_value_id === screeningTypeValueId;
-
         const forTimeFrameId = !timeFrameId || item.timeframe_id === timeFrameId
-    
-        // Ikkala shartdan birini yoki ikkalasini bajarish kerak
         return isTypeMatch && isValueMatch && forTimeFrameId;
       });
-    
-      // Natijalarni yangilash
+
       setAnalysis(filtered);
-    
-    
-        setAnalysis(filtered); 
+
     };
     selectFilter();
-  }, [selectValues,screeningTypeValueId, timeFrameId]);
+  }, [selectValues, screeningTypeValueId, timeFrameId]);
 
   const [data, setData] = useState({});
-  const [setError] = useState(null);
-
-  
-
+  // const [setError] = useState(null);
   const fetchKlines = async (symbol) => {
     const API_URL = `https://api.binance.com/api/v3/klines`;
     try {
@@ -197,7 +183,7 @@ const App = () => {
         }));
       }
     } catch (err) {
-      setError(`Muammo: ${err.message}`);
+      console.log(err)
     }
   };
 
@@ -228,31 +214,42 @@ const App = () => {
     document.body.style.overflow = isAlert || isVideo ? "hidden" : "auto";
   }, [isAlert, isVideo]);
 
+  const [selectedPreset, setSelectedPreset] = useState("Type");
+  const [selectedTicker, setSelectedTicker] = useState("Type");
+  const [selectedTime, setSelectedTime] = useState("All");
+
   return (
     <div className="app">
       {location.pathname.includes("/chart") ||
-      location.pathname === "/login" ? null : (
+        location.pathname === "/login" ? null : (
         <>
-        <Navbar
-          isVideo={isVideo}
-          setIsVideo={setIsVideo}
-          setIsAlert={setIsAlert}
-          isAlert={isAlert}
-          isUser={isUser}
-          isLogedIn={isLogedIn}
+          <Navbar
+            isVideo={isVideo}
+            setIsVideo={setIsVideo}
+            setIsAlert={setIsAlert}
+            isAlert={isAlert}
+            isUser={isUser}
+            isLogedIn={isLogedIn}
           />
-        <Filter
-          setIsGrid={setIsGrid}
-          isGrid={isGrid}
-          setSelectValues={setSelectValues}
-          selectValues={selectValues}
-          foundTimeId={foundTimeId}
-          setFoundTimeId={setFoundTimeId}
-          screeningTypeValueId={screeningTypeValueId}
-          setScreeningTypeValueId={setScreeningTypeValueId}
-          setTimeFrameId={setTimeFrameId}
+          <Filter
+            setSelectedPreset={setSelectedPreset}
+            selectedPreset={selectedPreset}
+            selectedTicker={selectedTicker}
+            setSelectedTicker={setSelectedTicker}
+            selectedTime={selectedTime}
+            setSelectedTime={setSelectedTime}
+            setIsGrid={setIsGrid}
+            isGrid={isGrid}
+            setSelectValues={setSelectValues}
+            selectValues={selectValues}
+            foundTimeId={foundTimeId}
+            setFoundTimeId={setFoundTimeId}
+            screeningTypeValueId={screeningTypeValueId}
+            setScreeningTypeValueId={setScreeningTypeValueId}
+            setTimeFrameId={setTimeFrameId}
+            timeFrameId={timeFrameId}
           />
-          </>
+        </>
       )}
       <AnalysisContext.Provider value={analysis}>
         <Routes>

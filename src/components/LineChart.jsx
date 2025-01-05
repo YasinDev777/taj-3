@@ -156,31 +156,26 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
         .map(item => ({
           time: item.date.seconds,
           value: item.price,
-          position: item.position,
+          position: item.position
         }))
-        .sort((a, b) => {
-          // "lower" elementlarni yuqoriga ko‘tarish
-          if (a.position === "lower" && b.position === "upper") return 1;
-          if (a.position === "upper" && b.position === "lower") return -1;
-          return 0; // Asosiy tartibni saqlash
-        });
-
-        const singleData = analysisData
-          .filter(item => item.position === "single")
-          .map(item => ({
-            value: item.price,
-          }));
+        .sort((a, b) => a.time - b.time);
 
         lineSeries1.setData(upperLowerData);
-
-        candlestickSeries.createPriceLine({
-          price: singleData.length > 0 ? singleData[0].value : NaN,
-          color: "rgba(255, 0, 0, 0.8)",
-          lineWidth: 2,
-          lineStyle: 0,
-          axisLabelVisible: true,
-        });
       }
+      const singleData = analysisData
+        .filter(item => item.position === "single")
+        .map(item => ({
+          value: item.price,
+        }));
+
+
+      candlestickSeries.createPriceLine({
+        price: singleData.length > 0 ? singleData[0].value : NaN,
+        color: "rgba(255, 0, 0, 0.8)",
+        lineWidth: 2,
+        lineStyle: 0,
+        axisLabelVisible: true,
+      });
 
       chart.timeScale().fitContent();
 
@@ -278,58 +273,58 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
     }
   }, [isMouseDown]);
 
-  return (
-    <div>
-      <div
-        className="nav"
-        id="nav"
-        style={isCard === false ? { display: "none" } : { display: "flex" }}
-      >
-        <div className="logo-name">
-          <Link to="/">AHSAN LABS</Link>
-        </div>
-        <div className="options">
-          <Link to="https://t.me/ahsanlabs_admin" target="blank">
-            <PiHeadsetBold />
-          </Link>
-          {isLogedIn === false ? (
-            <Link to="/login">
-              <button>
-                Kirish <FiArrowRightCircle />
-              </button>
-            </Link>
-          ) : (
-            <h3>{isUser}</h3>
-          )}
-        </div>
-      </div>
-      <div
-        ref={chartContainerRef}
-        className={`chart-container ${isCard === false ? "chart-container-mobile" : ""}`}
-        style={
-          isCard === false
-            ? {
-                width: "calc(var(--index)*20)",
-                height: "calc(var(--index)*15.5)",
-                transform: "translateY(0)",
-              }
-            : { width: "100%", height: "77.6dvh", cursor }
-        }
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
-      >
+    return (
+      <div>
         <div
-          className="exit-svg"
+          className="nav"
+          id="nav"
           style={isCard === false ? { display: "none" } : { display: "flex" }}
         >
-          <Link to="/">
-            <BsArrowLeftCircle className="exitsvg" />
-          </Link>
+          <div className="logo-name">
+            <Link to="/">AHSAN LABS</Link>
+          </div>
+          <div className="options">
+            <Link to="https://t.me/ahsanlabs_admin" target="blank">
+              <PiHeadsetBold />
+            </Link>
+            {isLogedIn === false ? (
+              <Link to="/login">
+                <button>
+                  Kirish <FiArrowRightCircle />
+                </button>
+              </Link>
+            ) : (
+              <h3>{isUser}</h3>
+            )}
+          </div>
+        </div>
+        <div
+          ref={chartContainerRef}
+          className={`chart-container ${isCard === false ? "chart-container-mobile" : ""}`}
+          style={
+            isCard === false
+              ? {
+                  width: "calc(var(--index)*20)",
+                  height: "calc(var(--index)*15.5)",
+                  transform: "translateY(0)",
+                }
+              : { width: "100%", height: "77.6dvh", cursor }
+          }
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div
+            className="exit-svg"
+            style={isCard === false ? { display: "none" } : { display: "flex" }}
+          >
+            <Link to="/" >
+              <BsArrowLeftCircle className="exitsvg" />
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
-export default Chart;
+  export default Chart;

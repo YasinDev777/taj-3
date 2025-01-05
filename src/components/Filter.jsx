@@ -21,7 +21,14 @@ const Filter = ({
     setSelectValues,
     setFoundTimeId,
     setScreeningTypeValueId,
-    setTimeFrameId
+    setTimeFrameId,
+    timeFrameId,
+    setSelectedPreset,
+    selectedPreset,
+    selectedTicker,
+    setSelectedTicker,
+    selectedTime,
+    setSelectedTime
 }) => {
     const [forFilterData, setForFilterData] = useState([])
     const [forTimeData, ] = useState([])
@@ -74,9 +81,7 @@ const Filter = ({
     const [open2, setOpen2] = useState(false)
     const [open3, setOpen3] = useState(false)
 
-      const [selectedPreset, setSelectedPreset] = useState("Type");
-      const [selectedTicker, setSelectedTicker] = useState("Type");
-      const [selectedTime, setSelectedTime] = useState("All");
+     
     const gridOptions = [6, 12, 24]
 
     useEffect(() => {        
@@ -108,8 +113,11 @@ const Filter = ({
         setSelectValues(null)
         setScreeningTypeValueId(null)
         setTimeFrameId(null)
-
     }
+
+
+
+
     return (
         <>
             <Alert
@@ -233,11 +241,22 @@ const Filter = ({
                                         <FiChevronDown />
                                     </div>
                                     <div className="select-options" style={open3 ===false ? {display: "none"} : {display: "flex"}}>
-                                    <div className="opt" onClick={() => { setOpen3(!open3); setSelectedTime("All"); setTimeFrameId(null) }}>
+                                    <div className="opt" 
+                                    onClick={() => { 
+                                        setOpen3(!open3);
+                                        setSelectedTime("All");
+                                        setTimeFrameId(null)
+                                        }}>
                                         <span>All</span>   
                                     </div>
                                         {forFilterTimeData.map((item, index) =>
-                                            <div key={`${item.name}-${index}`} className="opt" onClick={() => {setOpen3(!open3); setSelectedTime(item.name); setTimeFrameId(item.timeframe_id)}}>
+                                            <div key={`${item.name}-${index}`} className="opt" 
+                                            onClick={() => {
+                                                setOpen3(!open3);
+                                                setSelectedTime(item.name);
+                                                setTimeFrameId(item.timeframe_id)
+                                                localStorage.setItem("Timeframe", selectedTime)
+                                                }}>
                                                 <span>{item.name}</span>
                                             </div>
                                         )}

@@ -106,9 +106,9 @@ const Main = ({
     if (days > 0) {
       return `${days} kun ${hours} soat oldin`;
     } else if (totalHours > 0) {
-      return `${hours} soat ${minutes} minut oldin`;
+      return `${hours} soat ${hours <= 2 ? minutes + " minut oldin" : "oldin"}`;
     } else {
-      return `${minutes} minut oldin`;
+      return `${minutes <= 0 ? 1 : minutes} minut oldin`;
     }
   };
   
@@ -259,8 +259,6 @@ const Main = ({
 
       }
       
-
-
     </div>
   );
 };
