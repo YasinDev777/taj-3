@@ -16,7 +16,6 @@ const Login = ({
   const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate()
 
-
   const handlePaste = async () => {
     try {
       const text = await navigator.clipboard.readText();
@@ -39,8 +38,6 @@ const Login = ({
     }
   };
 
- 
-
   useEffect(() => {
     const storedLogin = localStorage.getItem("isLogedIn");
     const storedUser = localStorage.getItem("userName");
@@ -50,7 +47,6 @@ const Login = ({
       navigate("/");
     }
   }, [setIsLogedIn, setIsUser, navigate]);
-
 
   return (
     <div className="login">

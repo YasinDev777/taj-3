@@ -59,9 +59,6 @@ const App = () => {
       });
       setMains(fetchedData);
       setAnalysis(fetchedData);
-      
-  
-            
 
       const points = collection(db, "points");
       const allPoints = await getDocs(points);
@@ -171,7 +168,6 @@ const App = () => {
         }
       }
 
-      // Agar activeSymbols ichida symbol bo'lsa, lastClosePrice qo'shamiz
       if (symbol) {
         setData((prevData) => ({
           ...prevData,
@@ -183,7 +179,7 @@ const App = () => {
       } else {
         setData((prevData) => ({
           ...prevData,
-          [symbol]: response.data, // Faqat data
+          [symbol]: response.data,
         }));
       }
     } catch (err) {

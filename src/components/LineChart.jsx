@@ -13,11 +13,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
 
   const [timeFrameIdState, setTimeFrameIdState] = useState("1d")
   const { id } = useParams();
-
-  const canvasRef = useRef(null);
-
   const [cursor, setCursor] = useState("grab");
-
   const handleMouseDown = () => setCursor("grabbing");
   const handleMouseUp = () => setCursor("crosshair");
   const handleMouseLeave = () => setCursor("crosshair");

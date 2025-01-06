@@ -96,8 +96,6 @@ const Main = ({
     const now = new Date().getTime(); // Hozirgi vaqt
     const timeDifference = now - targetDate; // Vaqt farqi
   
-   
-  
     const totalMinutes = Math.floor(timeDifference / (1000 * 60)); // Umumiy daqiqalarni ҳисоблаш
     const totalHours = Math.floor(totalMinutes / 60); // Умумий соатларни ҳисоблаш
     const days = Math.floor(totalHours / 24); // Кунларни ҳисоблаш
