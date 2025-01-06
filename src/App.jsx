@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Main from "./components/Main";
@@ -24,14 +24,11 @@ const App = () => {
   const [isUser, setIsUser] = useState("");
   const [isLogedIn, setIsLogedIn] = useState(false);
   const [filterLimit, setFilterLimit] = useState(1);
-  // const [filterCards, setFilterCards] = useState([])
   const [setAlertShown] = useState(false);
   const [analysis, setAnalysis] = useState([]);
   const [pointsState, setPointsState] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
-
-
   const [mains, setMains] = useState([])
 
   const handleLogin = async (inputValue) => {
@@ -52,18 +49,19 @@ const App = () => {
         const index = number++;
         const lines =
           pointsState &&
-          pointsState.filter((state) =>  state.analysis_id === analysisId );
-          
+          pointsState.filter((state) => state.analysis_id === analysisId);
         fetchedData.push({
           lines,
           ...analysisMain,
           analysisId,
           index,
         });
-
-        setMains(fetchedData);
-        setAnalysis(fetchedData);
       });
+      setMains(fetchedData);
+      setAnalysis(fetchedData);
+      
+  
+            
 
       const points = collection(db, "points");
       const allPoints = await getDocs(points);
@@ -73,7 +71,7 @@ const App = () => {
         pointNew.push({ ...data });
       });
       setPointsState(pointNew);
-
+      let IsUserHave = true
       querySnapshot.forEach((docs) => {
         const userData = docs.data();
         if (userData.user_id === inputValue && userData.is_blocked === true) {
@@ -93,14 +91,17 @@ const App = () => {
           }
         }
         if (inputValue) {
-          if (userData.user_id === inputValue) {
+          if (userData.user_id === inputValue && IsUserHave === true) {
             foundUser = userData;
             localStorage.clear();
             setIsLogedIn(true);
             localStorage.setItem("userName", foundUser.name);
             localStorage.setItem("isLogedIn", "true");
             navigate("/");
-            window.location.reload();
+            // window.location.reload();
+            IsUserHave = true
+          }else{
+            IsUserHave = false
           }
         }
         if (userData.name === isUser) {
@@ -109,7 +110,7 @@ const App = () => {
               setFilterLimit(Infinity);
               break;
             case "basic":
-              setFilterLimit(6);
+              setFilterLimit(5);
               break;
             case "free":
               setFilterLimit(3);
@@ -119,6 +120,9 @@ const App = () => {
           }
         }
       });
+      if (IsUserHave === false) {
+        alert("Bunday token mavjut emas yoki token noto'g'ri kiritilgan")
+      }
     } catch (error) {
       console.error("xatolik:", error);
     }
@@ -128,32 +132,19 @@ const App = () => {
     const main = [...mains]
     const selectFilter = () => {
       const filtered = main.filter((item) => {
-        // 1. Birinchi dropdown bo'yicha filter
         const isTypeMatch = !selectValues || item.screening_type_id === selectValues;
-    
-        // 2. Ikkinchi dropdown bo'yicha filter
         const isValueMatch = !screeningTypeValueId || item.screening_type_value_id === screeningTypeValueId;
-
         const forTimeFrameId = !timeFrameId || item.timeframe_id === timeFrameId
-    
-        // Ikkala shartdan birini yoki ikkalasini bajarish kerak
         return isTypeMatch && isValueMatch && forTimeFrameId;
       });
-    
-      // Natijalarni yangilash
-      setAnalysis(filtered);
-    
-    
-        setAnalysis(filtered); 
+
+      setAnalysis(filtered);      
+
     };
     selectFilter();
-  }, [selectValues,screeningTypeValueId, timeFrameId]);
+  }, [selectValues, screeningTypeValueId, timeFrameId]);
 
   const [data, setData] = useState({});
-  const [setError] = useState(null);
-
-  
-
   const fetchKlines = async (symbol) => {
     const API_URL = `https://api.binance.com/api/v3/klines`;
     try {
@@ -197,7 +188,7 @@ const App = () => {
         }));
       }
     } catch (err) {
-      setError(`Muammo: ${err.message}`);
+      console.log(err)
     }
   };
 
@@ -228,31 +219,42 @@ const App = () => {
     document.body.style.overflow = isAlert || isVideo ? "hidden" : "auto";
   }, [isAlert, isVideo]);
 
+  const [selectedPreset, setSelectedPreset] = useState(selectValues || "Type");
+  const [selectedTicker, setSelectedTicker] = useState(screeningTypeValueId || "Type");
+  const [selectedTime, setSelectedTime] = useState(timeFrameId || "All");
+
   return (
     <div className="app">
       {location.pathname.includes("/chart") ||
-      location.pathname === "/login" ? null : (
+        location.pathname === "/login" ? null : (
         <>
-        <Navbar
-          isVideo={isVideo}
-          setIsVideo={setIsVideo}
-          setIsAlert={setIsAlert}
-          isAlert={isAlert}
-          isUser={isUser}
-          isLogedIn={isLogedIn}
+          <Navbar
+            isVideo={isVideo}
+            setIsVideo={setIsVideo}
+            setIsAlert={setIsAlert}
+            isAlert={isAlert}
+            isUser={isUser}
+            isLogedIn={isLogedIn}
           />
-        <Filter
-          setIsGrid={setIsGrid}
-          isGrid={isGrid}
-          setSelectValues={setSelectValues}
-          selectValues={selectValues}
-          foundTimeId={foundTimeId}
-          setFoundTimeId={setFoundTimeId}
-          screeningTypeValueId={screeningTypeValueId}
-          setScreeningTypeValueId={setScreeningTypeValueId}
-          setTimeFrameId={setTimeFrameId}
+          <Filter
+            setSelectedPreset={setSelectedPreset}
+            selectedPreset={selectedPreset}
+            selectedTicker={selectedTicker}
+            setSelectedTicker={setSelectedTicker}
+            selectedTime={selectedTime}
+            setSelectedTime={setSelectedTime}
+            setIsGrid={setIsGrid}
+            isGrid={isGrid}
+            setSelectValues={setSelectValues}
+            selectValues={selectValues}
+            foundTimeId={foundTimeId}
+            setFoundTimeId={setFoundTimeId}
+            screeningTypeValueId={screeningTypeValueId}
+            setScreeningTypeValueId={setScreeningTypeValueId}
+            setTimeFrameId={setTimeFrameId}
+            timeFrameId={timeFrameId}
           />
-          </>
+        </>
       )}
       <AnalysisContext.Provider value={analysis}>
         <Routes>
@@ -289,11 +291,8 @@ const App = () => {
             path="/login"
             element={
               <Login
-                isUser={isUser}
                 setIsUser={setIsUser}
-                isLogedIn={isLogedIn}
                 setIsLogedIn={setIsLogedIn}
-                setFilterLimit={setFilterLimit}
                 handleLogin={handleLogin}
               />
             }

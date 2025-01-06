@@ -7,11 +7,11 @@ import { BsArrowLeftCircle } from "react-icons/bs";
 import axios from "axios";
 import { AnalysisContext } from "../context/Context";
 
-const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
+const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
   const [analysisData, setAnalysisData] = useState([]);
   const [analysisSymbols, setAnalysisSymbols] = useState("");
 
-  const [timeFrameIdState, setTimeFrameIdState] = useState("1h")
+  const [timeFrameIdState, setTimeFrameIdState] = useState("1d")
   const { id } = useParams();
 
   const canvasRef = useRef(null);
@@ -43,45 +43,37 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
   const [isDarkMode] = useState(true);
 
   useEffect(() => {
-    const fetchBitCoinData = async () => {
-      if (!data && analysis) {
-        const filteredItems = analysis.filter(item => item.analysisId === id);
-        if (filteredItems.length > 0) {
-          setAnalysisSymbols(filteredItems[0].symbol);
-          if (filteredItems[0].timeframe_id === "four_hours") {
-            setTimeFrameIdState("4h")
-          } else if(filteredItems[0].timeframe_id === "one_hour") {
-            setTimeFrameIdState("1h")
-          } else if(filteredItems[0].timeframe_id === "daily") {
-            setTimeFrameIdState("1d")
-          }
-          
-        } else {
-          console.error('No analysis symbols found');
-          return;
-        }
-      } else {
-        setAnalysisSymbols(data.toString());
-      }
 
+  }, [data, analysis, id]);
+  
+//   //     if (filteredItems[0].timeframe_id === "four_hours") {
+//   //       setTimeFrameIdState("4h")
+//   //     } else if(filteredItems[0].timeframe_id === "one_hour") {
+//   //       setTimeFrameIdState("1h")
+//   //     } else if(filteredItems[0].timeframe_id === "daily") {
+//   //       setTimeFrameIdState("1d")            
+//   //     } 
+//     }
+
+  useEffect(() => {
+    if (!data && analysis) {
+      const filteredItems = analysis.filter(item => item.analysisId === id);
+      if (filteredItems.length > 0) {
+        setAnalysisSymbols(filteredItems[0].symbol);
+        console.log(filteredItems[0].symbol);
+      } 
+    }else {
+      setAnalysisSymbols(data.toString());
+    }
+    const fetchBitCoinData = async () => {
       try {
         const response = await axios.get('https://api.binance.com/api/v3/klines', {
           params: {
             symbol: analysisSymbols,
-            interval: timeFrameIdState,
+            interval: "1d",
             limit: 1000
-          },
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          proxy: {
-            protocol: 'https',
-            host: 'cors-anywhere.herokuapp.com',
-            port: 443
           }
         });
-
         if (response.data) {
           const formattedData = response.data.map(item => ({
             time: item[0] / 1000,
@@ -90,22 +82,16 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
             low: parseFloat(item[3]),
             close: parseFloat(item[4])
           }));
-
           if (formattedData.length > 0) {
             setCandlestickData(formattedData);
-          } else {
-            console.error('No valid data available');
           }
-        } else {
-          console.error('No data in response');
-        }
-      } catch (error) {
+         }} catch (error) {
         console.error('Error fetching data:', error.message);
       }
     };
 
     fetchBitCoinData();
-  }, [analysisSymbols, isLogedIn, data,analysis]);
+  }, [data, analysis]);
 
   useEffect(() => {
     if (chartContainerRef.current && candlestickData.length > 0) {
@@ -152,35 +138,30 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
 
       if (analysisData.length > 0) {
         const upperLowerData = analysisData
-        .filter(item => item.position === "upper" || item.position === "lower")
-        .map(item => ({
-          time: item.date.seconds,
-          value: item.price,
-          position: item.position,
-        }))
-        .sort((a, b) => {
-          // "lower" elementlarni yuqoriga ko‘tarish
-          if (a.position === "lower" && b.position === "upper") return 1;
-          if (a.position === "upper" && b.position === "lower") return -1;
-          return 0; // Asosiy tartibni saqlash
-        });
-
-        const singleData = analysisData
-          .filter(item => item.position === "single")
+          .filter(item => item.position === "upper" || item.position === "lower")
           .map(item => ({
+            time: item.date.seconds,
             value: item.price,
-          }));
+            position: item.position
+          }))
+          .sort((a, b) => a.time - b.time);
 
         lineSeries1.setData(upperLowerData);
-
-        candlestickSeries.createPriceLine({
-          price: singleData.length > 0 ? singleData[0].value : NaN,
-          color: "rgba(255, 0, 0, 0.8)",
-          lineWidth: 2,
-          lineStyle: 0,
-          axisLabelVisible: true,
-        });
       }
+      const singleData = analysisData
+        .filter(item => item.position === "single")
+        .map(item => ({
+          value: item.price,
+        }));
+
+
+      candlestickSeries.createPriceLine({
+        price: singleData.length > 0 ? singleData[0].value : NaN,
+        color: "rgba(255, 0, 0, 0.8)",
+        lineWidth: 2,
+        lineStyle: 0,
+        axisLabelVisible: true,
+      });
 
       chart.timeScale().fitContent();
 
@@ -309,10 +290,10 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
         style={
           isCard === false
             ? {
-                width: "calc(var(--index)*20)",
-                height: "calc(var(--index)*15.5)",
-                transform: "translateY(0)",
-              }
+              width: "calc(var(--index)*20)",
+              height: "calc(var(--index)*15.5)",
+              transform: "translateY(0)",
+            }
             : { width: "100%", height: "77.6dvh", cursor }
         }
         onMouseDown={handleMouseDown}
@@ -323,7 +304,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data,line }) => {
           className="exit-svg"
           style={isCard === false ? { display: "none" } : { display: "flex" }}
         >
-          <Link to="/">
+          <Link to="/" >
             <BsArrowLeftCircle className="exitsvg" />
           </Link>
         </div>
