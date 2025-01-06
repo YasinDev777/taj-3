@@ -42,11 +42,10 @@ const App = () => {
 
       const fetchedData = [];
 
-      let number = 0;
+      // let number = 0;
       allAnalysis.forEach((doc) => {
         const analysisId = doc.id;
         const analysisMain = doc.data();
-        const index = number++;
         const lines =
           pointsState &&
           pointsState.filter((state) => state.analysis_id === analysisId);
@@ -54,14 +53,10 @@ const App = () => {
           lines,
           ...analysisMain,
           analysisId,
-          index,
         });
       });
-      setMains(fetchedData);
-      setAnalysis(fetchedData);
-      
-  
-            
+      setMains(fetchedData.sort((a,b)=>b.created_at.seconds - a.created_at.seconds));
+      setAnalysis(fetchedData.sort((a,b)=>b.created_at.seconds - a.created_at.seconds));
 
       const points = collection(db, "points");
       const allPoints = await getDocs(points);
@@ -91,14 +86,13 @@ const App = () => {
           }
         }
         if (inputValue) {
-          if (userData.user_id === inputValue && IsUserHave === true) {
+          if (userData.user_id === inputValue) {
             foundUser = userData;
             localStorage.clear();
             setIsLogedIn(true);
             localStorage.setItem("userName", foundUser.name);
             localStorage.setItem("isLogedIn", "true");
             navigate("/");
-            // window.location.reload();
             IsUserHave = true
           }else{
             IsUserHave = false
@@ -120,9 +114,9 @@ const App = () => {
           }
         }
       });
-      if (IsUserHave === false) {
-        alert("Bunday token mavjut emas yoki token noto'g'ri kiritilgan")
-      }
+        if (IsUserHave === false) {
+          alert("Bunday token mavjut emas yoki token noto'g'ri kiritilgan")
+        }
     } catch (error) {
       console.error("xatolik:", error);
     }
@@ -172,7 +166,6 @@ const App = () => {
         }
       }
 
-      // Agar activeSymbols ichida symbol bo'lsa, lastClosePrice qo'shamiz
       if (symbol) {
         setData((prevData) => ({
           ...prevData,
@@ -184,7 +177,7 @@ const App = () => {
       } else {
         setData((prevData) => ({
           ...prevData,
-          [symbol]: response.data, // Faqat data
+          [symbol]: response.data,
         }));
       }
     } catch (err) {

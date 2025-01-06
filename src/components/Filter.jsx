@@ -132,9 +132,6 @@ const Filter = ({
         setIsGrid(6)
     }
 
-
-
-
     return (
         <>
             <Alert

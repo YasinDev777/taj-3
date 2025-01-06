@@ -8,16 +8,13 @@ import axios from "axios";
 import { AnalysisContext } from "../context/Context";
 
 const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
+  
   const [analysisData, setAnalysisData] = useState([]);
   const [analysisSymbols, setAnalysisSymbols] = useState("");
 
   const [timeFrameIdState, setTimeFrameIdState] = useState("1d")
   const { id } = useParams();
-
-  const canvasRef = useRef(null);
-
   const [cursor, setCursor] = useState("grab");
-
   const handleMouseDown = () => setCursor("grabbing");
   const handleMouseUp = () => setCursor("crosshair");
   const handleMouseLeave = () => setCursor("crosshair");
@@ -42,9 +39,6 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isDarkMode] = useState(true);
 
-  useEffect(() => {
-
-  }, [data, analysis, id]);
   
 //   //     if (filteredItems[0].timeframe_id === "four_hours") {
 //   //       setTimeFrameIdState("4h")
@@ -91,7 +85,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
     };
 
     fetchBitCoinData();
-  }, [data, analysis]);
+  }, [isLogedIn, pointsState, id, data,analysisSymbols]);
 
   useEffect(() => {
     if (chartContainerRef.current && candlestickData.length > 0) {

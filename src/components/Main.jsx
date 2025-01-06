@@ -25,9 +25,13 @@ const Main = ({
 
   useEffect(() => {
     if (analysis) {
-      setAnalysisData(analysis.filter(item => item.inactive === false));
+        const updatedData = analysis
+            .filter(item => item.inactive === false)
+            .map((item, index) => ({ ...item, index })); // index qo'shilmoqda
+        setAnalysisData(updatedData);
     }
-  }, [analysis, filterLimit, pointsState, isLogedIn]);
+}, [analysis, filterLimit, pointsState, isLogedIn]);
+
 
   useEffect(() => {
     setChartPerPage(Number(isGrid));
@@ -85,18 +89,17 @@ const Main = ({
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       setLoading(false);
     };
     fetchData();
   }, [currentPage]);
+  
 
   const calculateTimeDifference = (targetTime) => {
     const targetDate = targetTime.seconds * 1000; // Maqsad vaqtni millisekundga aylantirish
     const now = new Date().getTime(); // Hozirgi vaqt
     const timeDifference = now - targetDate; // Vaqt farqi
-  
-   
   
     const totalMinutes = Math.floor(timeDifference / (1000 * 60)); // Umumiy daqiqalarni ҳисоблаш
     const totalHours = Math.floor(totalMinutes / 60); // Умумий соатларни ҳисоблаш
