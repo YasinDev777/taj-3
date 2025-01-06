@@ -89,28 +89,31 @@ const Main = ({
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [currentPage]);
 
   const calculateTimeDifference = (targetTime) => {
     const targetDate = targetTime.seconds * 1000; // Maqsad vaqtni millisekundga aylantirish
     const now = new Date().getTime(); // Hozirgi vaqt
     const timeDifference = now - targetDate; // Vaqt farqi
   
-    const totalMinutes = Math.floor(timeDifference / (1000 * 60)); // Umumiy daqiqalarni hisoblash
-    const totalHours = Math.floor(totalMinutes / 60); // Umumiy soatlarni hisoblash
-    const days = Math.floor(totalHours / 24); // Kunlarni hisoblash
-    const hours = totalHours % 24; // Qoldiq soatlarni hisoblash
-    const minutes = totalMinutes % 60; // Qoldiq daqiqalarni hisoblash
+   
   
-    // Natijani qaytarish
+    const totalMinutes = Math.floor(timeDifference / (1000 * 60)); // Umumiy daqiqalarni ҳисоблаш
+    const totalHours = Math.floor(totalMinutes / 60); // Умумий соатларни ҳисоблаш
+    const days = Math.floor(totalHours / 24); // Кунларни ҳисоблаш
+    const hours = totalHours % 24; // Қолдиқ соатларни ҳисоблаш
+    const minutes = totalMinutes % 60; // Қолдиқ дақиқаларни ҳисоблаш
+  
+    // Натийжани қайтариш
     if (days > 0) {
-      return `${days} kun ${hours} soat oldin`;
+      return `${days} kun${hours > 0 ? ` ${hours} soat` : ""} oldin`;
     } else if (totalHours > 0) {
-      return `${hours} soat ${hours <= 2 ? minutes + " minut oldin" : "oldin"}`;
+      return `${totalHours} soat${minutes > 0 ? ` ${minutes} daqiqa` : ""} oldin`;
     } else {
-      return `${minutes <= 0 ? 1 : minutes} minut oldin`;
+      return `${minutes > 0 ? minutes : 1} minut oldin`; // Ҳеч бўлмаганда 1 дақиқа
     }
   };
+  
   
 
   return (
@@ -121,18 +124,16 @@ const Main = ({
         currentChart.length > 0  ?
         <>
           <div className="main">
-
             {
-              currentChart.map((item) => {
-
+              currentChart.map((item,index) => {
                 const symbol = Object.entries(data)
                   .filter(([symbol]) => symbol === item.symbol)
                   .map(([symbol]) => symbol);
                 const lastClosePrice = Object.entries(data).filter(([symbol]) => symbol === item.symbol).map(item => item[1].lastClosePrice)
                 return (
-                  <Link to={"/chart/" + item.analysisId} className="card">
+                  <>
                     {filterLimit > item.index ? (
-                      <>
+                      <Link to={"/chart/" + item.analysisId} key={item.index} className="card">
                         <div className="nav-card" style={{ background: "var(--main-color)", width: "100%" }}>
                           <div className="info">
                             <big>{item.symbol}</big>
@@ -140,12 +141,11 @@ const Main = ({
                           <div className="salary">
                             <i>{lastClosePrice}</i>
                           </div>
-                          <Link
-                            to={"/chart/" + item.analysisId}
+                          <div
                             className="navCardLink"
                           >
                             <LuScanSearch className="scanIcon" />
-                          </Link>
+                          </div>
                         </div>
 
                         <div className="image">
@@ -166,9 +166,9 @@ const Main = ({
                             </span>
                           </p>
                         </div>
-                      </>
+                      </Link>
                     ) : (
-                      <>
+                      <div className="card" key={item.index}>
                         <div
                           className="nav-card"
                           style={{ background: "var(--block-card-color)" }}
@@ -179,13 +179,12 @@ const Main = ({
                           <div className="salary">
                             <i>$0,2648</i>
                           </div>
-                          <Link
-                            to="./Main"
+                          <div
                             className="navCardLink"
                             style={{ pointerEvents: "none", cursor: "default" }}
                           >
                             <LuScanSearch className="scanIcon" />
-                          </Link>
+                          </div>
                         </div>
                         <div className="image">
                           <div className="dont-show" style={{ display: "flex" }}>
@@ -203,9 +202,9 @@ const Main = ({
                             </span>
                           </p>
                         </div>
-                      </>
+                      </div>
                     )}
-                  </Link>
+                  </>
                 );
               })
             }

@@ -24,7 +24,6 @@ const App = () => {
   const [isUser, setIsUser] = useState("");
   const [isLogedIn, setIsLogedIn] = useState(false);
   const [filterLimit, setFilterLimit] = useState(1);
-  // const [filterCards, setFilterCards] = useState([])
   const [setAlertShown] = useState(false);
   const [analysis, setAnalysis] = useState([]);
   const [pointsState, setPointsState] = useState([]);
@@ -51,17 +50,18 @@ const App = () => {
         const lines =
           pointsState &&
           pointsState.filter((state) => state.analysis_id === analysisId);
-
         fetchedData.push({
           lines,
           ...analysisMain,
           analysisId,
           index,
         });
-
-        setMains(fetchedData);
-        setAnalysis(fetchedData);
       });
+      setMains(fetchedData);
+      setAnalysis(fetchedData);
+      
+  
+            
 
       const points = collection(db, "points");
       const allPoints = await getDocs(points);
@@ -107,7 +107,7 @@ const App = () => {
               setFilterLimit(Infinity);
               break;
             case "basic":
-              setFilterLimit(6);
+              setFilterLimit(5);
               break;
             case "free":
               setFilterLimit(3);
@@ -132,14 +132,13 @@ const App = () => {
         return isTypeMatch && isValueMatch && forTimeFrameId;
       });
 
-      setAnalysis(filtered);
+      setAnalysis(filtered);      
 
     };
     selectFilter();
   }, [selectValues, screeningTypeValueId, timeFrameId]);
 
   const [data, setData] = useState({});
-  // const [setError] = useState(null);
   const fetchKlines = async (symbol) => {
     const API_URL = `https://api.binance.com/api/v3/klines`;
     try {
@@ -214,9 +213,9 @@ const App = () => {
     document.body.style.overflow = isAlert || isVideo ? "hidden" : "auto";
   }, [isAlert, isVideo]);
 
-  const [selectedPreset, setSelectedPreset] = useState("Type");
-  const [selectedTicker, setSelectedTicker] = useState("Type");
-  const [selectedTime, setSelectedTime] = useState("All");
+  const [selectedPreset, setSelectedPreset] = useState(selectValues || "Type");
+  const [selectedTicker, setSelectedTicker] = useState(screeningTypeValueId || "Type");
+  const [selectedTime, setSelectedTime] = useState(timeFrameId || "All");
 
   return (
     <div className="app">
@@ -286,11 +285,8 @@ const App = () => {
             path="/login"
             element={
               <Login
-                isUser={isUser}
                 setIsUser={setIsUser}
-                isLogedIn={isLogedIn}
                 setIsLogedIn={setIsLogedIn}
-                setFilterLimit={setFilterLimit}
                 handleLogin={handleLogin}
               />
             }

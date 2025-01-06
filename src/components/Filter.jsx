@@ -22,7 +22,6 @@ const Filter = ({
     setFoundTimeId,
     setScreeningTypeValueId,
     setTimeFrameId,
-    timeFrameId,
     setSelectedPreset,
     selectedPreset,
     selectedTicker,
@@ -102,6 +101,23 @@ const Filter = ({
         }
     }, [selectedPreset, selectedTime, forFilterData, forTimeData]);
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (!event.target.closest(".options-div")) {
+                setOpen(false);
+                setOpen1(false);
+                setOpen2(false);
+                setOpen3(false);
+            }
+        };
+    
+        document.addEventListener("click", handleClickOutside);    
+        return () => {
+            document.removeEventListener("click", handleClickOutside);
+        };
+    }, []);
+    
+
     const handleToDefoult = () =>{
         setOpen(false)
         setOpen1(false)
@@ -113,6 +129,7 @@ const Filter = ({
         setSelectValues(null)
         setScreeningTypeValueId(null)
         setTimeFrameId(null)
+        setIsGrid(6)
     }
 
 
