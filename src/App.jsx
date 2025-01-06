@@ -139,60 +139,62 @@ const App = () => {
   }, [selectValues, screeningTypeValueId, timeFrameId]);
 
   const [data, setData] = useState({});
-  const fetchKlines = async (symbol) => {
-    const API_URL = `https://api.binance.com/api/v3/klines`;
-    try {
-      const response = await axios.get(API_URL, {
-        params: {
-          symbol: symbol,
-          interval: "1h",
-          limit: 10,
-        },
-      });
 
-      let lastClosePrice = "";
-
-      if (response.data) {
-        const formattedData = response.data.map((item) => ({
-          time: item[0] / 1000,
-          open: parseFloat(item[1]),
-          high: parseFloat(item[2]),
-          low: parseFloat(item[3]),
-          close: parseFloat(item[4]),
-        }));
-
-        if (formattedData.length > 0) {
-          lastClosePrice = formattedData[formattedData.length - 1].close;
-        }
-      }
-
-      if (symbol) {
-        setData((prevData) => ({
-          ...prevData,
-          [symbol]: {
-            data: response.data,
-            lastClosePrice: lastClosePrice,
+    const fetchKlines = async (symbol) => {
+      const API_URL = `https://api.binance.com/api/v3/klines`;
+      try {
+        const response = await axios.get(API_URL, {
+          params: {
+            symbol: symbol,
+            interval: "1h",
+            limit: 10,
           },
-        }));
-      } else {
-        setData((prevData) => ({
-          ...prevData,
-          [symbol]: response.data,
-        }));
+        });
+  
+        let lastClosePrice = "";
+  
+        if (response.data) {
+          const formattedData = response.data.map((item) => ({
+            time: item[0] / 1000,
+            open: parseFloat(item[1]),
+            high: parseFloat(item[2]),
+            low: parseFloat(item[3]),
+            close: parseFloat(item[4]),
+          }));
+  
+          if (formattedData.length > 0) {
+            lastClosePrice = formattedData[formattedData.length - 1].close;
+          }
+        }
+  
+        if (symbol) {
+          setData((prevData) => ({
+            ...prevData,
+            [symbol]: {
+              data: response.data,
+              lastClosePrice: lastClosePrice,
+            },
+          }));
+        } else {
+          setData((prevData) => ({
+            ...prevData,
+            [symbol]: response.data,
+          }));
+        }
+      } catch (err) {
+        console.log(err)
       }
-    } catch (err) {
-      console.log(err)
-    }
-  };
+    };
+  
+  
 
   useEffect(() => {
     const activeSymbols = new Set(analysis.map((item) => item.symbol));
     activeSymbols.forEach((symbol) => fetchKlines(symbol));
-  }, [filterLimit, isLogedIn]);
+  }, [filterLimit, isLogedIn , analysis]);
 
   useEffect(() => {
     handleLogin();
-    // handle_block();
     const storedLogin = localStorage.getItem("isLogedIn");
     const storedUser = localStorage.getItem("userName");
     if (storedLogin === "true" && storedUser) {
