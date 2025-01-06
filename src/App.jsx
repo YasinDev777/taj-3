@@ -91,7 +91,7 @@ const App = () => {
           }
         }
         if (inputValue) {
-          if (userData.user_id === inputValue && IsUserHave === true) {
+          if (userData.user_id === inputValue) {
             foundUser = userData;
             localStorage.clear();
             setIsLogedIn(true);
@@ -120,9 +120,9 @@ const App = () => {
           }
         }
       });
-      if (IsUserHave === false) {
-        alert("Bunday token mavjut emas yoki token noto'g'ri kiritilgan")
-      }
+        if (IsUserHave === false) {
+          alert("Bunday token mavjut emas yoki token noto'g'ri kiritilgan")
+        }
     } catch (error) {
       console.error("xatolik:", error);
     }
