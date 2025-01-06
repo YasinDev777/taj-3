@@ -42,11 +42,10 @@ const App = () => {
 
       const fetchedData = [];
 
-      let number = 0;
+      // let number = 0;
       allAnalysis.forEach((doc) => {
         const analysisId = doc.id;
         const analysisMain = doc.data();
-        const index = number++;
         const lines =
           pointsState &&
           pointsState.filter((state) => state.analysis_id === analysisId);
@@ -54,11 +53,10 @@ const App = () => {
           lines,
           ...analysisMain,
           analysisId,
-          index,
         });
       });
-      setMains(fetchedData);
-      setAnalysis(fetchedData);
+      setMains(fetchedData.sort((a,b)=>b.created_at.seconds - a.created_at.seconds));
+      setAnalysis(fetchedData.sort((a,b)=>b.created_at.seconds - a.created_at.seconds));
 
       const points = collection(db, "points");
       const allPoints = await getDocs(points);
