@@ -98,7 +98,6 @@ const App = () => {
             localStorage.setItem("userName", foundUser.name);
             localStorage.setItem("isLogedIn", "true");
             navigate("/");
-            // window.location.reload();
             IsUserHave = true
           }else{
             IsUserHave = false
