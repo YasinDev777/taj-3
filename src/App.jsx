@@ -71,7 +71,7 @@ const App = () => {
         pointNew.push({ ...data });
       });
       setPointsState(pointNew);
-
+      let IsUserHave = true
       querySnapshot.forEach((docs) => {
         const userData = docs.data();
         if (userData.user_id === inputValue && userData.is_blocked === true) {
@@ -91,7 +91,7 @@ const App = () => {
           }
         }
         if (inputValue) {
-          if (userData.user_id === inputValue) {
+          if (userData.user_id === inputValue && IsUserHave === true) {
             foundUser = userData;
             localStorage.clear();
             setIsLogedIn(true);
@@ -99,6 +99,9 @@ const App = () => {
             localStorage.setItem("isLogedIn", "true");
             navigate("/");
             // window.location.reload();
+            IsUserHave = true
+          }else{
+            IsUserHave = false
           }
         }
         if (userData.name === isUser) {
@@ -117,6 +120,9 @@ const App = () => {
           }
         }
       });
+      if (IsUserHave === false) {
+        alert("Bunday token mavjut emas yoki token noto'g'ri kiritilgan")
+      }
     } catch (error) {
       console.error("xatolik:", error);
     }

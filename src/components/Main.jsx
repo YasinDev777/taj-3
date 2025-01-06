@@ -139,7 +139,7 @@ const Main = ({
                             <big>{item.symbol}</big>
                           </div>
                           <div className="salary">
-                            <i>{lastClosePrice}</i>
+                            <i>{"$"+lastClosePrice}</i>
                           </div>
                           <div
                             className="navCardLink"
