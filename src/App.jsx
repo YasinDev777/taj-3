@@ -195,7 +195,6 @@ const App = () => {
 
   useEffect(() => {
     handleLogin();
-    // handle_block();
     const storedLogin = localStorage.getItem("isLogedIn");
     const storedUser = localStorage.getItem("userName");
     if (storedLogin === "true" && storedUser) {
