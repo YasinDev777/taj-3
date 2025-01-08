@@ -35,7 +35,7 @@ html{
 } 
 
 ::-webkit-scrollbar{
-    width: 9px;
+    width: calc(var(--index)*0.55);
     background-color: transparent;
 }
 ::-webkit-scrollbar-thumb{

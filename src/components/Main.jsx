@@ -25,9 +25,7 @@ const Main = ({
 
   useEffect(() => {
     if (analysis) {
-        const updatedData = analysis
-            .filter(item => item.inactive === false)
-            .map((item, index) => ({ ...item, index })); // index qo'shilmoqda
+        const updatedData = analysis.map((item, index) => ({ ...item, index })); // index qo'shilmoqda
         setAnalysisData(updatedData);
     }
 }, [analysis, filterLimit, pointsState, isLogedIn]);
@@ -116,8 +114,6 @@ const Main = ({
       return `${minutes > 0 ? minutes : 1} minut oldin`; // Ҳеч бўлмаганда 1 дақиқа
     }
   };
-  
-  
 
   return (
     <div className="main1">
