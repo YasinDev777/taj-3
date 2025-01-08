@@ -7,11 +7,11 @@ import "./styles/App.css";
 import Popup from "./components/Popup";
 import Login from "./pages/Login";
 import Filter from "./components/Filter";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "./firebase";
 import axios from "axios";
 import { AnalysisContext } from "./context/Context";
-
+import CryptoJS from "crypto-js";
 const App = () => {
   const [selectValues, setSelectValues] = useState(null);
   const [screeningTypeValueId, setScreeningTypeValueId] = useState(null)
@@ -31,32 +31,34 @@ const App = () => {
   const location = useLocation();
   const [mains, setMains] = useState([])
 
+
+  const encryptData = (data) => {
+    return CryptoJS.AES.encrypt(JSON.stringify(data), 'your-secret-key').toString();
+  };
+
   const handleLogin = async (inputValue) => {
     let foundUser = null;
     try {
-      const usersCollection = collection(db, "user");
-      const querySnapshot = await getDocs(usersCollection);
-
       const analysisGet = collection(db, "analysis");
-      const allAnalysis = await getDocs(analysisGet);
+      const q = await query(analysisGet , where("inactive","==",false))
+      const allAnalysis = await getDocs(q);
 
       const fetchedData = [];
 
-      // let number = 0;
       allAnalysis.forEach((doc) => {
         const analysisId = doc.id;
         const analysisMain = doc.data();
         const lines =
           pointsState &&
           pointsState.filter((state) => state.analysis_id === analysisId);
-        fetchedData.push({
-          lines,
-          ...analysisMain,
-          analysisId,
+          fetchedData.push({
+            lines,
+            ...analysisMain,
+            analysisId,
+          });
         });
-      });
-      setMains(fetchedData.sort((a,b)=>b.created_at.seconds - a.created_at.seconds));
-      setAnalysis(fetchedData.sort((a,b)=>b.created_at.seconds - a.created_at.seconds));
+      setMains(fetchedData.sort((a,b)=>a.created_at - b.created_at));
+      setAnalysis(fetchedData.sort((a,b)=>b.created_at - a.created_at));
 
       const points = collection(db, "points");
       const allPoints = await getDocs(points);
@@ -66,61 +68,92 @@ const App = () => {
         pointNew.push({ ...data });
       });
       setPointsState(pointNew);
-      let IsUserHave = true
+        
+        const usersCollection = collection(db, "user");
+        const user_query = await query(usersCollection, where("user_id", "==", inputValue))
+        const querySnapshot = await getDocs(user_query);
+        if (querySnapshot.empty) {
+        alert("Bunday ma'lumotga ega User afsuski topilmadi!");
+      } else {
       querySnapshot.forEach((docs) => {
         const userData = docs.data();
-        if (userData.user_id === inputValue && userData.is_blocked === true) {
+        if (userData.is_blocked === true || isUser) {
           alert(
             `Hurmatli ${isUser}, siz bloklangansiz iltimos admin bilan bog'laning`
           );
           localStorage.clear();
           return;
+        } else {
+          foundUser = userData;
+          localStorage.clear();
+          setIsLogedIn(true);
+          localStorage.setItem("userName", foundUser.name);
+          localStorage.setItem("isLogedIn", "true");
+          localStorage.setItem("subscriptionType", encryptData(userData.subscription_type));
+          navigate("/");
+          
+      switch (userData.subscription_type) {
+        case "pro":
+            setFilterLimit(Infinity);
+            break;
+          case "basic":
+            setFilterLimit(5);
+            break;
+          case "free":
+            setFilterLimit(3);
+            break;
+          default:
+            setFilterLimit(1);
+      }
+   
         }
-        if (isUser && isUser === userData.name) {
-          if (userData.is_blocked === true) {
-            alert(
-              `Hurmatli ${isUser}, siz bloklangansiz iltimos admin bilan bog'laning`
-            );
-            localStorage.clear();
-            return;
-          }
-        }
-        if (inputValue) {
-          if (userData.user_id === inputValue) {
-            foundUser = userData;
-            localStorage.clear();
-            setIsLogedIn(true);
-            localStorage.setItem("userName", foundUser.name);
-            localStorage.setItem("isLogedIn", "true");
-            navigate("/");
-            IsUserHave = true
-          }else{
-            IsUserHave = false
-          }
-        }
-        if (userData.name === isUser) {
-          switch (userData.subscription_type) {
-            case "pro":
-              setFilterLimit(Infinity);
-              break;
-            case "basic":
-              setFilterLimit(5);
-              break;
-            case "free":
-              setFilterLimit(3);
-              break;
-            default:
-              setFilterLimit(1);
-          }
-        }
+        // if (isUser && isUser === userData.name) {
+        //   if (userData.is_blocked === true) {
+        //     alert(
+        //       `Hurmatli ${isUser}, siz bloklangansiz iltimos admin bilan bog'laning`
+        //     );
+        //     localStorage.clear();
+        //     return;
+        //   } 
+        // }
       });
-        if (IsUserHave === false) {
-          alert("Bunday token mavjut emas yoki token noto'g'ri kiritilgan")
-        }
+      }
+        
     } catch (error) {
       console.error("xatolik:", error);
     }
   };
+
+  const decryptData = (data) => {
+    if (!data) {
+      return null; // Возвращаем null, если данных нет
+    }
+    const bytes = CryptoJS.AES.decrypt(data, 'your-secret-key');
+    return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+  };
+  
+  useEffect(() => {
+    const storedSubscriptionType = localStorage.getItem("subscriptionType");
+    if (storedSubscriptionType) {
+      const decryptedSubscriptionType = decryptData(storedSubscriptionType);
+      if (decryptedSubscriptionType) {
+        switch (decryptedSubscriptionType) {
+          case "pro":
+            setFilterLimit(Infinity);
+            break;
+          case "basic":
+            setFilterLimit(5);
+            break;
+          case "free":
+            setFilterLimit(3);
+            break;
+          default:
+            setFilterLimit(1);
+        }
+      }
+    }
+  }, []);
+  
 
   useEffect(() => {
     const main = [...mains]
@@ -140,7 +173,7 @@ const App = () => {
 
   const [data, setData] = useState({});
 
-    const fetchKlines = async (symbol) => {
+  const fetchKlines = async (symbol) => {
       const API_URL = `https://api.binance.com/api/v3/klines`;
       try {
         const response = await axios.get(API_URL, {
@@ -184,9 +217,7 @@ const App = () => {
       } catch (err) {
         console.log(err)
       }
-    };
-  
-  
+  };
 
   useEffect(() => {
     const activeSymbols = new Set(analysis.map((item) => item.symbol));

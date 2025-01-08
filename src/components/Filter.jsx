@@ -269,8 +269,7 @@ const Filter = ({
                                                 setOpen3(!open3);
                                                 setSelectedTime(item.name);
                                                 setTimeFrameId(item.timeframe_id)
-                                                localStorage.setItem("Timeframe", selectedTime)
-                                                }}>
+                                            }}>
                                                 <span>{item.name}</span>
                                             </div>
                                         )}
