@@ -288,7 +288,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
               height: "calc(var(--index)*15.5)",
               transform: "translateY(0)",
             }
-            : { width: "100%", height: "77.6dvh", cursor }
+            : { width: "100%", height: "77dvh", cursor }
         }
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
