@@ -18,28 +18,34 @@ const Main = ({
   isUser,
   data,
   currentPage,
-  setCurrentPage
+  setCurrentPage,
+  selectedPreset,
+  selectedTime,
+  selectedTicker
 }) => {
   const [loading, setLoading] = useState(true);
+  const [loading1, setLoading1] = useState(true);
   const [ChartsPerPage, setChartPerPage] = useState(isGrid);
   const [analysisData, setAnalysisData] = useState([]);
-
+  const [currentChart, setCurrentChart] = useState([])
   useEffect(() => {
     if (analysis) {
         const updatedData = analysis.map((item, index) => ({ ...item, index })); // index qo'shilmoqda
         setAnalysisData(updatedData);
     }
-}, [analysis, filterLimit, pointsState, isLogedIn]);
-
+}, [analysis, filterLimit, pointsState, isLogedIn ]);
 
   useEffect(() => {
     setChartPerPage(Number(isGrid));
   }, [isGrid]);
+  let totalPages = Math.ceil(analysisData.length / ChartsPerPage);
+  useEffect(() => {
+    const lastChartIndex = currentPage * ChartsPerPage;
+    const firstChartIndex = lastChartIndex - ChartsPerPage;
+    setCurrentChart(analysisData.slice(firstChartIndex, lastChartIndex))
+  }, [analysisData , analysis])
+  
 
-  const totalPages = Math.ceil(analysisData.length / ChartsPerPage);
-  const lastChartIndex = currentPage * ChartsPerPage;
-  const firstChartIndex = lastChartIndex - ChartsPerPage;
-  const currentChart = analysisData.slice(firstChartIndex, lastChartIndex);
   const getVisiblePages = () => {
     const pages = [];
     if (totalPages <= 5) {
@@ -91,7 +97,7 @@ const Main = ({
       setLoading(false);
     };
     fetchData();
-  }, [currentPage]);
+  }, [currentPage, selectedPreset, selectedTime, selectedTicker]);
   
 
   const calculateTimeDifference = (targetTime) => {
@@ -167,10 +173,10 @@ const Main = ({
                         </div>
                       </Link>
                     ) : (
-                      <div className="card" key={item.index}>
+                      <div className="card" key={item.index}  >
                         <div
                           className="nav-card"
-                          style={{ background: "var(--block-card-color)" }}
+                          style={{ background: "var(--block-card-color)"}}
                         >
                           <div className="info">
                             <big>{item.symbol}</big>
@@ -179,13 +185,11 @@ const Main = ({
                             <i>$0,2648</i>
                           </div>
                           <div
-                            className="navCardLink"
-                            style={{ pointerEvents: "none", cursor: "default" }}
-                          >
+                            className="navCardLink">
                             <LuScanSearch className="scanIcon" />
                           </div>
                         </div>
-                        <div className="image">
+                        <div className="image" style={{cursor:"default"}} >
                           <div className="dont-show" style={{ display: "flex" }}>
                             <button onClick={() => setIsAlert(!isAlert)}>
                               Qo’lga kiritish <BiLockOpen />
