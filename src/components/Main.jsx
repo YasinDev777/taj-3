@@ -17,9 +17,10 @@ const Main = ({
   pointsState,
   isUser,
   data,
+  currentPage,
+  setCurrentPage
 }) => {
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
   const [ChartsPerPage, setChartPerPage] = useState(isGrid);
   const [analysisData, setAnalysisData] = useState([]);
 
@@ -39,7 +40,6 @@ const Main = ({
   const lastChartIndex = currentPage * ChartsPerPage;
   const firstChartIndex = lastChartIndex - ChartsPerPage;
   const currentChart = analysisData.slice(firstChartIndex, lastChartIndex);
-
   const getVisiblePages = () => {
     const pages = [];
     if (totalPages <= 5) {

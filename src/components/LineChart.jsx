@@ -138,20 +138,20 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
       });
 
         // Ma'lumotlar mavjud bo'lsa chizma yangilanadi
-          lineSeries1.setData(
+        //   lineSeries1.setData(
             
-           analysisData.map(item => ({
-           time: new Date(new Date(item.date.seconds * 1000).toISOString().split('T')[0]).getTime() /1000,
-           value: item.price,
-         })).sort((a, b) => a.time - b.time))
+        //    analysisData.map(item => ({
+        //    time: new Date(new Date(item.date.seconds * 1000).toISOString().split('T')[0]).getTime() /1000,
+        //    value: item.price,
+        //  })).sort((a, b) => a.time - b.time))
 
 
         console.log(analysisData.map(item => new Date(item.date.seconds *1000).toISOString().split('T')[0]));
 
-      // lineSeries1.setData([
-      //   {time: new Date('2024-08-05').getTime() / 1000, value:79543},
-      //   {time: new Date('2024-08-10').getTime() / 1000,value:89053}
-      // ])
+      lineSeries1.setData([
+        {time: new Date('2024-08-05').getTime() / 1000, value:79543},
+        {time: new Date('2024-08-10').getTime() / 1000,value:89053}
+      ])
       // console.log(analysisData.map(item => item.date.seconds));
       
       
