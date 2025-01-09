@@ -177,7 +177,7 @@ const Filter = ({
                                         <span>All</span>
                                     </div>
                                         {forFilterData && forFilterData.map((item, index) =>
-                                            <div key={index} className={`opt ${item.data.is_locked === true ? "opt-lock" : ""} `} onClick={() => { setOpen(!open); setSelectedPreset(item.data.name); setSelectValues(item.data.type_id); setSelectedTicker("All") }}>
+                                            <div key={index} className={`opt ${item.data.is_locked === true ? "opt-lock" : ""} `} onClick={() => { setOpen(!open); setSelectedPreset(item.data.name); setSelectValues(item.data.type_id); setSelectedTicker("All"); setScreeningTypeValueId(null); }}>
                                                 <span>
                                                     {item.data.name}
                                                 </span>

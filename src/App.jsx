@@ -18,6 +18,7 @@ const App = () => {
   const [timeFrameId, setTimeFrameId] = useState(null)
   const [foundTimeId, setFoundTimeId] = useState("");
   const [isGrid, setIsGrid] = useState(6);
+  const [currentPage, setCurrentPage] = useState(1);  
   const [isCard, setIsCard] = useState(false);
   const [isAlert, setIsAlert] = useState(false);
   const [isVideo, setIsVideo] = useState(false);
@@ -308,6 +309,8 @@ const App = () => {
                 isUser={isUser}
                 data={data}
                 analysis={analysis}
+                setCurrentPage={setCurrentPage}
+                currentPage={currentPage}
               />
             }
           />
