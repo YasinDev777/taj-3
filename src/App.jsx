@@ -7,7 +7,7 @@ import "./styles/App.css";
 import Popup from "./components/Popup";
 import Login from "./pages/Login";
 import Filter from "./components/Filter";
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "./firebase";
 import axios from "axios";
 import { AnalysisContext } from "./context/Context";
@@ -24,7 +24,7 @@ const App = () => {
   const [isUser, setIsUser] = useState("");
   const [isLogedIn, setIsLogedIn] = useState(false);
   const [filterLimit, setFilterLimit] = useState(1);
-  const [setAlertShown] = useState(false);
+  const [alertShown, setAlertShown] = useState(false);
   const [analysis, setAnalysis] = useState([]);
   const [pointsState, setPointsState] = useState([]);
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ const App = () => {
     let foundUser = null;
     try {
       const analysisGet = collection(db, "analysis");
-      const q = await query(analysisGet , where("inactive","==",false))
+      const q = await query(analysisGet, where("inactive", "==", false))
       const allAnalysis = await getDocs(q);
 
       const fetchedData = [];
@@ -51,14 +51,14 @@ const App = () => {
         const lines =
           pointsState &&
           pointsState.filter((state) => state.analysis_id === analysisId);
-          fetchedData.push({
-            lines,
-            ...analysisMain,
-            analysisId,
-          });
+        fetchedData.push({
+          lines,
+          ...analysisMain,
+          analysisId,
         });
-      setMains(fetchedData.sort((a,b)=>a.created_at - b.created_at));
-      setAnalysis(fetchedData.sort((a,b)=>b.created_at - a.created_at));
+      });
+      setMains(fetchedData.sort((a, b) => a.created_at - b.created_at));
+      setAnalysis(fetchedData.sort((a, b) => b.created_at - a.created_at));
 
       const points = collection(db, "points");
       const allPoints = await getDocs(points);
@@ -67,58 +67,65 @@ const App = () => {
         const data = docs.data();
         pointNew.push({ ...data });
       });
+      
       setPointsState(pointNew);
-        
-        const usersCollection = collection(db, "user");
-        const user_query = await query(usersCollection, where("user_id", "==", inputValue))
-        const querySnapshot = await getDocs(user_query);
-        if (querySnapshot.empty) {
+      const User = localStorage.getItem("subscriptionType")
+      let userForm = ""
+      if (User) {
+        userForm = decryptData(User)
+      } else {
+        userForm = inputValue
+      }
+
+      const usersCollection = collection(db, "user");
+      const user_query = await query(usersCollection, where("user_id", "==", userForm))
+      const querySnapshot = await getDocs(user_query);
+      if (querySnapshot.empty) {
         alert("Bunday ma'lumotga ega User afsuski topilmadi!");
       } else {
-      querySnapshot.forEach((docs) => {
-        const userData = docs.data();
-        if (userData.is_blocked === true || isUser) {
-          alert(
-            `Hurmatli ${isUser}, siz bloklangansiz iltimos admin bilan bog'laning`
-          );
-          localStorage.clear();
-          return;
-        } else {
-          foundUser = userData;
-          localStorage.clear();
-          setIsLogedIn(true);
-          localStorage.setItem("userName", foundUser.name);
-          localStorage.setItem("isLogedIn", "true");
-          localStorage.setItem("subscriptionType", encryptData(userData.subscription_type));
-          navigate("/");
-          
-      switch (userData.subscription_type) {
-        case "pro":
-            setFilterLimit(Infinity);
-            break;
-          case "basic":
-            setFilterLimit(5);
-            break;
-          case "free":
-            setFilterLimit(3);
-            break;
-          default:
-            setFilterLimit(1);
+        querySnapshot.forEach((docs) => {
+          const userData = docs.data();
+          if (userData.is_blocked === true) {
+            alert(
+              `Hurmatli ${isUser}, siz bloklangansiz iltimos admin bilan bog'laning`
+            );
+            localStorage.clear();
+            return;
+          } else {
+            foundUser = userData;
+            setIsLogedIn(true);
+            localStorage.setItem("userName", foundUser.name);
+            localStorage.setItem("isLogedIn", "true");
+            localStorage.setItem("subscriptionType", encryptData(foundUser.user_id));
+            navigate("/");
+              switch (userData.subscription_type) {
+                case "pro":
+                  setFilterLimit(Infinity);
+                  break;
+                case "basic":
+                  setFilterLimit(5);
+                  break;
+                case "free":
+                  setFilterLimit(3);
+                  break;
+                default:
+                  setFilterLimit(1);
+              
+            }
+
+          }
+          // if (isUser && isUser === userData.name) {
+          //   if (userData.is_blocked === true) {
+          //     alert(
+          //       `Hurmatli ${isUser}, siz bloklangansiz iltimos admin bilan bog'laning`
+          //     );
+          //     localStorage.clear();
+          //     return;
+          //   } 
+          // }
+        });
       }
-   
-        }
-        // if (isUser && isUser === userData.name) {
-        //   if (userData.is_blocked === true) {
-        //     alert(
-        //       `Hurmatli ${isUser}, siz bloklangansiz iltimos admin bilan bog'laning`
-        //     );
-        //     localStorage.clear();
-        //     return;
-        //   } 
-        // }
-      });
-      }
-        
+
     } catch (error) {
       console.error("xatolik:", error);
     }
@@ -131,29 +138,29 @@ const App = () => {
     const bytes = CryptoJS.AES.decrypt(data, 'your-secret-key');
     return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
   };
-  
-  useEffect(() => {
-    const storedSubscriptionType = localStorage.getItem("subscriptionType");
-    if (storedSubscriptionType) {
-      const decryptedSubscriptionType = decryptData(storedSubscriptionType);
-      if (decryptedSubscriptionType) {
-        switch (decryptedSubscriptionType) {
-          case "pro":
-            setFilterLimit(Infinity);
-            break;
-          case "basic":
-            setFilterLimit(5);
-            break;
-          case "free":
-            setFilterLimit(3);
-            break;
-          default:
-            setFilterLimit(1);
-        }
-      }
-    }
-  }, []);
-  
+
+  // useEffect(() => {
+  //   const storedSubscriptionType = localStorage.getItem("subscriptionType");
+  //   if (storedSubscriptionType) {
+  //     const decryptedSubscriptionType = decryptData(storedSubscriptionType);
+  //     if (decryptedSubscriptionType) {
+  //       switch (decryptedSubscriptionType) {
+  //         case "pro":
+  //           setFilterLimit(Infinity);
+  //           break;
+  //         case "basic":
+  //           setFilterLimit(5);
+  //           break;
+  //         case "free":
+  //           setFilterLimit(3);
+  //           break;
+  //         default:
+  //           setFilterLimit(1);
+  //       }
+  //     }
+  //   }
+  // }, []);
+
 
   useEffect(() => {
     const main = [...mains]
@@ -165,7 +172,7 @@ const App = () => {
         return isTypeMatch && isValueMatch && forTimeFrameId;
       });
 
-      setAnalysis(filtered);      
+      setAnalysis(filtered);
 
     };
     selectFilter();
@@ -174,55 +181,55 @@ const App = () => {
   const [data, setData] = useState({});
 
   const fetchKlines = async (symbol) => {
-      const API_URL = `https://api.binance.com/api/v3/klines`;
-      try {
-        const response = await axios.get(API_URL, {
-          params: {
-            symbol: symbol,
-            interval: "1h",
-            limit: 10,
-          },
-        });
-  
-        let lastClosePrice = "";
-  
-        if (response.data) {
-          const formattedData = response.data.map((item) => ({
-            time: item[0] / 1000,
-            open: parseFloat(item[1]),
-            high: parseFloat(item[2]),
-            low: parseFloat(item[3]),
-            close: parseFloat(item[4]),
-          }));
-  
-          if (formattedData.length > 0) {
-            lastClosePrice = formattedData[formattedData.length - 1].close;
-          }
+    const API_URL = `https://api.binance.com/api/v3/klines`;
+    try {
+      const response = await axios.get(API_URL, {
+        params: {
+          symbol: symbol,
+          interval: "1h",
+          limit: 10,
+        },
+      });
+
+      let lastClosePrice = "";
+
+      if (response.data) {
+        const formattedData = response.data.map((item) => ({
+          time: item[0] / 1000,
+          open: parseFloat(item[1]),
+          high: parseFloat(item[2]),
+          low: parseFloat(item[3]),
+          close: parseFloat(item[4]),
+        }));
+
+        if (formattedData.length > 0) {
+          lastClosePrice = formattedData[formattedData.length - 1].close;
         }
-  
-        if (symbol) {
-          setData((prevData) => ({
-            ...prevData,
-            [symbol]: {
-              data: response.data,
-              lastClosePrice: lastClosePrice,
-            },
-          }));
-        } else {
-          setData((prevData) => ({
-            ...prevData,
-            [symbol]: response.data,
-          }));
-        }
-      } catch (err) {
-        console.log(err)
       }
+
+      if (symbol) {
+        setData((prevData) => ({
+          ...prevData,
+          [symbol]: {
+            data: response.data,
+            lastClosePrice: lastClosePrice,
+          },
+        }));
+      } else {
+        setData((prevData) => ({
+          ...prevData,
+          [symbol]: response.data,
+        }));
+      }
+    } catch (err) {
+      console.log(err)
+    }
   };
 
   useEffect(() => {
     const activeSymbols = new Set(analysis.map((item) => item.symbol));
     activeSymbols.forEach((symbol) => fetchKlines(symbol));
-  }, [filterLimit, isLogedIn , analysis]);
+  }, [filterLimit, isLogedIn, analysis]);
 
   useEffect(() => {
     handleLogin();
@@ -233,7 +240,6 @@ const App = () => {
       setIsUser(storedUser);
     }
   }, [filterLimit, isLogedIn]);
-
 
 
   const closeAlert = () => {
@@ -269,6 +275,8 @@ const App = () => {
             setSelectedTicker={setSelectedTicker}
             selectedTime={selectedTime}
             setSelectedTime={setSelectedTime}
+            setAlertShown={setAlertShown}
+            alertShown={alertShown}
             setIsGrid={setIsGrid}
             isGrid={isGrid}
             setSelectValues={setSelectValues}
@@ -279,6 +287,7 @@ const App = () => {
             setScreeningTypeValueId={setScreeningTypeValueId}
             setTimeFrameId={setTimeFrameId}
             timeFrameId={timeFrameId}
+            isUser={isUser}
           />
         </>
       )}
