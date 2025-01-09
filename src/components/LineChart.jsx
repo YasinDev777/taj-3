@@ -147,8 +147,6 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
 
 
         console.log(analysisData.map(item => new Date(item.date.seconds *1000).toISOString().split('T')[0]));
-        
-        
 
       // lineSeries1.setData([
       //   {time: new Date('2024-08-05').getTime() / 1000, value:79543},
