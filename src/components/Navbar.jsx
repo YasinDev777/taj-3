@@ -14,7 +14,7 @@ const Navbar = ({
     <>
       <div className="nav">
          <div className="logo-name">
-           <Link to="">AHSAN LABS</Link>
+           <Link to="/">AHSAN LABS</Link>
          </div>
          <div className="options">
           <button

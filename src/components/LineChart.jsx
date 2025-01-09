@@ -21,6 +21,13 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
 
   const analysis = useContext(AnalysisContext)
 
+
+  const chartContainerRef = useRef(null);
+  const [candlestickData, setCandlestickData] = useState([]);
+  const [isMouseDown, setIsMouseDown] = useState(false);
+  const [isDarkMode] = useState(true);
+
+
   useEffect(() => {
     const fetchAnalysisData = async () => {
       if (!line && pointsState && id) {
@@ -34,27 +41,19 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
     fetchAnalysisData();
   }, [isLogedIn, pointsState, id, data]);
 
-  const chartContainerRef = useRef(null);
-  const [candlestickData, setCandlestickData] = useState([]);
-  const [isMouseDown, setIsMouseDown] = useState(false);
-  const [isDarkMode] = useState(true);
-
   
-//   //     if (filteredItems[0].timeframe_id === "four_hours") {
-//   //       setTimeFrameIdState("4h")
-//   //     } else if(filteredItems[0].timeframe_id === "one_hour") {
-//   //       setTimeFrameIdState("1h")
-//   //     } else if(filteredItems[0].timeframe_id === "daily") {
-//   //       setTimeFrameIdState("1d")            
-//   //     } 
-//     }
-
   useEffect(() => {
     if (!data && analysis) {
       const filteredItems = analysis.filter(item => item.analysisId === id);
       if (filteredItems.length > 0) {
+            if (filteredItems[0].timeframe_id === "four_hours") {
+              setTimeFrameIdState("4h")
+            } else if(filteredItems[0].timeframe_id === "one_hour") {
+              setTimeFrameIdState("1h")
+            } else if(filteredItems[0].timeframe_id === "daily") {
+              setTimeFrameIdState("1d")            
+            } 
         setAnalysisSymbols(filteredItems[0].symbol);
-        console.log(filteredItems[0].symbol);
       } 
     }else {
       setAnalysisSymbols(data.toString());
@@ -64,7 +63,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
         const response = await axios.get('https://api.binance.com/api/v3/klines', {
           params: {
             symbol: analysisSymbols,
-            interval: "1d",
+            interval:timeFrameIdState,
             limit: 1000
           }
         });
@@ -84,8 +83,14 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
       }
     };
 
-    fetchBitCoinData();
+    if (analysisSymbols) {
+      fetchBitCoinData();
+    }
   }, [isLogedIn, pointsState, id, data,analysisSymbols]);
+
+
+  
+  
 
   useEffect(() => {
     if (chartContainerRef.current && candlestickData.length > 0) {
@@ -98,8 +103,9 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
           ...(isDarkMode ? darkMode.timeScale : lightMode.timeScale),
           scrollable: isCard,
           rightOffset: 10,
-          barSpacing: 12,
+          barSpacing: 5,
           leftOffset: -10,
+          // fixRightEdge: true,
         },
         handleScale: isCard,
         handleScroll: isCard,
@@ -110,9 +116,9 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
         crosshair: isDarkMode ? darkMode.crosshair : lightMode.crosshair,
       });
 
-      const timeScale = chart.timeScale();
-      timeScale.scrollToPosition(-12, false);
-
+      // const timeScale = chart.timeScale();
+      // timeScale.scrollToPosition(-12, false);
+      
       const candlestickSeries = chart.addCandlestickSeries({
         upColor: isDarkMode ? "#27a691" : "#4caf50",
         downColor: isDarkMode ? "#f23645" : "#f44336",
@@ -128,49 +134,59 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
         lineWidth: 1,
         priceLineVisible: false,
         lastValueVisible: false,
+        axisLabelVisible: false,
       });
 
-      if (analysisData.length > 0) {
-        const upperLowerData = analysisData
-          .filter(item => item.position === "upper" || item.position === "lower")
-          .map(item => ({
-            time: item.date.seconds,
-            value: item.price,
-            position: item.position
-          }))
-          .sort((a, b) => a.time - b.time);
+        // Ma'lumotlar mavjud bo'lsa chizma yangilanadi
+          lineSeries1.setData(
+            
+           analysisData.map(item => ({
+           time: new Date(new Date(item.date.seconds * 1000).toISOString().split('T')[0]).getTime() /1000,
+           value: item.price,
+         })).sort((a, b) => a.time - b.time))
 
-        lineSeries1.setData(upperLowerData);
-      }
+
+        console.log(analysisData.map(item => new Date(item.date.seconds *1000).toISOString().split('T')[0]));
+        
+        
+
+      // lineSeries1.setData([
+      //   {time: new Date('2024-08-05').getTime() / 1000, value:79543},
+      //   {time: new Date('2024-08-10').getTime() / 1000,value:89053}
+      // ])
+      // console.log(analysisData.map(item => item.date.seconds));
+      
+      
       const singleData = analysisData
-        .filter(item => item.position === "single")
+      .filter(item => item.position === "single")
         .map(item => ({
           value: item.price,
         }));
-
-
-      candlestickSeries.createPriceLine({
-        price: singleData.length > 0 ? singleData[0].value : NaN,
-        color: "rgba(255, 0, 0, 0.8)",
-        lineWidth: 2,
-        lineStyle: 0,
-        axisLabelVisible: true,
-      });
-
-      chart.timeScale().fitContent();
-
-      const handleResize = () => {
-        chart.applyOptions({
-          width: chartContainerRef.current.clientWidth,
-          height: chartContainerRef.current.clientHeight,
+        
+        
+        candlestickSeries.createPriceLine({
+          price: singleData.length > 0 ? singleData[0].value : NaN,
+          color: "rgba(255, 0, 0, 0.8)",
+          lineWidth: 2,
+          lineStyle: 0,
+          axisLabelVisible: true,
         });
-      };
 
-      chart.timeScale().setVisibleRange({
-        from: candlestickData[candlestickData.length - (isCard === false ? 50 : 260)]?.time || candlestickData[0]?.time,
-        to: candlestickData[candlestickData.length - 1]?.time,
-      });
-
+        chart.timeScale().fitContent();
+        
+        const handleResize = () => {
+          chart.applyOptions({
+            width: chartContainerRef.current.clientWidth,
+            height: chartContainerRef.current.clientHeight,
+          });
+        };
+        
+        if (!candlestickData || candlestickData.length === 0) return;
+        chart.timeScale().setVisibleRange({
+          from: candlestickData[candlestickData.length - (isCard === false ? 50 : 260)]?.time || candlestickData[0]?.time,
+          to: candlestickData[candlestickData.length - 1]?.time,
+        });
+        
       window.addEventListener("resize", handleResize);
       return () => {
         window.removeEventListener("resize", handleResize);
@@ -244,7 +260,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
       horzLine: { color: "#2ecc71", width: 1, style: 3, visible: true },
     },
   };
-
+  
   useEffect(() => {
     if (isMouseDown && chartContainerRef.current) {
       chartContainerRef.current.style.cursor = "grabbing";
@@ -252,7 +268,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
       chartContainerRef.current.style.cursor = "crosshair";
     }
   }, [isMouseDown]);
-
+  
   return (
     <div>
       <div

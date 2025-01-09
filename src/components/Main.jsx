@@ -130,7 +130,7 @@ const Main = ({
                   .map(([symbol]) => symbol);
                 const lastClosePrice = Object.entries(data).filter(([symbol]) => symbol === item.symbol).map(item => item[1].lastClosePrice)
                 return (
-                  <>
+                  <div key={index}>
                     {filterLimit > item.index ? (
                       <Link to={"/chart/" + item.analysisId} key={item.index} className="card">
                         <div className="nav-card" style={{ background: "var(--main-color)", width: "100%" }}>
@@ -203,7 +203,7 @@ const Main = ({
                         </div>
                       </div>
                     )}
-                  </>
+                  </div>
                 );
               })
             }

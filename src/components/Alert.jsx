@@ -27,21 +27,21 @@ const Alert = ({
       const usersCollection = collection(db, "user");
       const userQuery = query(usersCollection, where("name", "==", userName));
       const querySnapshot = await getDocs(userQuery);
-
+  
       if (!querySnapshot.empty) {
-        const userDoc = querySnapshot.docs[0];
-        const userRef = doc(db, "user", userDoc.id);
-
-        await updateDoc(userRef, { subscription_type: "free" });
+        const userDoc = querySnapshot.docs[0]; // Hujjatni olamiz
+        const userRef = doc(db, "user", userDoc.id); // Hujjat manzilini aniqlaymiz
+  
+        await updateDoc(userRef, { subscription_type: "free" }); // Yangilash
       } else {
-        alert("Foydalanuvchi topilmadi.");
+        console.log("Foydalanuvchi topilmadi.");
       }
     } catch (error) {
       console.error("Subscription turini o'zgartirishda xatolik:", error);
       alert("Xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
     }
   };
-
+  
   const fetchSubscriptionData = async (userName) => {
     try {
       const usersCollection = collection(db, "user");
@@ -49,9 +49,9 @@ const Alert = ({
       const querySnapshot = await getDocs(userQuery);
       if (!querySnapshot.empty) {
         const userDoc = querySnapshot.docs[0].data();
-        const expirationDate =
-          userDoc.subscription_expiration_date.seconds * 1000;
+        const expirationDate = userDoc.subscription_expiration_date.seconds * 1000;
         setSubscriptionDateEnd(expirationDate);
+
       } else {
         alert("Foydalanuvchi topilmadi.");
       }
@@ -59,12 +59,13 @@ const Alert = ({
       console.error("Subscription ma'lumotlarini olishda xatolik:", error);
     }
   };
-
+  
   useEffect(() => {
-    if (isLogedIn) {
-      fetchSubscriptionData(isUser);
+    if (isUser) {
+      fetchSubscriptionData(isUser);    
     }
-  }, [isLogedIn, isUser, subscriptionDateEnd]);
+  }, [isUser]); // Faqat isUser ga qarash, chunki subscriptionDateEnd ni qaramlikka olishning keragi yo'q
+  
 
   useEffect(() => {
     const currentTime = new Date().getTime();
