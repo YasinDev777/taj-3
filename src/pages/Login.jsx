@@ -31,7 +31,6 @@ const Login = ({
   };
 
   const handleKeyDown = (event) => {
-    console.log("salom");
     
     if (event.key === "Enter") {
       handleLogin(inputValue);

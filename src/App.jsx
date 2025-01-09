@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Main from "./components/Main";
@@ -31,7 +31,6 @@ const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [mains, setMains] = useState([])
-
 
   const encryptData = (data) => {
     return CryptoJS.AES.encrypt(JSON.stringify(data), 'your-secret-key').toString();
@@ -83,15 +82,17 @@ const App = () => {
       const querySnapshot = await getDocs(user_query);
       if (querySnapshot.empty) {
         alert("Bunday ma'lumotga ega User afsuski topilmadi!");
+        localStorage.clear()
+        return
       } else {
         querySnapshot.forEach((docs) => {
           const userData = docs.data();
           if (userData.is_blocked === true) {
             alert(
-              `Hurmatli ${isUser}, siz bloklangansiz iltimos admin bilan bog'laning`
+              `Hurmatli Foydalanuvchi siz bloklangansiz iltimos admin bilan bog'laning`
             );
             localStorage.clear();
-            return;
+            window.location.reload();
           } else {
             foundUser = userData;
             setIsLogedIn(true);
@@ -115,20 +116,11 @@ const App = () => {
             }
 
           }
-          // if (isUser && isUser === userData.name) {
-          //   if (userData.is_blocked === true) {
-          //     alert(
-          //       `Hurmatli ${isUser}, siz bloklangansiz iltimos admin bilan bog'laning`
-          //     );
-          //     localStorage.clear();
-          //     return;
-          //   } 
-          // }
         });
       }
 
     } catch (error) {
-      console.error("xatolik:", error);
+      console.error();
     }
   };
 
@@ -166,6 +158,7 @@ const App = () => {
   useEffect(() => {
     const main = [...mains]
     const selectFilter = () => {
+      setCurrentPage(1)
       const filtered = main.filter((item) => {
         const isTypeMatch = !selectValues || item.screening_type_id === selectValues;
         const isValueMatch = !screeningTypeValueId || item.screening_type_value_id === screeningTypeValueId;
@@ -178,6 +171,8 @@ const App = () => {
     };
     selectFilter();
   }, [selectValues, screeningTypeValueId, timeFrameId]);
+
+
 
   const [data, setData] = useState({});
 
@@ -311,6 +306,9 @@ const App = () => {
                 analysis={analysis}
                 setCurrentPage={setCurrentPage}
                 currentPage={currentPage}
+                selectedPreset={selectedPreset}
+                selectedTicker={selectedTicker}
+                selectedTime={selectedTime}
               />
             }
           />
