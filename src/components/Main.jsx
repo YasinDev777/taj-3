@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Chart from "../components/LineChart";
 import { BiLockOpen } from "react-icons/bi";
@@ -30,29 +30,29 @@ const Main = ({
   useEffect(() => {
     if (analysis) {
       const updatedData = analysis
-      .map((item, index) => {
+        .map((item, index) => {
           const [symbol, value] = Object.entries(data).find(([sym]) => sym === item.symbol) || [];
           return value?.lastClosePrice !== undefined
-              ? { ...item, index, symbol, lastClosePrice: value.lastClosePrice }
-              : null;
-      })
-      .filter(Boolean); // Faqat null bo'lmagan elementlarni saqlaydi  
-        setAnalysisData(updatedData);
+            ? { ...item, index, symbol, lastClosePrice: value.lastClosePrice }
+            : null;
+        })
+        .filter(Boolean); // Faqat null bo'lmagan elementlarni saqlaydi  
+      setAnalysisData(updatedData);
     }
-}, [analysis, filterLimit, pointsState, isLogedIn ]);
+  }, [analysis, filterLimit, pointsState, isLogedIn]);
 
-useEffect(() => {
+  useEffect(() => {
     setChartsPerPage(isGrid);
   }, [isGrid, ChartsPerPage]);
   let totalPages = Math.ceil(analysisData.length / ChartsPerPage);
   useEffect(() => {
-    
+
     const lastChartIndex = currentPage * ChartsPerPage;
     const firstChartIndex = lastChartIndex - ChartsPerPage;
-    
+
     setCurrentChart(analysisData.slice(firstChartIndex, lastChartIndex))
-  }, [analysisData , analysis, ChartsPerPage,currentPage])
-  
+  }, [analysisData, analysis, ChartsPerPage, currentPage])
+
 
   const getVisiblePages = () => {
     const pages = [];
@@ -105,20 +105,20 @@ useEffect(() => {
       setLoading(false);
     };
     fetchData();
-  }, [currentPage, selectedPreset, selectedTime, selectedTicker,ChartsPerPage]);
-  
+  }, [currentPage, selectedPreset, selectedTime, selectedTicker, ChartsPerPage]);
+
 
   const calculateTimeDifference = (targetTime) => {
     const targetDate = targetTime.seconds * 1000; // Maqsad vaqtni millisekundga aylantirish
     const now = new Date().getTime(); // Hozirgi vaqt
     const timeDifference = now - targetDate; // Vaqt farqi
-  
+
     const totalMinutes = Math.floor(timeDifference / (1000 * 60)); // Umumiy daqiqalarni ҳисоблаш
     const totalHours = Math.floor(totalMinutes / 60); // Умумий соатларни ҳисоблаш
     const days = Math.floor(totalHours / 24); // Кунларни ҳисоблаш
     const hours = totalHours % 24; // Қолдиқ соатларни ҳисоблаш
     const minutes = totalMinutes % 60; // Қолдиқ дақиқаларни ҳисоблаш
-  
+
     // Натийжани қайтариш
     if (days > 0) {
       return `${days} kun${hours > 0 ? ` ${hours} soat` : ""} oldin`;
@@ -133,140 +133,139 @@ useEffect(() => {
     <div className="main1">
       {loading ? (
         <Loader />
-      ) : 
-        currentChart.length > 0  ?
-        <>
-          <div className="main">
-            {
-              currentChart && currentChart.map((item,index) => {   
-                return (
-                  <>
-                    {filterLimit > item.index ? (
-                      <Link to={"/chart/" + item.analysisId} key={item.index} className="card" >
-                        <div className="nav-card" style={{ background: "var(--main-color)", width: "100%" }}>
-                          <div className="info">
-                            <big>{item.symbol}</big>
+      ) :
+        currentChart.length > 0 ?
+          <>
+            <div className="main">
+              {
+                currentChart && currentChart.map((item, index) => {
+                  return (
+                    <>
+                      {filterLimit > item.index ? (
+                        <Link to={"/chart/" + item.analysisId} key={item.index} className="card" >
+                          <div className="nav-card" style={{ background: "var(--main-color)", width: "100%" }}>
+                            <div className="info">
+                              <big>{item.symbol}</big>
+                            </div>
+                            <div className="salary">
+                              <i>{"$" + item.lastClosePrice}</i>
+                            </div>
+                            <div
+                              className="navCardLink"
+                            >
+                              <LuScanSearch className="scanIcon" />
+                            </div>
                           </div>
-                          <div className="salary">
-                            <i>{"$"+item.lastClosePrice}</i>
+
+                          <div className="image">
+                            <Chart
+                              isCard={isCard}
+                              isUser={isUser}
+                              isLogedIn={isLogedIn}
+                              analysis={analysis}
+                              data={item.symbol}
+                              line={item.lines}
+                            />
                           </div>
+                          <div className="texx">
+                            <p>
+                              Aniqlandi:
+                              <span> {" "}
+                                {calculateTimeDifference(item.created_at)}{" "}
+                              </span>
+                            </p>
+                          </div>
+                        </Link>
+                      ) : (
+                        <div className="card" key={item.index}  >
                           <div
-                            className="navCardLink"
+                            className="nav-card"
+                            style={{ background: "var(--block-card-color)" }}
                           >
-                            <LuScanSearch className="scanIcon" />
+                            <div className="info">
+                              <big>{item.symbol}</big>
+                            </div>
+                            <div className="salary">
+                              <i>$0,2648</i>
+                            </div>
+                            <div
+                              className="navCardLink">
+                              <LuScanSearch className="scanIcon" />
+                            </div>
+                          </div>
+                          <div className="image" style={{ cursor: "default" }} >
+                            <div className="dont-show" style={{ display: "flex" }}>
+                              <button onClick={() => setIsAlert(!isAlert)}>
+                                Qo’lga kiritish <BiLockOpen />
+                              </button>
+                            </div>
+                            <img src="/images/chartimg.jpg" alt="" />
+                          </div>
+                          <div className="texx">
+                            <p>
+                              Aniqlandi:
+                              <span> {" "}
+                                {calculateTimeDifference(item.created_at)}{" "}
+                              </span>
+                            </p>
                           </div>
                         </div>
+                      )}
+                    </>
+                  )
 
-                        <div className="image">
-                          <Chart
-                            isCard={isCard}
-                            isUser={isUser}
-                            isLogedIn={isLogedIn}
-                            analysis={analysis}
-                            data={item.symbol}
-                            line={item.lines}
-                          />
-                        </div>
-                        <div className="texx">
-                          <p>
-                            Aniqlandi:
-                            <span> {" "}
-                              {calculateTimeDifference(item.created_at)}{" "}
-                            </span>
-                          </p>
-                        </div>
-                      </Link>
-                    ) : (
-                      <div className="card" key={item.index}  >
-                        <div
-                          className="nav-card"
-                          style={{ background: "var(--block-card-color)"}}
-                        >
-                          <div className="info">
-                            <big>{item.symbol}</big>
-                          </div>
-                          <div className="salary">
-                            <i>$0,2648</i>
-                          </div>
-                          <div
-                            className="navCardLink">
-                            <LuScanSearch className="scanIcon" />
-                          </div>
-                        </div>
-                        <div className="image" style={{cursor:"default"}} >
-                          <div className="dont-show" style={{ display: "flex" }}>
-                            <button onClick={() => setIsAlert(!isAlert)}>
-                              Qo’lga kiritish <BiLockOpen />
-                            </button>
-                          </div>
-                          <img src="/images/chartimg.jpg" alt="" />
-                        </div>
-                        <div className="texx">
-                          <p>
-                            Aniqlandi:
-                            <span> {" "}
-                              {calculateTimeDifference(item.created_at)}{" "}
-                            </span>
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </>
-)
+                })
+              }
+            </div>
 
-
-})
-}
+            <div className="btns">
+              <button
+                className="prev-btn"
+                onClick={() => {
+                  prevPage();
+                  handleScroll();
+                }}
+                disabled={currentPage === 1}
+              >
+                <GrFormPrevious />
+              </button>
+              {getVisiblePages().map((page, index) =>
+                typeof page === "number" ? (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      paginate(page);
+                      handleScroll();
+                    }}
+                    className={page === currentPage ? "active" : ""}
+                  >
+                    {page}
+                  </button>
+                ) : (
+                  <span key={index} className="dots">
+                    ...
+                  </span>
+                )
+              )}
+              <button
+                className="next-btn"
+                onClick={() => {
+                  nextPage();
+                  handleScroll();
+                }}
+                disabled={currentPage === totalPages}
+              >
+                <GrFormNext />
+              </button>
+            </div>
+          </>
+          :
+          <div className="chartNone">
+            <h1>Analiz mavjud emas</h1>
           </div>
-
-          <div className="btns">
-            <button
-              className="prev-btn"
-              onClick={() => {
-                prevPage();
-                handleScroll();
-              }}
-              disabled={currentPage === 1}
-            >
-              <GrFormPrevious />
-            </button>
-            {getVisiblePages().map((page, index) =>
-              typeof page === "number" ? (
-                <button
-                  key={index}
-                  onClick={() => {
-                    paginate(page);
-                    handleScroll();
-                  }}
-                  className={page === currentPage ? "active" : ""}
-                >
-                  {page}
-                </button>
-              ) : (
-                <span key={index} className="dots">
-                  ...
-                </span>
-              )
-            )}
-            <button
-              className="next-btn"
-              onClick={() => {
-                nextPage();
-                handleScroll();
-              }}
-              disabled={currentPage === totalPages}
-            >
-              <GrFormNext />
-            </button>
-          </div>
-      </>
-       : 
-       <div className="chartNone">
-        <h1>Analiz mavjud emas</h1>
-      </div>
 
       }
-      
+
     </div>
   );
 };

@@ -100,10 +100,7 @@ const Alert = ({
   }, [
     isLogedIn,
     subscriptionDateEnd,
-    alertShown,
-    setAlertShown,
-    setLimit,
-    setIsLogedIn,
+    alertShown
   ]);
 
   const handleCloseAlert = () => {

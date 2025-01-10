@@ -24,7 +24,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
 
   const chartContainerRef = useRef(null);
   const [candlestickData, setCandlestickData] = useState([]);
-  const [isMouseDown, setIsMouseDown] = useState(false);
+  const [isMouseDown] = useState(false);
   const [isDarkMode] = useState(true);
 
 
