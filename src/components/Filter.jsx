@@ -27,7 +27,8 @@ const Filter = ({
     selectedTicker,
     setSelectedTicker,
     selectedTime,
-    setSelectedTime
+    setSelectedTime,
+    setCurrentPage
 }) => {
     const [forFilterData, setForFilterData] = useState([])
     const [forTimeData, ] = useState([])
@@ -234,7 +235,7 @@ const Filter = ({
                                     </div>
                                     <div className="select-options" style={open2 === false ? {display: "none"} : {display: "flex"}}>
                                         {gridOptions.map((item, index) => (
-                                           <div key={index} className="opt" onClick={() => {setOpen2(!open2); setIsGrid(item)}}>
+                                           <div key={index} className="opt" onClick={() => {setOpen2(!open2); setIsGrid(item); setCurrentPage(1)}}>
                                             <span>{item}</span>
                                            </div> 
                                         ))}

@@ -29,23 +29,29 @@ const Main = ({
   const [currentChart, setCurrentChart] = useState([])
   useEffect(() => {
     if (analysis) {
-        const updatedData = analysis.map((item, index) => ({ ...item, index })); // index qo'shilmoqda
+      const updatedData = analysis
+      .map((item, index) => {
+          const [symbol, value] = Object.entries(data).find(([sym]) => sym === item.symbol) || [];
+          return value?.lastClosePrice !== undefined
+              ? { ...item, index, symbol, lastClosePrice: value.lastClosePrice }
+              : null;
+      })
+      .filter(Boolean); // Faqat null bo'lmagan elementlarni saqlaydi  
         setAnalysisData(updatedData);
     }
 }, [analysis, filterLimit, pointsState, isLogedIn ]);
 
-  useEffect(() => {
-    console.log("salom");
+useEffect(() => {
     setChartsPerPage(isGrid);
-    setCurrentPage(1)
   }, [isGrid, ChartsPerPage]);
   let totalPages = Math.ceil(analysisData.length / ChartsPerPage);
   useEffect(() => {
     
     const lastChartIndex = currentPage * ChartsPerPage;
     const firstChartIndex = lastChartIndex - ChartsPerPage;
+    
     setCurrentChart(analysisData.slice(firstChartIndex, lastChartIndex))
-  }, [analysisData , analysis, ChartsPerPage])
+  }, [analysisData , analysis, ChartsPerPage,currentPage])
   
 
   const getVisiblePages = () => {
@@ -132,21 +138,17 @@ const Main = ({
         <>
           <div className="main">
             {
-              currentChart && currentChart.map((item,index) => {
-                const symbol = Object.entries(data)
-                  .filter(([symbol]) => symbol === item.symbol)
-                  .map(([symbol]) => symbol);
-                const lastClosePrice = Object.entries(data).filter(([symbol]) => symbol === item.symbol).map(item => item[1].lastClosePrice)
+              currentChart && currentChart.map((item,index) => {   
                 return (
-                  <div key={index}>
+                  <>
                     {filterLimit > item.index ? (
-                      <Link to={"/chart/" + item.analysisId} key={item.index} className="card">
+                      <Link to={"/chart/" + item.analysisId} key={item.index} className="card" >
                         <div className="nav-card" style={{ background: "var(--main-color)", width: "100%" }}>
                           <div className="info">
                             <big>{item.symbol}</big>
                           </div>
                           <div className="salary">
-                            <i>{"$"+lastClosePrice}</i>
+                            <i>{"$"+item.lastClosePrice}</i>
                           </div>
                           <div
                             className="navCardLink"
@@ -161,7 +163,7 @@ const Main = ({
                             isUser={isUser}
                             isLogedIn={isLogedIn}
                             analysis={analysis}
-                            data={symbol}
+                            data={item.symbol}
                             line={item.lines}
                           />
                         </div>
@@ -209,10 +211,12 @@ const Main = ({
                         </div>
                       </div>
                     )}
-                  </div>
-                );
-              })
-            }
+                  </>
+)
+
+
+})
+}
           </div>
 
           <div className="btns">
