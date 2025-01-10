@@ -251,6 +251,8 @@ const App = () => {
   const [selectedTicker, setSelectedTicker] = useState(screeningTypeValueId || "Type");
   const [selectedTime, setSelectedTime] = useState(timeFrameId || "All");
 
+  
+
   return (
     <div className="app">
       {location.pathname.includes("/chart") ||

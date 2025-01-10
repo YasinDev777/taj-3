@@ -24,8 +24,7 @@ const Main = ({
   selectedTicker
 }) => {
   const [loading, setLoading] = useState(true);
-  const [loading1, setLoading1] = useState(true);
-  const [ChartsPerPage, setChartPerPage] = useState(isGrid);
+  const [ChartsPerPage, setChartsPerPage] = useState(isGrid);
   const [analysisData, setAnalysisData] = useState([]);
   const [currentChart, setCurrentChart] = useState([])
   useEffect(() => {
@@ -36,14 +35,17 @@ const Main = ({
 }, [analysis, filterLimit, pointsState, isLogedIn ]);
 
   useEffect(() => {
-    setChartPerPage(Number(isGrid));
-  }, [isGrid]);
+    console.log("salom");
+    setChartsPerPage(isGrid);
+    setCurrentPage(1)
+  }, [isGrid, ChartsPerPage]);
   let totalPages = Math.ceil(analysisData.length / ChartsPerPage);
   useEffect(() => {
+    
     const lastChartIndex = currentPage * ChartsPerPage;
     const firstChartIndex = lastChartIndex - ChartsPerPage;
     setCurrentChart(analysisData.slice(firstChartIndex, lastChartIndex))
-  }, [analysisData , analysis])
+  }, [analysisData , analysis, ChartsPerPage])
   
 
   const getVisiblePages = () => {
@@ -97,7 +99,7 @@ const Main = ({
       setLoading(false);
     };
     fetchData();
-  }, [currentPage, selectedPreset, selectedTime, selectedTicker]);
+  }, [currentPage, selectedPreset, selectedTime, selectedTicker,ChartsPerPage]);
   
 
   const calculateTimeDifference = (targetTime) => {
@@ -130,7 +132,7 @@ const Main = ({
         <>
           <div className="main">
             {
-              currentChart.map((item,index) => {
+              currentChart && currentChart.map((item,index) => {
                 const symbol = Object.entries(data)
                   .filter(([symbol]) => symbol === item.symbol)
                   .map(([symbol]) => symbol);
