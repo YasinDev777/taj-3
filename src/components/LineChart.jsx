@@ -89,9 +89,6 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
   }, [isLogedIn, pointsState, id, data,analysisSymbols]);
 
 
-  
-  
-
   useEffect(() => {
     if (chartContainerRef.current && candlestickData.length > 0) {
       const chart = createChart(chartContainerRef.current, {
@@ -138,13 +135,22 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
       });
 
         // Ma'lumotlar mavjud bo'lsa chizma yangilanadi
-          lineSeries1.setData(
-            
-           analysisData.map(item => ({
-           time: new Date(new Date(item.date.seconds * 1000).toISOString().split('T')[0]).getTime() /1000,
-           value: item.price,
-         })).sort((a, b) => a.time - b.time))
-
+        lineSeries1.setData(
+          analysisData.map(item => {
+            const date = new Date(item.date.seconds * 1000);
+        
+            // Форматирование даты в "YYYY-MM-DD"
+            const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+        
+            return {
+              time: formattedDate,
+              value: item.price,
+            };
+          }).sort((a, b) => new Date(a.time) - new Date(b.time))
+        );
+        
+         console.log(analysisData.map(item => new Date(item.date.seconds * 1000).toISOString().split('T')[0]));
+         
 
       //   console.log(analysisData.map(item => new Date(item.date.seconds *1000).toISOString().split('T')[0]));
 
