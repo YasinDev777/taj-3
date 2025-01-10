@@ -158,7 +158,6 @@ const App = () => {
   useEffect(() => {
     const main = [...mains]
     const selectFilter = () => {
-      setCurrentPage(1)
       const filtered = main.filter((item) => {
         const isTypeMatch = !selectValues || item.screening_type_id === selectValues;
         const isValueMatch = !screeningTypeValueId || item.screening_type_value_id === screeningTypeValueId;
@@ -182,13 +181,11 @@ const App = () => {
       const response = await axios.get(API_URL, {
         params: {
           symbol: symbol,
-          interval: "1h",
+          interval: "1s",
           limit: 10,
         },
       });
-
       let lastClosePrice = "";
-
       if (response.data) {
         const formattedData = response.data.map((item) => ({
           time: item[0] / 1000,
@@ -197,7 +194,6 @@ const App = () => {
           low: parseFloat(item[3]),
           close: parseFloat(item[4]),
         }));
-
         if (formattedData.length > 0) {
           lastClosePrice = formattedData[formattedData.length - 1].close;
         }
@@ -211,12 +207,7 @@ const App = () => {
             lastClosePrice: lastClosePrice,
           },
         }));
-      } else {
-        setData((prevData) => ({
-          ...prevData,
-          [symbol]: response.data,
-        }));
-      }
+      } 
     } catch (err) {
       console.log(err)
     }
@@ -286,6 +277,7 @@ const App = () => {
             setTimeFrameId={setTimeFrameId}
             timeFrameId={timeFrameId}
             isUser={isUser}
+            setCurrentPage={setCurrentPage}
           />
         </>
       )}

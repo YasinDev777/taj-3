@@ -149,7 +149,6 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
           }).sort((a, b) => new Date(a.time) - new Date(b.time))
         );
         
-         console.log(analysisData.map(item => new Date(item.date.seconds * 1000).toISOString().split('T')[0]));
          
 
       //   console.log(analysisData.map(item => new Date(item.date.seconds *1000).toISOString().split('T')[0]));
