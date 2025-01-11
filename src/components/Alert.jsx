@@ -6,7 +6,6 @@ import { collection, getDocs, doc, updateDoc, query, where } from "firebase/fire
 import { db } from "../firebase";
 
 const Alert = ({
-  setIsLogedIn,
   isLogedIn,
   isUser,
   setAlertShown,

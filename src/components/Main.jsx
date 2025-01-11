@@ -138,7 +138,7 @@ const Main = ({
           <>
             <div className="main">
               {
-                currentChart && currentChart.map((item, index) => {
+                currentChart && currentChart.map((item) => {
                   return (
                     <>
                       {filterLimit > item.index ? (
