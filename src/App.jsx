@@ -158,6 +158,7 @@ const App = () => {
   useEffect(() => {
     const main = [...mains]
     const selectFilter = () => {
+      setCurrentPage(1)
       const filtered = main.filter((item) => {
         const isTypeMatch = !selectValues || item.screening_type_id === selectValues;
         const isValueMatch = !screeningTypeValueId || item.screening_type_value_id === screeningTypeValueId;
