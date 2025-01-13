@@ -4,8 +4,11 @@
     display: none;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: calc(var(--index)*0.75);
+    -moz-backdrop-filter: calc(var(--index)*0.75);
+    -o-backdrop-filter: calc(var(--index)*0.75);
+    -ms-backdrop-filter: calc(var(--index)*0.75);
+    backdrop-filter: blur(calc(var(--index)*0.75));
     position: fixed;
     top: 0;
     left: 0;
