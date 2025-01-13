@@ -258,6 +258,8 @@ const App = () => {
             timeFrameId={timeFrameId}
             isUser={isUser}
             setCurrentPage={setCurrentPage}
+            setIsVideo={setIsVideo}
+            setIsLogedIn={setIsLogedIn}
           />
         </>
       )}
