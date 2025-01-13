@@ -136,7 +136,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
       });
 
       lineSeries1.setData(
-        analysisData.map(item => {
+        analysisData.filter(item => item.position === "lower" || item.position === "upper").map(item => {
           const date = new Date(item.date.seconds * 1000);
           const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
 
@@ -311,8 +311,8 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
           className="exit-svg"
           style={isCard === false ? { display: "none" } : { display: "flex" }}
         >
-          <Link to="/" >
-            <BsArrowLeftCircle className="exitsvg" />
+          <Link to="/">
+            <BsArrowLeftCircle className="exitsvg"  />
           </Link>
         </div>
       </div>

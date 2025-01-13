@@ -7,6 +7,7 @@ import Alert from "./Alert";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { FaLock } from "react-icons/fa6";
+import { FilterAnalaysisAnalytics, FilterClearAnalytics, FilterGridAnalytics, FilterTimeFrameAnalytics } from "../analytics/Analytics";
 const Filter = ({
     setIsVideo,
     isVideo,
@@ -131,6 +132,7 @@ const Filter = ({
         setScreeningTypeValueId(null)
         setTimeFrameId(null)
         setIsGrid(6)
+        FilterClearAnalytics()
     }
 
     return (
@@ -161,7 +163,7 @@ const Filter = ({
                         <div className="options-div">
 
                             <div className="main-select">
-                                <span className="name">Analayze</span>
+                                <span className="name">Analaysis</span>
                                 <div className="option">
                                     <div className="selected-option select-one" onClick={() => { 
                                         setOpen(!open);
@@ -174,11 +176,14 @@ const Filter = ({
                                         <FiChevronDown />
                                     </div>
                                     <div className="select-options" style={open === false ? { display: "none" } : { display: "flex" }}>
-                                    <div className="opt" onClick={() => { setOpen(!open); setScreeningTypeValueId(null); setSelectedPreset("All"); setSelectValues(null); setSelectedTicker("All") }}>
+                                    <div className="opt" onClick={() => { 
+                                        setOpen(!open); setScreeningTypeValueId(null); 
+                                        setSelectedPreset("All"); setSelectValues(null); 
+                                        setSelectedTicker("All"); FilterAnalaysisAnalytics("All") }}>
                                         <span>All</span>
                                     </div>
                                         {forFilterData && forFilterData.map((item, index) =>
-                                            <div key={index} className={`opt ${item.data.is_locked === true ? "opt-lock" : ""} `} onClick={() => { setOpen(!open); setSelectedPreset(item.data.name); setSelectValues(item.data.type_id); setSelectedTicker("All"); setScreeningTypeValueId(null); }}>
+                                            <div key={index} className={`opt ${item.data.is_locked === true ? "opt-lock" : ""} `} onClick={() => { setOpen(!open); setSelectedPreset(item.data.name); setSelectValues(item.data.type_id); setSelectedTicker("All"); setScreeningTypeValueId(null); FilterAnalaysisAnalytics(item.data.type_id); }}>
                                                 <span>
                                                     {item.data.name}
                                                 </span>
@@ -235,7 +240,12 @@ const Filter = ({
                                     </div>
                                     <div className="select-options" style={open2 === false ? {display: "none"} : {display: "flex"}}>
                                         {gridOptions.map((item, index) => (
-                                           <div key={index} className="opt" onClick={() => {setOpen2(!open2); setIsGrid(item); setCurrentPage(1)}}>
+                                           <div key={index} className="opt" onClick={
+                                            () => {
+                                                setOpen2(!open2); 
+                                                setIsGrid(item); 
+                                                FilterGridAnalytics(item)
+                                                setCurrentPage(1)}}>
                                             <span>{item}</span>
                                            </div> 
                                         ))}
@@ -250,7 +260,7 @@ const Filter = ({
                                         setOpen3(!open3);
                                         setOpen(open === true ? false : false);
                                         setOpen1(open1 === true ? false : false)
-                                        setOpen2(open2 === true ? false : false)
+                                        setOpen2(open2 === true ? false : false);
                                     }}>
                                         <span>{selectedTime}</span>
                                         <FiChevronDown />
@@ -261,6 +271,7 @@ const Filter = ({
                                         setOpen3(!open3);
                                         setSelectedTime("All");
                                         setTimeFrameId(null)
+                                        FilterTimeFrameAnalytics("All")
                                         }}>
                                         <span>All</span>   
                                     </div>
@@ -270,6 +281,7 @@ const Filter = ({
                                                 setOpen3(!open3);
                                                 setSelectedTime(item.name);
                                                 setTimeFrameId(item.timeframe_id)
+                                                FilterTimeFrameAnalytics(item.timeframe_id)
                                             }}>
                                                 <span>{item.name}</span>
                                             </div>
