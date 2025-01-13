@@ -101,7 +101,7 @@ const Main = ({
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2500));
       setLoading(false);
     };
     fetchData();

@@ -12,6 +12,7 @@ import { db } from "./firebase";
 import axios from "axios";
 import { AnalysisContext } from "./context/Context";
 import CryptoJS from "crypto-js";
+
 const App = () => {
   const [selectValues, setSelectValues] = useState(null);
   const [screeningTypeValueId, setScreeningTypeValueId] = useState(null)
@@ -36,7 +37,7 @@ const App = () => {
     return CryptoJS.AES.encrypt(JSON.stringify(data), 'your-secret-key').toString();
   };
 
-  const handleLogin = async (inputValue) => {
+  const handleLogin = async (inputValue) => {    
     let foundUser = null;
     try {
       const analysisGet = collection(db, "analysis");
@@ -132,28 +133,7 @@ const App = () => {
     return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
   };
 
-  // useEffect(() => {
-  //   const storedSubscriptionType = localStorage.getItem("subscriptionType");
-  //   if (storedSubscriptionType) {
-  //     const decryptedSubscriptionType = decryptData(storedSubscriptionType);
-  //     if (decryptedSubscriptionType) {
-  //       switch (decryptedSubscriptionType) {
-  //         case "pro":
-  //           setFilterLimit(Infinity);
-  //           break;
-  //         case "basic":
-  //           setFilterLimit(5);
-  //           break;
-  //         case "free":
-  //           setFilterLimit(3);
-  //           break;
-  //         default:
-  //           setFilterLimit(1);
-  //       }
-  //     }
-  //   }
-  // }, []);
-
+  
 
   useEffect(() => {
     const main = [...mains]
@@ -243,7 +223,6 @@ const App = () => {
   const [selectedTicker, setSelectedTicker] = useState(screeningTypeValueId || "Type");
   const [selectedTime, setSelectedTime] = useState(timeFrameId || "All");
 
-  
 
   return (
     <div className="app">
