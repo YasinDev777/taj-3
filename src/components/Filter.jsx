@@ -209,9 +209,9 @@ const Filter = ({
                                         <FiChevronDown />
                                     </div>
                                     <div className="select-options" style={open1 === false ? { display: "none" } : { display: "flex" }}>
-                                    <div className="opt" onClick={() => { setOpen1(!open1); setSelectedTicker("All");setScreeningTypeValueId(null); FilterAnalaysisTypeAnalytics(selectValues , "All" )  }}>
+                                   {selectValues && <div className="opt" onClick={() => { setOpen1(!open1); setSelectedTicker("All");setScreeningTypeValueId(null); FilterAnalaysisTypeAnalytics(selectValues , "All" )  }}>
                                         <span>All</span>   
-                                    </div>
+                                    </div>}
                                         {forFilterData && forFilterData.map((item) =>
                                             item.addScreenTypeAndValue.filter(item => item.screening_type_id === selectValues).map((item, idx) =>
                                                 <div key={`${item.name}-${idx}`} className={`opt ${item.is_locked === true ? "opt-lock" : ""}`} onClick={() => { setOpen1(!open1); setSelectedTicker(item.name); setScreeningTypeValueId(item.value_id); FilterAnalaysisTypeAnalytics(selectValues , item.value_id ) }}>
