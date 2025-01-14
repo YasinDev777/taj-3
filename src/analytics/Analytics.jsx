@@ -1,4 +1,5 @@
 import { collection, addDoc, Timestamp } from "firebase/firestore";
+
 import { db } from "../firebase";
 import CryptoJS from "crypto-js";
     const decryptData = (data) => {
@@ -12,7 +13,6 @@ import CryptoJS from "crypto-js";
 
   // Filterni Firebase'ga yozish funksiyasi
  export const openWebsite = async () => {
-  
     try {
         await addDoc(collection(db, "analytics"), {
         action:"open website",
@@ -23,8 +23,6 @@ import CryptoJS from "crypto-js";
       console.error("Xatolik yuz berdi:", error);
     }
   } 
-
-
 
   export const FilterGridAnalytics = async (actionType) => {
     
