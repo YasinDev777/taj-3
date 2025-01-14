@@ -7,7 +7,7 @@ import Alert from "./Alert";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { FaLock } from "react-icons/fa6";
-import { FilterAnalaysisAnalytics, FilterAnalaysisTypeAnalytics, FilterClearAnalytics, FilterGridAnalytics, FilterTimeFrameAnalytics } from "../analytics/Analytics";
+import { FilterAnalaysisAnalytics, FilterAnalaysisTypeAnalytics, FilterClearAnalytics, FilterGridAnalytics, FilterTimeFrameAnalytics, VideoAnalytics } from "../analytics/Analytics";
 const Filter = ({
     setIsVideo,
     isVideo,
@@ -151,7 +151,7 @@ const Filter = ({
                     </div>
                     <button
                         className="video-btn2"
-                        onClick={() => setIsVideo(!isVideo)}
+                        onClick={() => {setIsVideo(!isVideo); VideoAnalytics("open")}}
                         style={isVideo === true ? { display: "none" } : { display: "flex" }}
                     >
                         <RxVideo /> Foydalanish videosi
