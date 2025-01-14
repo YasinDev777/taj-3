@@ -32,8 +32,8 @@ const Filter = ({
     setCurrentPage
 }) => {
     const [forFilterData, setForFilterData] = useState([])
-    const [forTimeData, ] = useState([])
-    const [forFilterTimeData, ] = useState([])
+    const [forTimeData,] = useState([])
+    const [forFilterTimeData,] = useState([])
 
     useEffect(() => {
         const fetchs = async () => {
@@ -63,7 +63,7 @@ const Filter = ({
                 })
 
                 const timeframeGetMain = []
-                timeFrameDataGet.forEach((docs) =>{
+                timeFrameDataGet.forEach((docs) => {
                     const data = docs.data()
                     timeframeGetMain.push(data)
                     forFilterTimeData.push(data)
@@ -82,22 +82,22 @@ const Filter = ({
     const [open2, setOpen2] = useState(false)
     const [open3, setOpen3] = useState(false)
 
-     
+
     const gridOptions = [6, 12, 24]
 
-    useEffect(() => {        
-            const foundPresetData = forFilterData.find((item) => item.data.name === selectedPreset);
-            if (foundPresetData) {
-                setSelectValues(foundPresetData.data.type_id);
-                
-            } else {
-                setSelectValues(null);
-            }        
-    
+    useEffect(() => {
+        const foundPresetData = forFilterData.find((item) => item.data.name === selectedPreset);
+        if (foundPresetData) {
+            setSelectValues(foundPresetData.data.type_id);
+
+        } else {
+            setSelectValues(null);
+        }
+
         const foundTimeData = forTimeData.find((item) => item.addAnalsisAndTimeframe.name === selectedTime);
         if (foundTimeData) {
             const foundTypeIdTime = foundTimeData.addAnalsisAndTimeframe.id;
-            setFoundTimeId(foundTypeIdTime); 
+            setFoundTimeId(foundTypeIdTime);
         } else {
             setFoundTimeId(null);
         }
@@ -112,15 +112,15 @@ const Filter = ({
                 setOpen3(false);
             }
         };
-    
-        document.addEventListener("click", handleClickOutside);    
+
+        document.addEventListener("click", handleClickOutside);
         return () => {
             document.removeEventListener("click", handleClickOutside);
         };
     }, []);
-    
 
-    const handleToDefoult = () =>{
+
+    const handleToDefoult = () => {
         setOpen(false)
         setOpen1(false)
         setOpen2(false)
@@ -164,23 +164,24 @@ const Filter = ({
                             <div className="main-select">
                                 <span className="name">Analaysis</span>
                                 <div className="option">
-                                    <div className="selected-option select-one" onClick={() => { 
+                                    <div className="selected-option select-one" onClick={() => {
                                         setOpen(!open);
                                         setOpen1(open1 === true ? false : false);
                                         setOpen2(open2 === true ? false : false);
-                                        setOpen3(open3 === true ? false : false) 
-                                        }}
-                                        >
+                                        setOpen3(open3 === true ? false : false)
+                                    }}
+                                    >
                                         <span>{selectedPreset}</span>
                                         <FiChevronDown />
                                     </div>
                                     <div className="select-options" style={open === false ? { display: "none" } : { display: "flex" }}>
-                                    <div className="opt" onClick={() => { 
-                                        setOpen(!open); setScreeningTypeValueId(null); 
-                                        setSelectedPreset("All"); setSelectValues(null); 
-                                        setSelectedTicker("All"); FilterAnalaysisAnalytics("All") }}>
-                                        <span>All</span>
-                                    </div>
+                                        <div className="opt" onClick={() => {
+                                            setOpen(!open); setScreeningTypeValueId(null);
+                                            setSelectedPreset("All"); setSelectValues(null);
+                                            setSelectedTicker("All"); FilterAnalaysisAnalytics("All")
+                                        }}>
+                                            <span>All</span>
+                                        </div>
                                         {forFilterData && forFilterData.map((item, index) =>
                                             <div key={index} className={`opt ${item.data.is_locked === true ? "opt-lock" : ""} `} onClick={() => { setOpen(!open); setSelectedPreset(item.data.name); setSelectValues(item.data.type_id); setSelectedTicker("All"); setScreeningTypeValueId(null); FilterAnalaysisAnalytics(item.data.type_id); }}>
                                                 <span>
@@ -196,12 +197,12 @@ const Filter = ({
                             <div className="main-select">
                                 <span className="name">{selectedPreset}</span>
                                 <div className="option">
-                                    <div className="selected-option select-two" 
-                                    onClick={() => { 
-                                        setOpen1(!open1); 
-                                        setOpen(open === true ? false : false); 
-                                        setOpen2(setOpen2 === true ? false : false); 
-                                        setOpen3(setOpen3 === true ? false : false) 
+                                    <div className="selected-option select-two"
+                                        onClick={() => {
+                                            setOpen1(!open1);
+                                            setOpen(open === true ? false : false);
+                                            setOpen2(setOpen2 === true ? false : false);
+                                            setOpen3(setOpen3 === true ? false : false)
                                         }}
                                     >
                                         <span>{selectedTicker}</span>
@@ -218,6 +219,7 @@ const Filter = ({
                                                     {item.name}
                                                 </span>
                                                 {item.is_locked === true ? <FaLock /> : null}
+                                     
                                                 </div>
                                             )
                                         )}
@@ -227,26 +229,28 @@ const Filter = ({
                             <div className="main-select">
                                 <span className="name">Grid</span>
                                 <div className="option">
-                                    <div className="selected-option select-three" 
-                                    onClick={() => { 
-                                        setOpen2(!open2);
-                                        setOpen(open === true ? false : false); 
-                                        setOpen1(open1 === true ? false : false); 
-                                        setOpen3(setOpen3 === true ? false : false) }} 
-                                        >
+                                    <div className="selected-option select-three"
+                                        onClick={() => {
+                                            setOpen2(!open2);
+                                            setOpen(open === true ? false : false);
+                                            setOpen1(open1 === true ? false : false);
+                                            setOpen3(setOpen3 === true ? false : false)
+                                        }}
+                                    >
                                         <span>{isGrid}</span>
                                         <FiChevronDown />
                                     </div>
-                                    <div className="select-options" style={open2 === false ? {display: "none"} : {display: "flex"}}>
+                                    <div className="select-options" style={open2 === false ? { display: "none" } : { display: "flex" }}>
                                         {gridOptions.map((item, index) => (
-                                           <div key={index} className="opt" onClick={
-                                            () => {
-                                                setOpen2(!open2); 
-                                                setIsGrid(item); 
-                                                FilterGridAnalytics(item)
-                                                setCurrentPage(1)}}>
-                                            <span>{item}</span>
-                                           </div> 
+                                            <div key={index} className="opt" onClick={
+                                                () => {
+                                                    setOpen2(!open2);
+                                                    setIsGrid(item);
+                                                    FilterGridAnalytics(item)
+                                                    setCurrentPage(1)
+                                                }}>
+                                                <span>{item}</span>
+                                            </div>
                                         ))}
                                     </div>
                                 </div>
@@ -254,34 +258,34 @@ const Filter = ({
                             <div className="main-select">
                                 <span className="name">Timeframe</span>
                                 <div className="option">
-                                    <div className="selected-option select-four" 
-                                    onClick={() => {
-                                        setOpen3(!open3);
-                                        setOpen(open === true ? false : false);
-                                        setOpen1(open1 === true ? false : false)
-                                        setOpen2(open2 === true ? false : false);
-                                    }}>
+                                    <div className="selected-option select-four"
+                                        onClick={() => {
+                                            setOpen3(!open3);
+                                            setOpen(open === true ? false : false);
+                                            setOpen1(open1 === true ? false : false)
+                                            setOpen2(open2 === true ? false : false);
+                                        }}>
                                         <span>{selectedTime}</span>
                                         <FiChevronDown />
                                     </div>
-                                    <div className="select-options" style={open3 ===false ? {display: "none"} : {display: "flex"}}>
-                                    <div className="opt" 
-                                    onClick={() => { 
-                                        setOpen3(!open3);
-                                        setSelectedTime("All");
-                                        setTimeFrameId(null)
-                                        FilterTimeFrameAnalytics("All")
-                                        }}>
-                                        <span>All</span>   
-                                    </div>
-                                        {forFilterTimeData.map((item, index) =>
-                                            <div key={`${item.name}-${index}`} className="opt" 
+                                    <div className="select-options" style={open3 === false ? { display: "none" } : { display: "flex" }}>
+                                        <div className="opt"
                                             onClick={() => {
                                                 setOpen3(!open3);
-                                                setSelectedTime(item.name);
-                                                setTimeFrameId(item.timeframe_id)
-                                                FilterTimeFrameAnalytics(item.timeframe_id)
+                                                setSelectedTime("All");
+                                                setTimeFrameId(null)
+                                                FilterTimeFrameAnalytics("All")
                                             }}>
+                                            <span>All</span>
+                                        </div>
+                                        {forFilterTimeData.map((item, index) =>
+                                            <div key={`${item.name}-${index}`} className="opt"
+                                                onClick={() => {
+                                                    setOpen3(!open3);
+                                                    setSelectedTime(item.name);
+                                                    setTimeFrameId(item.timeframe_id)
+                                                    FilterTimeFrameAnalytics(item.timeframe_id)
+                                                }}>
                                                 <span>{item.name}</span>
                                             </div>
                                         )}

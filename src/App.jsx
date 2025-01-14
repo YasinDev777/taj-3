@@ -127,7 +127,7 @@ const App = () => {
 
   const decryptData = (data) => {
     if (!data) {
-      return null; // Возвращаем null, если данных нет
+      return null;
     }
     const bytes = CryptoJS.AES.decrypt(data, 'your-secret-key');
     return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));

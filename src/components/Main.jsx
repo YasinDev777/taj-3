@@ -134,7 +134,7 @@ const Main = ({
       {loading ? (
         <Loader />
       ) :
-        currentChart.length > 0 ?
+        currentChart.length ?
           <>
             <div className="main">
               {
@@ -263,7 +263,6 @@ const Main = ({
           <div className="chartNone">
             <h1>Analiz mavjud emas</h1>
           </div>
-
       }
 
     </div>
