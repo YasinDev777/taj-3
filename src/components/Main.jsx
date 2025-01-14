@@ -5,6 +5,7 @@ import { BiLockOpen } from "react-icons/bi";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { LuScanSearch } from "react-icons/lu";
 import Loader from "./Loader";
+import { BlockChartAnalytics, chartAnalyticsOpen, PaginationAnalytics } from "../analytics/Analytics";
 
 const Main = ({
   isCard,
@@ -29,8 +30,9 @@ const Main = ({
   const [currentChart, setCurrentChart] = useState([])
   const navigate = useNavigate()
 
-  const handleNavigate = (id) =>{
+  const handleNavigate = (id , symbol) =>{
     navigate(`/chart/${id}`, {replace: true})
+    chartAnalyticsOpen(symbol)
   }
 
 
@@ -152,7 +154,7 @@ const Main = ({
                   return (
                     <>
                       {filterLimit > item.index ? (
-                        <div onClick={() => handleNavigate(item.analysisId)} key={item.index} className="card" >
+                        <div onClick={() => handleNavigate(item.analysisId, item.symbol)} key={item.index} className="card" >
                           <div className="nav-card" style={{ background: "var(--main-color)", width: "100%" }}>
                             <div className="info">
                               <big>{item.symbol}</big>
@@ -205,7 +207,7 @@ const Main = ({
                           </div>
                           <div className="image" style={{ cursor: "default" }} >
                             <div className="dont-show" style={{ display: "flex" }}>
-                              <button onClick={() => setIsAlert(!isAlert)}>
+                              <button onClick={() => {setIsAlert(!isAlert); BlockChartAnalytics("open") }}>
                                 Qo’lga kiritish <BiLockOpen />
                               </button>
                             </div>
@@ -214,8 +216,8 @@ const Main = ({
                           <div className="texx">
                             <p>
                               Aniqlandi:
-                              <span> {" "}
-                                {calculateTimeDifference(item.created_at)}{" "}
+                              <span>
+                                {calculateTimeDifference(item.created_at)}
                               </span>
                             </p>
                           </div>
@@ -234,6 +236,7 @@ const Main = ({
                 onClick={() => {
                   prevPage();
                   handleScroll();
+                  PaginationAnalytics("prev")
                 }}
                 disabled={currentPage === 1}
               >
@@ -246,6 +249,7 @@ const Main = ({
                     onClick={() => {
                       paginate(page);
                       handleScroll();
+                  PaginationAnalytics(page)
                     }}
                     className={page === currentPage ? "active" : ""}
                   >
@@ -262,6 +266,7 @@ const Main = ({
                 onClick={() => {
                   nextPage();
                   handleScroll();
+                  PaginationAnalytics("next")
                 }}
                 disabled={currentPage === totalPages}
               >

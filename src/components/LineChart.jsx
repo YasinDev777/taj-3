@@ -6,7 +6,7 @@ import { FiArrowRightCircle } from "react-icons/fi";
 import { BsArrowLeftCircle } from "react-icons/bs";
 import axios from "axios";
 import { AnalysisContext } from "../context/Context";
-
+import {chartAnalyticsClose, ConatactAnalytics, pageAnalytics} from "../analytics/Analytics"
 const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
 
   const [analysisData, setAnalysisData] = useState([]);
@@ -274,14 +274,14 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
         style={isCard === false ? { display: "none" } : { display: "flex" }}
       >
         <div className="logo-name">
-          <Link to="/">AHSAN LABS</Link>
+          <Link to="/" onClick={()=> pageAnalytics("toHomePage")} >AHSAN LABS</Link>
         </div>
         <div className="options">
-          <Link to="https://t.me/ahsanlabs_admin" target="blank">
+          <Link to="https://t.me/ahsanlabs_admin" onClick={()=>ConatactAnalytics("headphoneContactAdmin")} target="blank">
             <PiHeadsetBold />
           </Link>
           {isLogedIn === false ? (
-            <Link to="/login">
+            <Link to="/login" onClick={()=> pageAnalytics("toLoginPage")} >
               <button>
                 Kirish <FiArrowRightCircle />
               </button>
@@ -311,7 +311,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
           className="exit-svg"
           style={isCard === false ? { display: "none" } : { display: "flex" }}
         >
-          <Link to="/">
+          <Link to="/" onClick={()=>chartAnalyticsClose()}>
             <BsArrowLeftCircle className="exitsvg"  />
           </Link>
         </div>

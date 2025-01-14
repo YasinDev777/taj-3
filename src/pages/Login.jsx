@@ -7,6 +7,7 @@ import { FiArrowRightCircle } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/pagination";
+import { ConatactAnalytics , pageAnalytics } from "../analytics/Analytics";
 
 const Login = ({
   setIsLogedIn,
@@ -52,7 +53,7 @@ const Login = ({
       <div className="container">
         <div className="left">
           <div className="exit-nav">
-            <Link to="/">
+            <Link to="/" onClick={()=>pageAnalytics("exitLoginPage")} >
               <BsArrowLeftCircle />
             </Link>
           </div>
@@ -102,7 +103,7 @@ const Login = ({
         </div>
         <div className="right">
           <div className="exit-nav2">
-            <Link to="/">
+            <Link to="/" onClick={()=>pageAnalytics("exitLoginPage")} >
               <BsArrowLeftCircle />
             </Link>
           </div>
@@ -127,7 +128,7 @@ const Login = ({
                 Kirish <FiArrowRightCircle />
               </button>
               <p>
-                <Link to="https://t.me/ahsanlabs_admin">
+                <Link to="https://t.me/ahsanlabs_admin" onClick={()=>ConatactAnalytics("headphoneContactAdmin")} >
                   <span>@ahsan_admin</span> bilan bog'laning va <br /> tokeninginzni
                   oling.
                 </Link>

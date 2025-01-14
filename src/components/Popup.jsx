@@ -1,6 +1,7 @@
 import React from 'react'
 import { BiX } from "react-icons/bi";
 import { Link } from 'react-router-dom'
+import { BlockChartAnalytics, ConatactAnalytics, VideoAnalytics } from '../analytics/Analytics';
 
 const Popav = ({ isAlert, setIsAlert, isVideo, setIsVideo }) => {
 
@@ -26,8 +27,8 @@ const Popav = ({ isAlert, setIsAlert, isVideo, setIsVideo }) => {
                     Pastdagi tugmani bosing va telegram orqali admin bilan bog'laning!
                 </p>
                 <div className="btn-div">
-                    <button onClick={() => setIsAlert(!isAlert)}>Chiqish</button>
-                    <Link to="https://t.me/ahsanlabs_admin" target="blank">
+                    <button onClick={() => {setIsAlert(!isAlert); BlockChartAnalytics("close")}}>Chiqish</button>
+                    <Link to="https://t.me/ahsanlabs_admin" target="blank" onClick={()=>ConatactAnalytics("popupContactAdmin")} >
                         <button onClick={() => setIsAlert(!isAlert)}>Bog'lanish</button>
                     </Link>
                 </div>
@@ -36,8 +37,10 @@ const Popav = ({ isAlert, setIsAlert, isVideo, setIsVideo }) => {
                 <div className="textss">
                     <p>Video qo'llanma 😎</p>
                     <BiX onClick={() => {
-                        setIsVideo(false)
-                        setIsAlert(false)
+                        setIsVideo(false);
+                        setIsAlert(false);
+                        VideoAnalytics("close")
+
                     }} className='textsss-btn' />
                 </div>
                 <iframe
