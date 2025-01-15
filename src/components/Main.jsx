@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Chart from "../components/LineChart";
 import { BiLockOpen } from "react-icons/bi";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { LuScanSearch } from "react-icons/lu";
 import Loader from "./Loader";
+import { BlockChartAnalytics, chartAnalyticsOpen, PaginationAnalytics } from "../analytics/Analytics";
 
 const Main = ({
   isCard,
@@ -27,6 +28,14 @@ const Main = ({
   const [ChartsPerPage, setChartsPerPage] = useState(isGrid);
   const [analysisData, setAnalysisData] = useState([]);
   const [currentChart, setCurrentChart] = useState([])
+  const navigate = useNavigate()
+
+  const handleNavigate = (id , symbol) =>{
+    navigate(`/chart/${id}`, {replace: true})
+    chartAnalyticsOpen(symbol)
+  }
+
+
   useEffect(() => {
     if (analysis) {
       const updatedData = analysis
@@ -100,13 +109,16 @@ const Main = ({
 
   useEffect(() => {
     const fetchData = async () => {
+      if (analysisData.length > 0) {
+        setLoading(false);
+        return; // Если данные уже загружены, пропускаем загрузку
+      }
       setLoading(true);
       await new Promise((resolve) => setTimeout(resolve, 2500));
       setLoading(false);
     };
     fetchData();
-  }, [currentPage, selectedPreset, selectedTime, selectedTicker, ChartsPerPage]);
-
+  }, [analysisData]); // Срабатывает только при изменении `analysisData`
 
   const calculateTimeDifference = (targetTime) => {
     const targetDate = targetTime.seconds * 1000; // Maqsad vaqtni millisekundga aylantirish
@@ -142,7 +154,7 @@ const Main = ({
                   return (
                     <>
                       {filterLimit > item.index ? (
-                        <Link to={"/chart/" + item.analysisId} key={item.index} className="card" >
+                        <div onClick={() => handleNavigate(item.analysisId, item.symbol)} key={item.index} className="card" >
                           <div className="nav-card" style={{ background: "var(--main-color)", width: "100%" }}>
                             <div className="info">
                               <big>{item.symbol}</big>
@@ -175,7 +187,7 @@ const Main = ({
                               </span>
                             </p>
                           </div>
-                        </Link>
+                        </div>
                       ) : (
                         <div className="card" key={item.index}  >
                           <div
@@ -195,7 +207,7 @@ const Main = ({
                           </div>
                           <div className="image" style={{ cursor: "default" }} >
                             <div className="dont-show" style={{ display: "flex" }}>
-                              <button onClick={() => setIsAlert(!isAlert)}>
+                              <button onClick={() => {setIsAlert(!isAlert); BlockChartAnalytics("open") }}>
                                 Qo’lga kiritish <BiLockOpen />
                               </button>
                             </div>
@@ -204,8 +216,8 @@ const Main = ({
                           <div className="texx">
                             <p>
                               Aniqlandi:
-                              <span> {" "}
-                                {calculateTimeDifference(item.created_at)}{" "}
+                              <span>
+                                {calculateTimeDifference(item.created_at)}
                               </span>
                             </p>
                           </div>
@@ -224,6 +236,7 @@ const Main = ({
                 onClick={() => {
                   prevPage();
                   handleScroll();
+                  PaginationAnalytics("prev")
                 }}
                 disabled={currentPage === 1}
               >
@@ -236,6 +249,7 @@ const Main = ({
                     onClick={() => {
                       paginate(page);
                       handleScroll();
+                  PaginationAnalytics(page)
                     }}
                     className={page === currentPage ? "active" : ""}
                   >
@@ -252,6 +266,7 @@ const Main = ({
                 onClick={() => {
                   nextPage();
                   handleScroll();
+                  PaginationAnalytics("next")
                 }}
                 disabled={currentPage === totalPages}
               >

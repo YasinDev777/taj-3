@@ -12,6 +12,7 @@ import { db } from "./firebase";
 import axios from "axios";
 import { AnalysisContext } from "./context/Context";
 import CryptoJS from "crypto-js";
+import { loginAnalytics, openWebsite } from "./analytics/Analytics";
 
 const App = () => {
   const [selectValues, setSelectValues] = useState(null);
@@ -19,7 +20,7 @@ const App = () => {
   const [timeFrameId, setTimeFrameId] = useState(null)
   const [foundTimeId, setFoundTimeId] = useState("");
   const [isGrid, setIsGrid] = useState(6);
-  const [currentPage, setCurrentPage] = useState(1);  
+  const [currentPage, setCurrentPage] = useState(1);
   const [isCard, setIsCard] = useState(false);
   const [isAlert, setIsAlert] = useState(false);
   const [isVideo, setIsVideo] = useState(false);
@@ -37,7 +38,7 @@ const App = () => {
     return CryptoJS.AES.encrypt(JSON.stringify(data), 'your-secret-key').toString();
   };
 
-  const handleLogin = async (inputValue) => {    
+  const handleLogin = async (inputValue) => {
     let foundUser = null;
     try {
       const analysisGet = collection(db, "analysis");
@@ -68,7 +69,7 @@ const App = () => {
         const data = docs.data();
         pointNew.push({ ...data });
       });
-      
+
       setPointsState(pointNew);
       const User = localStorage.getItem("subscriptionType")
       let userForm = ""
@@ -83,6 +84,7 @@ const App = () => {
       const querySnapshot = await getDocs(user_query);
       if (querySnapshot.empty) {
         alert("Bunday ma'lumotga ega User afsuski topilmadi!");
+        loginAnalytics("invalid")
         localStorage.clear()
         return
       } else {
@@ -92,6 +94,7 @@ const App = () => {
             alert(
               `Hurmatli Foydalanuvchi siz bloklangansiz iltimos admin bilan bog'laning`
             );
+            loginAnalytics("userBlock")
             localStorage.clear();
             window.location.reload();
           } else {
@@ -100,20 +103,23 @@ const App = () => {
             localStorage.setItem("userName", foundUser.name);
             localStorage.setItem("isLogedIn", "true");
             localStorage.setItem("subscriptionType", encryptData(foundUser.user_id));
+            if (inputValue) {
+              loginAnalytics("valid")
+            }
             navigate("/");
-              switch (userData.subscription_type) {
-                case "pro":
-                  setFilterLimit(Infinity);
-                  break;
-                case "basic":
-                  setFilterLimit(5);
-                  break;
-                case "free":
-                  setFilterLimit(3);
-                  break;
-                default:
-                  setFilterLimit(1);
-              
+            switch (userData.subscription_type) {
+              case "pro":
+                setFilterLimit(Infinity);
+                break;
+              case "basic":
+                setFilterLimit(5);
+                break;
+              case "free":
+                setFilterLimit(3);
+                break;
+              default:
+                setFilterLimit(1);
+
             }
 
           }
@@ -133,7 +139,7 @@ const App = () => {
     return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
   };
 
-  
+
 
   useEffect(() => {
     const main = [...mains]
@@ -151,6 +157,7 @@ const App = () => {
     };
     selectFilter();
   }, [selectValues, screeningTypeValueId, timeFrameId]);
+
 
 
 
@@ -188,7 +195,7 @@ const App = () => {
             lastClosePrice: lastClosePrice,
           },
         }));
-      } 
+      }
     } catch (err) {
       console.log(err)
     }
@@ -223,6 +230,10 @@ const App = () => {
   const [selectedTicker, setSelectedTicker] = useState(screeningTypeValueId || "Type");
   const [selectedTime, setSelectedTime] = useState(timeFrameId || "All");
 
+  useEffect(() => {
+    openWebsite()
+  }, [])
+  
 
   return (
     <div className="app">

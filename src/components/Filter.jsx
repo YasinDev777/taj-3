@@ -7,7 +7,7 @@ import Alert from "./Alert";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { FaLock } from "react-icons/fa6";
-import { FilterAnalaysisAnalytics, FilterClearAnalytics, FilterGridAnalytics, FilterTimeFrameAnalytics } from "../analytics/Analytics";
+import { FilterAnalaysisAnalytics, FilterAnalaysisTypeAnalytics, FilterClearAnalytics, FilterGridAnalytics, FilterTimeFrameAnalytics, VideoAnalytics } from "../analytics/Analytics";
 const Filter = ({
     setIsVideo,
     isVideo,
@@ -134,7 +134,6 @@ const Filter = ({
         setIsGrid(6)
         FilterClearAnalytics()
     }
-
     return (
         <>
             <Alert
@@ -152,7 +151,7 @@ const Filter = ({
                     </div>
                     <button
                         className="video-btn2"
-                        onClick={() => setIsVideo(!isVideo)}
+                        onClick={() => {setIsVideo(!isVideo); VideoAnalytics("open")}}
                         style={isVideo === true ? { display: "none" } : { display: "flex" }}
                     >
                         <RxVideo /> Foydalanish videosi
@@ -210,16 +209,17 @@ const Filter = ({
                                         <FiChevronDown />
                                     </div>
                                     <div className="select-options" style={open1 === false ? { display: "none" } : { display: "flex" }}>
-                                        <div className="opt" onClick={() => { setOpen1(!open1); setSelectedTicker("All"); setScreeningTypeValueId(null) }}>
-                                            <span>All</span>
-                                        </div>
+                                   {selectValues && <div className="opt" onClick={() => { setOpen1(!open1); setSelectedTicker("All");setScreeningTypeValueId(null); FilterAnalaysisTypeAnalytics(selectValues , "All" )  }}>
+                                        <span>All</span>   
+                                    </div>}
                                         {forFilterData && forFilterData.map((item) =>
                                             item.addScreenTypeAndValue.filter(item => item.screening_type_id === selectValues).map((item, idx) =>
-                                                <div key={`${item.name}-${idx}`} className={`opt ${item.is_locked === true ? "opt-lock" : ""}`} onClick={() => { setOpen1(!open1); setSelectedTicker(item.name); setScreeningTypeValueId(item.value_id) }}>
-                                                    <span>
-                                                        {item.name}
-                                                    </span>
-                                                    {item.is_locked === true ? <FaLock /> : null}
+                                                <div key={`${item.name}-${idx}`} className={`opt ${item.is_locked === true ? "opt-lock" : ""}`} onClick={() => { setOpen1(!open1); setSelectedTicker(item.name); setScreeningTypeValueId(item.value_id); FilterAnalaysisTypeAnalytics(selectValues , item.value_id ) }}>
+                                                <span>
+                                                    {item.name}
+                                                </span>
+                                                {item.is_locked === true ? <FaLock /> : null}
+                                     
                                                 </div>
                                             )
                                         )}
