@@ -75,8 +75,26 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
             low: parseFloat(item[3]),
             close: parseFloat(item[4]),
           }));
+
           if (formattedData.length > 0) {
-            setCandlestickData(formattedData);
+            const lastDataPointTime = formattedData[formattedData.length - 1].time;
+
+            const extendedData = [...formattedData];
+            const endDate = new Date('2026-01-15T00:00:00Z').getTime() / 1000;
+            let currentTime = lastDataPointTime;
+
+            while (currentTime < endDate) {
+              currentTime += 24 * 60 * 60;
+              extendedData.push({
+                time: currentTime,
+                open: NaN,
+                high: NaN,
+                low: NaN,
+                close: NaN,
+              });
+            }
+
+            setCandlestickData(extendedData);
           }
         }
       } catch (error) {
@@ -102,7 +120,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
           rightOffset: 10,
           barSpacing: 5,
           leftOffset: -10,
-          // fixRightEdge: true,
+          fixRightEdge: true,
         },
         handleScale: isCard,
         handleScroll: isCard,
@@ -112,9 +130,6 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
         },
         crosshair: isDarkMode ? darkMode.crosshair : lightMode.crosshair,
       });
-
-      // const timeScale = chart.timeScale();
-      // timeScale.scrollToPosition(-12, false);
 
       const candlestickSeries = chart.addCandlestickSeries({
         upColor: isDarkMode ? '#27a691' : '#4caf50',
