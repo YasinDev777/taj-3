@@ -1,51 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Chart from "../components/LineChart";
-import { BiLockOpen } from "react-icons/bi";
-import { GrFormPrevious, GrFormNext } from "react-icons/gr";
-import { LuScanSearch } from "react-icons/lu";
-import Loader from "./Loader";
-import { BlockChartAnalytics, chartAnalyticsOpen, PaginationAnalytics } from "../analytics/Analytics";
+/* eslint-disable react/prop-types */
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Chart from '../components/LineChart';
+import { BiLockOpen } from 'react-icons/bi';
+import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
+import { LuScanSearch } from 'react-icons/lu';
+import Loader from './Loader';
+import { BlockChartAnalytics, chartAnalyticsOpen, PaginationAnalytics } from '../analytics/Analytics';
 
-const Main = ({
-  isCard,
-  analysis,
-  isGrid,
-  isAlert,
-  setIsAlert,
-  isLogedIn,
-  filterLimit,
-  pointsState,
-  isUser,
-  data,
-  currentPage,
-  setCurrentPage,
-  selectedPreset,
-  selectedTime,
-  selectedTicker
-}) => {
+const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filterLimit, pointsState, isUser, data, currentPage, setCurrentPage }) => {
   const [loading, setLoading] = useState(true);
   const [ChartsPerPage, setChartsPerPage] = useState(isGrid);
   const [analysisData, setAnalysisData] = useState([]);
-  const [currentChart, setCurrentChart] = useState([])
-  const navigate = useNavigate()
+  const [currentChart, setCurrentChart] = useState([]);
+  const navigate = useNavigate();
 
-  const handleNavigate = (id , symbol) =>{
-    navigate(`/chart/${id}`, {replace: true})
-    chartAnalyticsOpen(symbol)
-  }
-
+  const handleNavigate = (id, symbol) => {
+    navigate(`/chart/${id}`, { replace: true });
+    chartAnalyticsOpen(symbol);
+  };
 
   useEffect(() => {
     if (analysis) {
       const updatedData = analysis
         .map((item, index) => {
           const [symbol, value] = Object.entries(data).find(([sym]) => sym === item.symbol) || [];
-          return value?.lastClosePrice !== undefined
-            ? { ...item, index, symbol, lastClosePrice: value.lastClosePrice }
-            : null;
+          return value?.lastClosePrice !== undefined ? { ...item, index, symbol, lastClosePrice: value.lastClosePrice } : null;
         })
-        .filter(Boolean); // Faqat null bo'lmagan elementlarni saqlaydi  
+        .filter(Boolean); // Faqat null bo'lmagan elementlarni saqlaydi
       setAnalysisData(updatedData);
     }
   }, [analysis, filterLimit, pointsState, isLogedIn]);
@@ -55,13 +37,11 @@ const Main = ({
   }, [isGrid, ChartsPerPage]);
   let totalPages = Math.ceil(analysisData.length / ChartsPerPage);
   useEffect(() => {
-
     const lastChartIndex = currentPage * ChartsPerPage;
     const firstChartIndex = lastChartIndex - ChartsPerPage;
 
-    setCurrentChart(analysisData.slice(firstChartIndex, lastChartIndex))
-  }, [analysisData, analysis, ChartsPerPage, currentPage])
-
+    setCurrentChart(analysisData.slice(firstChartIndex, lastChartIndex));
+  }, [analysisData, analysis, ChartsPerPage, currentPage]);
 
   const getVisiblePages = () => {
     const pages = [];
@@ -69,26 +49,11 @@ const Main = ({
       for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
       if (currentPage <= 3) {
-        pages.push(1, 2, 3, 4, "...", totalPages);
+        pages.push(1, 2, 3, 4, '...', totalPages);
       } else if (currentPage >= totalPages - 2) {
-        pages.push(
-          1,
-          "...",
-          totalPages - 3,
-          totalPages - 2,
-          totalPages - 1,
-          totalPages
-        );
+        pages.push(1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
       } else {
-        pages.push(
-          1,
-          "...",
-          currentPage - 1,
-          currentPage,
-          currentPage + 1,
-          "...",
-          totalPages
-        );
+        pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
       }
     }
     return pages;
@@ -133,9 +98,9 @@ const Main = ({
 
     // Натийжани қайтариш
     if (days > 0) {
-      return `${days} kun${hours > 0 ? ` ${hours} soat` : ""} oldin`;
+      return `${days} kun${hours > 0 ? ` ${hours} soat` : ''} oldin`;
     } else if (totalHours > 0) {
-      return `${totalHours} soat${minutes > 0 ? ` ${minutes} daqiqa` : ""} oldin`;
+      return `${totalHours} soat${minutes > 0 ? ` ${minutes} daqiqa` : ''} oldin`;
     } else {
       return `${minutes > 0 ? minutes : 1} minut oldin`; // Ҳеч бўлмаганда 1 дақиқа
     }
@@ -145,69 +110,59 @@ const Main = ({
     <div className="main1">
       {loading ? (
         <Loader />
-      ) :
-        currentChart.length &&
+      ) : (
+        currentChart.length && (
           <>
             <div className="main">
-              {
-                currentChart && currentChart.map((item) => {
+              {currentChart &&
+                currentChart.map((item) => {
                   return (
                     <>
                       {filterLimit > item.index ? (
-                        <div onClick={() => handleNavigate(item.analysisId, item.symbol)} key={item.index} className="card" >
-                          <div className="nav-card" style={{ background: "var(--main-color)", width: "100%" }}>
+                        <div onClick={() => handleNavigate(item.analysisId, item.symbol)} key={item.index} className="card">
+                          <div className="nav-card" style={{ background: 'var(--main-color)', width: '100%' }}>
                             <div className="info">
                               <big>{item.symbol}</big>
                             </div>
                             <div className="salary">
-                              <i>{"$" + item.lastClosePrice}</i>
+                              <i>{'$' + item.lastClosePrice}</i>
                             </div>
-                            <div
-                              className="navCardLink"
-                            >
+                            <div className="navCardLink">
                               <LuScanSearch className="scanIcon" />
                             </div>
                           </div>
 
                           <div className="image">
-                            <Chart
-                              isCard={isCard}
-                              isUser={isUser}
-                              isLogedIn={isLogedIn}
-                              analysis={analysis}
-                              data={item.symbol}
-                              line={item.lines}
-                            />
+                            <Chart isCard={isCard} isUser={isUser} isLogedIn={isLogedIn} analysis={analysis} data={item.symbol} line={item.lines} />
                           </div>
                           <div className="texx">
                             <p>
                               Aniqlandi:
-                              <span> {" "}
-                                {calculateTimeDifference(item.created_at)}{" "}
-                              </span>
+                              <span> {calculateTimeDifference(item.created_at)} </span>
                             </p>
                           </div>
                         </div>
                       ) : (
-                        <div className="card" key={item.index}  >
-                          <div
-                            className="nav-card"
-                            style={{ background: "var(--block-card-color)" }}
-                          >
+                        <div className="card" key={item.index}>
+                          <div className="nav-card" style={{ background: 'var(--block-card-color)' }}>
                             <div className="info">
                               <big>{item.symbol}</big>
                             </div>
                             <div className="salary">
                               <i>$0,2648</i>
                             </div>
-                            <div
-                              className="navCardLink">
+                            <div className="navCardLink">
                               <LuScanSearch className="scanIcon" />
                             </div>
                           </div>
-                          <div className="image" style={{ cursor: "default" }} >
-                            <div className="dont-show" style={{ display: "flex" }}>
-                              <button onClick={() => {setIsAlert(!isAlert); BlockChartAnalytics("open") }}>
+                          <div className="image" style={{ cursor: 'default' }}>
+                            <div className="dont-show" style={{ display: 'flex' }}>
+                              <button
+                                onClick={() => {
+                                  setIsAlert(!isAlert);
+                                  BlockChartAnalytics('open');
+                                }}
+                              >
                                 Qo’lga kiritish <BiLockOpen />
                               </button>
                             </div>
@@ -216,18 +171,14 @@ const Main = ({
                           <div className="texx">
                             <p>
                               Aniqlandi:
-                              <span>
-                                {calculateTimeDifference(item.created_at)}
-                              </span>
+                              <span>{calculateTimeDifference(item.created_at)}</span>
                             </p>
                           </div>
                         </div>
                       )}
                     </>
-                  )
-
-                })
-              }
+                  );
+                })}
             </div>
 
             <div className="btns">
@@ -236,22 +187,22 @@ const Main = ({
                 onClick={() => {
                   prevPage();
                   handleScroll();
-                  PaginationAnalytics("prev")
+                  PaginationAnalytics('prev');
                 }}
                 disabled={currentPage === 1}
               >
                 <GrFormPrevious />
               </button>
               {getVisiblePages().map((page, index) =>
-                typeof page === "number" ? (
+                typeof page === 'number' ? (
                   <button
                     key={index}
                     onClick={() => {
                       paginate(page);
                       handleScroll();
-                  PaginationAnalytics(page)
+                      PaginationAnalytics(page);
                     }}
-                    className={page === currentPage ? "active" : ""}
+                    className={page === currentPage ? 'active' : ''}
                   >
                     {page}
                   </button>
@@ -259,14 +210,14 @@ const Main = ({
                   <span key={index} className="dots">
                     ...
                   </span>
-                )
+                ),
               )}
               <button
                 className="next-btn"
                 onClick={() => {
                   nextPage();
                   handleScroll();
-                  PaginationAnalytics("next")
+                  PaginationAnalytics('next');
                 }}
                 disabled={currentPage === totalPages}
               >
@@ -274,9 +225,8 @@ const Main = ({
               </button>
             </div>
           </>
-      
-      }
-
+        )
+      )}
     </div>
   );
 };

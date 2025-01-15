@@ -1,109 +1,107 @@
 .main1 {
-    width: 96%;
-    background-color: var(--other-main-color);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin: 0 auto;
-    overflow: hidden;
-    border-radius: 0 calc(var(--index)*0.5) calc(var(--index)*0.5);
+  width: 96%;
+  background-color: var(--other-main-color);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 0 calc(var(--index) * 0.5) calc(var(--index) * 0.5);
 }
 
 .main {
-    width: 100%;
-    padding: 0 calc(var(--index)*1.5);
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    background-color: var(--other-main-color);
-    gap: calc(var(--index)*0.8);
+  width: 100%;
+  padding: 0 calc(var(--index) * 1.5);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background-color: var(--other-main-color);
+  gap: calc(var(--index) * 0.8);
 }
 
-.image img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .infors {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: calc(var(--index)*1.2);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--index) * 1.2);
 }
 
 .info {
-    display: flex;
-    align-items: center;
-    gap: calc(var(--index)*0.5);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--index) * 0.5);
 }
 
 .image {
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  position: relative;
 }
 
-
 .card {
-    width: 100%;
-    height: calc(var(--index)*18.15);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    overflow: hidden;
-    border-radius: calc(var(--index)*0.3);
-    background-color: var(--other-main-color);
-    -webkit-box-shadow: 0 0 calc(var(--index)*0.4) calc(var(--index)*-0.2) rgba(0, 0, 0, 1);
-    -moz-box-shadow: 0 0 calc(var(--index)*0.4) calc(var(--index)*-0.2) rgba(0, 0, 0, 1);
-    box-shadow: 0 0 calc(var(--index)*0.4) calc(var(--index)*-0.2) rgba(0, 0, 0, 1);
+  width: 100%;
+  height: calc(var(--index) * 18.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  overflow: hidden;
+  border-radius: calc(var(--index) * 0.3);
+  background-color: var(--other-main-color);
+  -webkit-box-shadow: 0 0 calc(var(--index) * 0.4) calc(var(--index) * -0.2) rgba(0, 0, 0, 1);
+  -moz-box-shadow: 0 0 calc(var(--index) * 0.4) calc(var(--index) * -0.2) rgba(0, 0, 0, 1);
+  box-shadow: 0 0 calc(var(--index) * 0.4) calc(var(--index) * -0.2) rgba(0, 0, 0, 1);
 }
 
 .nav-card {
-    width: 100%;
-    height: calc(var(--index)*1.75);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: calc(var(--index)*0.25) calc(var(--index)*0.5);
-    border-radius: calc(var(--index)*0.3) calc(var(--index)*0.3) 0 0;
-    gap: calc(var(--index)*0.25);
+  width: 100%;
+  height: calc(var(--index) * 1.75);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(var(--index) * 0.25) calc(var(--index) * 0.5);
+  border-radius: calc(var(--index) * 0.3) calc(var(--index) * 0.3) 0 0;
+  gap: calc(var(--index) * 0.25);
 }
 
 .nav-card big {
-    font-size: calc(var(--index)*0.8);
-    color: var(--card-text);
-    font-family: var(--main-front);
-    font-weight: 600;
+  font-size: calc(var(--index) * 0.8);
+  color: var(--card-text);
+  font-family: var(--main-front);
+  font-weight: 600;
 }
 
 .nav-card p {
-    font-family: var(--main-front);
-    color: var(--card-text);
-    font-weight: 300;
-    font-size: calc(var(--index)*0.7);
+  font-family: var(--main-front);
+  color: var(--card-text);
+  font-weight: 300;
+  font-size: calc(var(--index) * 0.7);
 }
 
 .salary {
-    padding: calc(var(--index)*0.15) calc(var(--index)*0.3);
-    background-color: var(--other-main-color);
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: calc(var(--index)*0.6);
-    gap: calc(var(--index)*1.5);
-    color: var(--text-color);
-    border-radius: calc(var(--index)*0.25);
+  padding: calc(var(--index) * 0.15) calc(var(--index) * 0.3);
+  background-color: var(--other-main-color);
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: calc(var(--index) * 0.6);
+  gap: calc(var(--index) * 1.5);
+  color: var(--text-color);
+  border-radius: calc(var(--index) * 0.25);
 }
 
-
 .salary i {
-    font-family: var(--main-front);
-    font-weight: 600;
-    font-style: normal;
-    position: relative;
+  font-family: var(--main-front);
+  font-weight: 600;
+  font-style: normal;
+  position: relative;
 }
 
 /* .salary i::after{
@@ -118,92 +116,90 @@
 } */
 
 .navCardLink {
-    font-size: var(--index);
-    color: var(--other-main-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
+  font-size: var(--index);
+  color: var(--other-main-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 .btns {
-    display: flex;
-    align-items: center;
-    gap: calc(var(--index)*0.75);
-    padding: calc(var(--index)*1) 0;
-    transform: translateX(calc(var(--index)*-1.55));
+  display: flex;
+  align-items: center;
+  gap: calc(var(--index) * 0.75);
+  padding: calc(var(--index) * 1) 0;
+  transform: translateX(calc(var(--index) * -1.55));
 }
 
-.btns>button {
-    width: calc(var(--index)*2);
-    height: calc(var(--index)*2);
-    color: var(--main-color);
-    background-color: transparent;
-    border: calc(var(--index)*0.05) solid var(--border-color);
-    font-size: calc(var(--index)*0.75);
-    cursor: pointer;
-    border-radius: calc(var(--index)*0.45);
-    transition: 0.25s ease;
+.btns > button {
+  width: calc(var(--index) * 2);
+  height: calc(var(--index) * 2);
+  color: var(--main-color);
+  background-color: transparent;
+  border: calc(var(--index) * 0.05) solid var(--border-color);
+  font-size: calc(var(--index) * 0.75);
+  cursor: pointer;
+  border-radius: calc(var(--index) * 0.45);
+  transition: 0.25s ease;
 }
 
-.btns>svg {
-    font-size: calc(var(--index)*1);
+.btns > svg {
+  font-size: calc(var(--index) * 1);
 }
 
 .prev-btn,
 .next-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.btns>button.active {
-    background-color: var(--main-color);
-    color: var(--other-main-color);
-    border: none;
+.btns > button.active {
+  background-color: var(--main-color);
+  color: var(--other-main-color);
+  border: none;
 }
 
 .dont-show {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 99;
-    -webkit-backdrop-filter: calc(var(--index)*0.5);
-    -moz-backdrop-filter: calc(var(--index)*0.5);
-    -o-backdrop-filter: calc(var(--index)*0.5);
-    -ms-backdrop-filter: calc(var(--index)*0.5);
-    backdrop-filter: blur(calc(var(--index)*0.5));
-    align-items: center;
-    justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  -webkit-backdrop-filter: calc(var(--index) * 0.5);
+  -moz-backdrop-filter: calc(var(--index) * 0.5);
+  -o-backdrop-filter: calc(var(--index) * 0.5);
+  -ms-backdrop-filter: calc(var(--index) * 0.5);
+  backdrop-filter: blur(calc(var(--index) * 0.5));
+  align-items: center;
+  justify-content: center;
 }
 
 .dont-show button {
-    width: calc(var(--index)*8.65);
-    height: calc(var(--index)*2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: calc(var(--index)*0.1) solid var(--block-card-color);
-    border-radius: calc(var(--index)*0.3);
-    font-size: calc(var(--index)*1);
-    gap: calc(var(--index)*0.5);
-    color: var(--block-card-color);
-    background-color: var(--other-main-color);
-    cursor: pointer;
+  width: calc(var(--index) * 8.65);
+  height: calc(var(--index) * 2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: calc(var(--index) * 0.1) solid var(--block-card-color);
+  border-radius: calc(var(--index) * 0.3);
+  font-size: calc(var(--index) * 1);
+  gap: calc(var(--index) * 0.5);
+  color: var(--block-card-color);
+  background-color: var(--other-main-color);
+  cursor: pointer;
 }
 
 .texx {
-    padding: 0 calc(var(--index)*0.5) calc(var(--index)*0.4) calc(var(--index)*0.5);
-    width: 100%;
-    background-color: var(--other-main-color);
-    color: var(--text-color);
-    font-weight: 300;
-    font-size: calc(var(--index)*0.6);
+  padding: 0 calc(var(--index) * 0.5) calc(var(--index) * 0.4) calc(var(--index) * 0.5);
+  width: 100%;
+  background-color: var(--other-main-color);
+  color: var(--text-color);
+  font-weight: 300;
+  font-size: calc(var(--index) * 0.6);
 }
-
-
 
 /* @keyframes anim {
     0%{
@@ -214,89 +210,86 @@
     }
 } */
 .chartNone {
-    width: 100%;
-    text-align: center;
-    padding: calc(var(--index)*1.5) 0px calc(var(--index)*2.5);
+  width: 100%;
+  text-align: center;
+  padding: calc(var(--index) * 1.5) 0px calc(var(--index) * 2.5);
 }
 .chartNone h1 {
-    font-weight: 400;
-    font-size: calc(var(--index)*1.5);
+  font-weight: 400;
+  font-size: calc(var(--index) * 1.5);
 }
 @media (max-width: 900px) {
-    
-    .main{
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .main {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-    .image {
-        width: 100% !important;
-    }
+  .image {
+    width: 100% !important;
+  }
 
-    .chart-container {
-        width: 100% !important;
-    }
+  .chart-container {
+    width: 100% !important;
+  }
 }
 
 @media (max-width: 650px) {
+  .btns {
+    gap: calc(var(--index) * 1);
+  }
 
-    .btns {
-        gap: calc(var(--index)*1);
-    }
+  .main {
+    grid-template-columns: repeat(1, 1fr);
+    gap: calc(var(--index) * 1.5);
+  }
 
-        
-    .main{
-        grid-template-columns: repeat(1, 1fr);
-        gap: calc(var(--index)*1.5);
-    }
+  .card {
+    height: calc(var(--index) * 28);
+  }
 
-    .card {
-        height: calc(var(--index)*28);
-    }
+  .chart-container {
+    height: calc(var(--index) * 2) !important;
+  }
 
-    .chart-container {
-        height: calc(var(--index)*2) !important;
-    }
+  .dont-show > button {
+    width: 50%;
+    height: calc(var(--index) * 4);
+    font-size: calc(var(--index) * 1.5);
+  }
 
-    .dont-show>button {
-        width: 50%;
-        height: calc(var(--index)*4);
-        font-size: calc(var(--index)*1.5);
-    }
+  .nav-card {
+    height: calc(var(--index) * 3) !important;
+  }
 
-    .nav-card {
-        height: calc(var(--index)*3) !important;
-    }
+  .info {
+    gap: calc(var(--index) * 0.8);
+  }
 
-    .info {
-        gap: calc(var(--index)*0.8);
-    }
+  .infors {
+    gap: calc(var(--index) * 0.8);
+  }
 
-    .infors {
-        gap: calc(var(--index)*0.8);
-    }
+  .info > big {
+    font-size: calc(var(--index) * 1.3);
+  }
 
-    .info>big {
-        font-size: calc(var(--index)*1.3);
-    }
+  .info > img {
+    width: calc(var(--index) * 1.5);
+    height: calc(var(--index) * 1.5);
+  }
 
-    .info>img {
-        width: calc(var(--index)*1.5);
-        height: calc(var(--index)*1.5);
-    }
+  .info > p {
+    font-size: calc(var(--index) * 1);
+  }
 
-    .info>p {
-        font-size: calc(var(--index)*1);
-    }
+  .salary i {
+    font-size: calc(var(--index) * 0.8);
+  }
 
-    .salary i {
-        font-size: calc(var(--index)*0.8);
-    }
+  .navCardLink {
+    font-size: calc(var(--index) * 1.8);
+  }
 
-    .navCardLink {
-        font-size: calc(var(--index)*1.8);
-    }
-
-    .texx>p {
-        font-size: calc(var(--index)*1);
-    }
+  .texx > p {
+    font-size: calc(var(--index) * 1);
+  }
 }

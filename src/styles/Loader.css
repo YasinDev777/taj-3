@@ -1,43 +1,44 @@
-  .container-loader {
-    width: 100%;
-    height: calc(var(--index)*13);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    margin: 0 auto;
+.container-loader {
+  width: 100%;
+  height: calc(var(--index) * 13);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+.loader {
+  width: calc(var(--index) * 3);
+  height: calc(var(--index) * 3);
+  display: inline-block;
+  position: relative;
+}
+
+.loader::after,
+.loader::before {
+  content: '';
+  box-sizing: border-box;
+  width: calc(var(--index) * 3);
+  height: calc(var(--index) * 3);
+  border-radius: 100%;
+  border: calc(var(--index) * 0.1) solid var(--main-color);
+  position: absolute;
+  left: 0;
+  top: 0;
+  animation: animloader 2s linear infinite;
+}
+.loader::after {
+  animation-delay: 1s;
+}
+
+@keyframes animloader {
+  0% {
+    transform: scale(0);
+    opacity: 1;
   }
-  
-  .loader {
-    width: calc(var(--index)*3);
-    height: calc(var(--index)*3);
-    display: inline-block;
-    position: relative;
+  100% {
+    transform: scale(1);
+    opacity: 0;
   }
-  .loader::after,
-  .loader::before {
-    content: '';  
-    box-sizing: border-box;
-    width: calc(var(--index)*3);
-    height: calc(var(--index)*3);
-    border-radius: 100%;
-    border: calc(var(--index)*0.1) solid var(--main-color);
-    position: absolute;
-    left: 0;
-    top: 0;
-    animation: animloader 2s linear infinite;
-  }
-  .loader::after {
-    animation-delay: 1s;
-  }
-  
-  @keyframes animloader {
-    0% {
-      transform: scale(0);
-      opacity: 1;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 0;
-    }
-  }
+}

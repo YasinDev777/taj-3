@@ -1,6 +1,17 @@
 {
-    "rules": {
-      "react-hooks/exhaustive-deps": "off",
-      "no-unused-vars": "warn"
+  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:prettier/recommended"],
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
     }
+  },
+  "rules": {
+    "prettier/prettier": ["error", { "endOfLine": "auto" }]
+  }
 }
