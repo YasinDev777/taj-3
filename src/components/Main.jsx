@@ -134,7 +134,7 @@ const Main = ({
       {loading ? (
         <Loader />
       ) :
-        currentChart.length ?
+        currentChart.length &&
           <>
             <div className="main">
               {
@@ -259,10 +259,7 @@ const Main = ({
               </button>
             </div>
           </>
-          :
-          <div className="chartNone">
-            <h1>Analiz mavjud emas</h1>
-          </div>
+      
       }
 
     </div>
