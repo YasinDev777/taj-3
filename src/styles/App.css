@@ -7,7 +7,7 @@
   outline: none;
   background: transparent;
   text-decoration: none;
-  font-family: var(--main-front);
+  font-family: var(--main-font);
 }
 
 html {
@@ -15,7 +15,7 @@ html {
 }
 
 :root {
-  --main-front: 'Mulish', sans-serif;
+  --main-font: 'Mulish', sans-serif;
   --other-main-font: 'Poppins', sans-serif;
   --main-color: #2c2b34;
   --other-main-color: #fff;
@@ -89,13 +89,17 @@ a {
 
 @media (max-width: 650px) {
   .chart-container {
-    height: 38dvh !important;
+    width: 100%;
+    height: calc(var(--index)*23) !important;
   }
   .exitsvg {
     font-size: calc(var(--index) * 2.3);
   }
   .exit-svg {
     height: calc(var(--index) * 5);
+  }
+  .chart-container-mobile{
+    height: 75dvh !important
   }
 }
 

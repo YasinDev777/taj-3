@@ -166,7 +166,7 @@ const Filter = ({
                     <span>{selectedPreset}</span>
                     <FiChevronDown />
                   </div>
-                  <div className="select-options" style={open === false ? { display: 'none' } : { display: 'flex' }}>
+                  <div className="select-options" style={open === false || forFilterData.some((item) => item.data.length <= 0) ? { display: 'none' } : { display: 'flex' }}>
                     <div
                       className="opt"
                       onClick={() => {
@@ -207,6 +207,7 @@ const Filter = ({
                 <div className="option">
                   <div
                     className="selected-option select-two"
+                    style={forFilterData.some((item) => item.addScreenTypeAndValue.length <= 0) ? { pointerEvents: 'none' } : { pointerEvents: 'auto' }}
                     onClick={() => {
                       setOpen1(!open1);
                       setOpen(open === true ? false : false);
@@ -217,10 +218,11 @@ const Filter = ({
                     <span>{selectedTicker}</span>
                     <FiChevronDown />
                   </div>
-                  <div className="select-options" style={open1 === false ? { display: 'none' } : { display: 'flex' }}>
+                  <div className="select-options" style={open1 === false || selectedPreset === 'All' || selectedPreset === 'Type' ? { display: 'none' } : { display: 'flex' }}>
                     {selectValues && (
                       <div
                         className="opt"
+                        style={forFilterData.some((item) => item.addScreenTypeAndValue.length <= 0) ? { display: 'none' } : { display: 'flex' }}
                         onClick={() => {
                           setOpen1(!open1);
                           setSelectedTicker('All');
@@ -302,7 +304,7 @@ const Filter = ({
                     <span>{selectedTime}</span>
                     <FiChevronDown />
                   </div>
-                  <div className="select-options" style={open3 === false ? { display: 'none' } : { display: 'flex' }}>
+                  <div className="select-options" style={open3 === false || forFilterTimeData.some((item) => item.length <= 0) ? { display: 'none' } : { display: 'flex' }}>
                     <div
                       className="opt"
                       onClick={() => {
