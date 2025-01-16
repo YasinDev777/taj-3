@@ -40,8 +40,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
     };
 
     fetchAnalysisData();
-  }, [isLogedIn, pointsState, id, data]);
-
+  }, [isLogedIn, pointsState, id, data, line]);
   useEffect(() => {
     if (!data && analysis) {
       const filteredItems = analysis.filter((item) => item.analysisId === id);
@@ -80,7 +79,10 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
             const lastDataPointTime = formattedData[formattedData.length - 1].time;
 
             const extendedData = [...formattedData];
-            const endDate = new Date('2026-01-15T00:00:00Z').getTime() / 1000;
+            // bugungi kundan boshlab qo'shimcha 100 kun qo'shish uchun
+            const endDate = new Date(new Date().setDate(new Date().getDate() + 100)).getTime() / 1000;
+
+            // const endDate = new Date('2026-01-15T00:00:00Z').getTime() / 1000;
             let currentTime = lastDataPointTime;
 
             while (currentTime < endDate) {
@@ -155,7 +157,6 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
           .map((item) => {
             const date = new Date(item.date.seconds * 1000);
             const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-
             return {
               time: formattedDate,
               value: item.price,
@@ -197,7 +198,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
 
       if (!candlestickData || candlestickData.length === 0) return;
       chart.timeScale().setVisibleRange({
-        from: candlestickData[candlestickData.length - (isCard === false ? 50 : 260)]?.time || candlestickData[0]?.time,
+        from: candlestickData[candlestickData.length - (isCard === false ? 200 : 260)]?.time || candlestickData[0]?.time,
         to: candlestickData[candlestickData.length - 1]?.time,
       });
 
@@ -308,13 +309,13 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
       </div>
       <div
         ref={chartContainerRef}
-        className={`chart-container ${isCard === false ? 'chart-container-mobile' : ''}`}
+        className={`chart-container ${isCard === false ? '' : 'chart-container-mobile'}`}
         style={
           isCard === false
             ? {
-                width: 'calc(var(--index)*20)',
+                width: 'calc(var(--index)*30)',
                 height: 'calc(var(--index)*15.5)',
-                transform: 'translateY(0)',
+                transform: 'translateY(0px)',
               }
             : { width: '100%', height: '77dvh', cursor }
         }

@@ -142,8 +142,8 @@ export const FilterClearAnalytics = async () => {
 export const PaginationAnalytics = async (pageAction) => {
   try {
     await addDoc(collection(db, 'analytics'), {
-      action: 'page',
-      param: 'clearedFilter',
+      action: 'pagination',
+      param: 'paginating',
       param_value: pageAction,
       user_id: decryptData(userId),
       created_at: Timestamp.now(),
@@ -181,7 +181,7 @@ export const chartAnalyticsOpen = async (symbol) => {
   try {
     await addDoc(collection(db, 'analytics'), {
       action: 'chart',
-      param: 'chartWatchOpen',
+      param: 'openChart',
       param_value: symbol,
       user_id: decryptData(userId),
       created_at: Timestamp.now(),
@@ -197,7 +197,7 @@ export const chartAnalyticsClose = async () => {
   try {
     await addDoc(collection(db, 'analytics'), {
       action: 'chart',
-      param: 'chartWatchClose',
+      param: 'exitChart',
       param_value: 'close',
       user_id: decryptData(userId),
       created_at: Timestamp.now(),
