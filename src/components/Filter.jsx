@@ -207,7 +207,6 @@ const Filter = ({
                 <div className="option">
                   <div
                     className="selected-option select-two"
-                    style={forFilterData.some((item) => item.addScreenTypeAndValue.length <= 0) ? { pointerEvents: 'none' } : { pointerEvents: 'auto' }}
                     onClick={() => {
                       setOpen1(!open1);
                       setOpen(open === true ? false : false);
