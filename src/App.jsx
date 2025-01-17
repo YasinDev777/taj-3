@@ -57,9 +57,9 @@ const App = () => {
           analysisId,
         });
       });
-      setMains(fetchedData.sort((a, b) => a.created_at - b.created_at));
-      setAnalysis(fetchedData.sort((a, b) => b.created_at - a.created_at));
 
+      setMains(fetchedData.sort((a, b) => b.created_at - a.created_at));
+      setAnalysis(fetchedData.sort((a, b) => b.created_at - a.created_at));
       const points = collection(db, 'points');
       const allPoints = await getDocs(points);
       let pointNew = [];
@@ -81,7 +81,7 @@ const App = () => {
       const user_query = await query(usersCollection, where('user_id', '==', userForm));
       const querySnapshot = await getDocs(user_query);
       if (querySnapshot.empty) {
-        alert("Bunday ma'lumotga ega User afsuski topilmadi!");
+        alert("Bunday ma'lumotga ega Foydalanuvchi afsuski topilmadi!");
         loginAnalytics('invalid');
         localStorage.clear();
         return;
@@ -173,8 +173,8 @@ const App = () => {
           lastClosePrice = formattedData[formattedData.length - 1].close;
         }
       }
-
       if (symbol) {
+        console.log(symbol);
         setData((prevData) => ({
           ...prevData,
           [symbol]: {
