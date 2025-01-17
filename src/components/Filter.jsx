@@ -221,7 +221,6 @@ const Filter = ({
                     {selectValues && (
                       <div
                         className="opt"
-                        style={forFilterData.some((item) => item.addScreenTypeAndValue.length <= 0) ? { display: 'none' } : { display: 'flex' }}
                         onClick={() => {
                           setOpen1(!open1);
                           setSelectedTicker('All');

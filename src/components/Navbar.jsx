@@ -4,13 +4,13 @@ import { Link } from 'react-router-dom';
 import { PiHeadsetBold } from 'react-icons/pi';
 import { RxVideo } from 'react-icons/rx';
 import { FiArrowRightCircle } from 'react-icons/fi';
-import { ConatactAnalytics, pageAnalytics, VideoAnalytics } from '../analytics/Analytics';
+import { ConatactAnalytics, logoAnalytics, pageAnalytics, VideoAnalytics } from '../analytics/Analytics';
 const Navbar = ({ isVideo, setIsVideo, setIsAlert, isUser, isLogedIn }) => {
   return (
     <>
       <div className="nav">
         <div className="logo-name">
-          <Link to="/" onClick={() => pageAnalytics('toHomePage')}>
+          <Link to="/" onClick={() => logoAnalytics()}>
             AHSAN LABS
           </Link>
         </div>
@@ -25,7 +25,7 @@ const Navbar = ({ isVideo, setIsVideo, setIsAlert, isUser, isLogedIn }) => {
           >
             <RxVideo /> Foydalanish videosi
           </button>
-          <Link to="https://t.me/ahsanlabs_admin" onClick={() => ConatactAnalytics('headphoneContactAdmin')} target="blank">
+          <Link to="https://t.me/ahsanlabs_admin" onClick={() => ConatactAnalytics('contactAdminIcon')} target="blank">
             <PiHeadsetBold />
           </Link>
           {isLogedIn === false ? (

@@ -9,7 +9,7 @@ import { FiArrowRightCircle } from 'react-icons/fi';
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import axios from 'axios';
 import { AnalysisContext } from '../context/Context';
-import { chartAnalyticsClose, ConatactAnalytics, pageAnalytics } from '../analytics/Analytics';
+import { chartAnalyticsClose, ConatactAnalytics, logoAnalytics, pageAnalytics } from '../analytics/Analytics';
 
 const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
   const [analysisData, setAnalysisData] = useState([]);
@@ -34,13 +34,12 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
       if (!line && pointsState && id) {
         const lines = pointsState.filter((state) => state.analysis_id === id);
         setAnalysisData(lines);
-      } else if (data) {
+      } else {
         setAnalysisData(line);
       }
     };
-
     fetchAnalysisData();
-  }, [isLogedIn, pointsState, id, data, line]);
+  }, [pointsState, data, line]);
   useEffect(() => {
     if (!data && analysis) {
       const filteredItems = analysis.filter((item) => item.analysisId === id);
@@ -79,10 +78,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
             const lastDataPointTime = formattedData[formattedData.length - 1].time;
 
             const extendedData = [...formattedData];
-            // bugungi kundan boshlab qo'shimcha 100 kun qo'shish uchun
             const endDate = new Date(new Date().setDate(new Date().getDate() + 100)).getTime() / 1000;
-
-            // const endDate = new Date('2026-01-15T00:00:00Z').getTime() / 1000;
             let currentTime = lastDataPointTime;
 
             while (currentTime < endDate) {
@@ -107,7 +103,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
     if (analysisSymbols) {
       fetchBitCoinData();
     }
-  }, [isLogedIn, pointsState, id, data, analysisSymbols]);
+  }, [pointsState, id, data, analysisSymbols]);
 
   useEffect(() => {
     if (chartContainerRef.current && candlestickData.length > 0) {
@@ -288,16 +284,16 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
     <div>
       <div className="nav" id="nav" style={isCard === false ? { display: 'none' } : { display: 'flex' }}>
         <div className="logo-name">
-          <Link to="/" onClick={() => pageAnalytics('toHomePage')}>
+          <Link to="/" onClick={() => logoAnalytics()}>
             AHSAN LABS
           </Link>
         </div>
         <div className="options">
-          <Link to="https://t.me/ahsanlabs_admin" onClick={() => ConatactAnalytics('headphoneContactAdmin')} target="blank">
+          <Link to="https://t.me/ahsanlabs_admin" onClick={() => ConatactAnalytics('contactAdminIcon')} target="blank">
             <PiHeadsetBold />
           </Link>
           {isLogedIn === false ? (
-            <Link to="/login" onClick={() => pageAnalytics('toLoginPage')}>
+            <Link to="/login" onClick={() => pageAnalytics('openLoginPage')}>
               <button>
                 Kirish <FiArrowRightCircle />
               </button>
@@ -324,7 +320,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
         onMouseLeave={handleMouseLeave}
       >
         <div className="exit-svg" style={isCard === false ? { display: 'none' } : { display: 'flex' }}>
-          <Link to="/" onClick={() => chartAnalyticsClose()}>
+          <Link to="/" onClick={() => chartAnalyticsClose(analysisSymbols)}>
             <BsArrowLeftCircle className="exitsvg" />
           </Link>
         </div>

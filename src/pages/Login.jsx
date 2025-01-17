@@ -100,7 +100,7 @@ const Login = ({ setIsLogedIn, setIsUser, handleLogin }) => {
                 Kirish <FiArrowRightCircle />
               </button>
               <p>
-                <Link to="https://t.me/ahsanlabs_admin" onClick={() => ConatactAnalytics('headphoneContactAdmin')}>
+                <Link to="https://t.me/ahsanlabs_admin" onClick={() => ConatactAnalytics('loginContactAdmin')}>
                   <span>@ahsan_admin</span> bilan bog'laning va <br /> tokeninginzni oling.
                 </Link>
               </p>
