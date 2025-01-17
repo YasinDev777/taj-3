@@ -3,7 +3,7 @@
 import React from 'react';
 import { BiX } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
-import { BlockChartAnalytics, ConatactAnalytics, VideoAnalytics } from '../analytics/Analytics';
+import { BlockChartAnalytics, VideoAnalytics } from '../analytics/Analytics';
 
 const Popav = ({ isAlert, setIsAlert, isVideo, setIsVideo }) => {
   const handleNone = (e) => {
@@ -29,12 +29,12 @@ const Popav = ({ isAlert, setIsAlert, isVideo, setIsVideo }) => {
           <button
             onClick={() => {
               setIsAlert(!isAlert);
-              BlockChartAnalytics('close');
+              BlockChartAnalytics('exit');
             }}
           >
             Chiqish
           </button>
-          <Link to="https://t.me/ahsanlabs_admin" target="blank" onClick={() => ConatactAnalytics('popupContactAdmin')}>
+          <Link to="https://t.me/ahsanlabs_admin" target="blank" onClick={() => BlockChartAnalytics('contactAdmin')}>
             <button onClick={() => setIsAlert(!isAlert)}>Bog'lanish</button>
           </Link>
         </div>

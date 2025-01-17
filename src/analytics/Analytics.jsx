@@ -41,8 +41,8 @@ export const openWebsite = async () => {
   try {
     await addDoc(collection(db, 'analytics'), {
       action: 'open',
-      param: 'opening website',
-      param_value: 'opened website',
+      param: 'entered site',
+      param_value: 'entered website',
       user_id: decryptData(userId),
       created_at: Timestamp.now(),
       browser: browserName,
@@ -59,8 +59,8 @@ export const FilterAnalaysisAnalytics = async (actionTypeValue) => {
   try {
     await addDoc(collection(db, 'analytics'), {
       action: 'filter',
-      param: actionTypeValue,
-      param_value: 'All',
+      param: 'Analysis',
+      param_value: actionTypeValue,
       user_id: decryptData(userId),
       created_at: Timestamp.now(),
       browser: browserName,
@@ -124,7 +124,7 @@ export const FilterClearAnalytics = async () => {
   try {
     await addDoc(collection(db, 'analytics'), {
       action: 'filterClear',
-      param: 'clearedFilter',
+      param: 'clearIcon',
       param_value: 'clear',
       user_id: decryptData(userId),
       created_at: Timestamp.now(),
@@ -162,7 +162,7 @@ export const VideoAnalytics = async (alert) => {
   try {
     await addDoc(collection(db, 'analytics'), {
       action: 'videoPlayAlert',
-      param: 'video alert',
+      param: 'videoAlert',
       param_value: alert,
       user_id: decryptData(userId),
       created_at: Timestamp.now(),
@@ -193,12 +193,12 @@ export const chartAnalyticsOpen = async (symbol) => {
     console.error('Xatolik yuz berdi:', error);
   }
 };
-export const chartAnalyticsClose = async () => {
+export const chartAnalyticsClose = async (symbol) => {
   try {
     await addDoc(collection(db, 'analytics'), {
       action: 'chart',
       param: 'exitChart',
-      param_value: 'close',
+      param_value: symbol,
       user_id: decryptData(userId),
       created_at: Timestamp.now(),
       browser: browserName,
@@ -252,8 +252,8 @@ export const pageAnalytics = async (action) => {
 export const BlockChartAnalytics = async (action) => {
   try {
     await addDoc(collection(db, 'analytics'), {
-      action: 'blockChart',
-      param: 'blockChart',
+      action: 'get',
+      param: 'getButton',
       param_value: action,
       user_id: decryptData(userId),
       created_at: Timestamp.now(),
@@ -272,6 +272,22 @@ export const ConatactAnalytics = async (action) => {
       action: 'contact',
       param: 'conatctAdmin',
       param_value: action,
+      user_id: decryptData(userId),
+      created_at: Timestamp.now(),
+      browser: browserName,
+      operatingSystem: operatingSystem,
+      device: device,
+    });
+  } catch (error) {
+    console.error('Xatolik yuz berdi:', error);
+  }
+};
+export const logoAnalytics = async () => {
+  try {
+    await addDoc(collection(db, 'analytics'), {
+      action: 'logo',
+      param: 'navbarLogo',
+      param_value: 'clicked',
       user_id: decryptData(userId),
       created_at: Timestamp.now(),
       browser: browserName,

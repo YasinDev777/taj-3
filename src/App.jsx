@@ -69,6 +69,7 @@ const App = () => {
       });
 
       setPointsState(pointNew);
+
       const User = localStorage.getItem('subscriptionType');
       let userForm = '';
       if (User) {
@@ -76,7 +77,6 @@ const App = () => {
       } else {
         userForm = inputValue;
       }
-
       const usersCollection = collection(db, 'user');
       const user_query = await query(usersCollection, where('user_id', '==', userForm));
       const querySnapshot = await getDocs(user_query);

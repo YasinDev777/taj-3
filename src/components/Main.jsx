@@ -41,7 +41,6 @@ const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filter
   useEffect(() => {
     const lastChartIndex = currentPage * ChartsPerPage;
     const firstChartIndex = lastChartIndex - ChartsPerPage;
-
     setCurrentChart(analysisData.slice(firstChartIndex, lastChartIndex));
   }, [analysisData, analysis, ChartsPerPage, currentPage]);
 
@@ -62,30 +61,36 @@ const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filter
   };
 
   const paginate = (number) => setCurrentPage(number);
-  const nextPage = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
-  };
 
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+      setTimeout(() => handleScroll(), 50);
+    }
+  };
   const prevPage = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+      setTimeout(() => handleScroll(), 50);
+    }
   };
 
   const handleScroll = () => {
-    window.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   useEffect(() => {
     const fetchData = async () => {
       if (analysisData.length > 0) {
         setLoading(false);
-        return; // Skip loading if data is already loaded
+        return;
       }
       setLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 4000));
       setLoading(false);
     };
     fetchData();
-  }, [analysisData]); // Trigger only when `analysisData` changes
+  }, [analysisData, analysis]);
 
   const calculateTimeDifference = (targetTime) => {
     const targetDate = targetTime.seconds * 1000; // Convert target time to milliseconds
@@ -129,7 +134,6 @@ const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filter
                       <LuScanSearch className="scanIcon" />
                     </div>
                   </div>
-
                   <div className="image">
                     <Chart isCard={isCard} isUser={isUser} isLogedIn={isLogedIn} analysis={analysis} data={item.symbol} line={item.lines} />
                   </div>
@@ -144,10 +148,10 @@ const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filter
                 <div className="card" key={item.symbol}>
                   <div className="nav-card" style={{ background: 'var(--block-card-color)' }}>
                     <div className="info">
-                      <big>{item.symbol}</big>
+                      <big className="block-info">{item.symbol}</big>
                     </div>
-                    <div className="salary">
-                      <i>$0,2648</i>
+                    <div className="salary block-salary">
+                      <i>{'$' + item.lastClosePrice}</i>
                     </div>
                     <div className="navCardLink">
                       <LuScanSearch className="scanIcon" />
@@ -182,7 +186,6 @@ const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filter
               className="prev-btn"
               onClick={() => {
                 prevPage();
-                handleScroll();
                 PaginationAnalytics('prev');
               }}
               disabled={currentPage === 1}
@@ -212,7 +215,6 @@ const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filter
               className="next-btn"
               onClick={() => {
                 nextPage();
-                handleScroll();
                 PaginationAnalytics('next');
               }}
               disabled={currentPage === totalPages}

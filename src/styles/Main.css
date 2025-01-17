@@ -77,6 +77,16 @@
   font-weight: 600;
 }
 
+.block-info{
+  pointer-events: none;
+  user-select: none;
+  -webkit-filter: calc(var(--index) * 0.5);
+  -moz-filter: calc(var(--index) * 0.5);
+  -o-filter: calc(var(--index) * 0.5);
+  -ms-filter: calc(var(--index) * 0.5);
+  filter: blur(calc(var(--index) * 0.5));
+}
+
 .nav-card p {
   font-family: var(--main-front);
   color: var(--card-text);
@@ -97,23 +107,22 @@
   border-radius: calc(var(--index) * 0.25);
 }
 
+.block-salary{
+  -webkit-filter: blur(calc(var(--index)*0.15));
+  -moz-filter: blur(calc(var(--index)*0.15));
+  -o-filter: blur(calc(var(--index)*0.15));
+  -ms-filter: blur(calc(var(--index)*0.15));
+  filter: blur(calc(var(--index)*0.15));
+  pointer-events: none;
+  user-select: none;
+}
+
 .salary i {
   font-family: var(--main-front);
   font-weight: 600;
   font-style: normal;
   position: relative;
 }
-
-/* .salary i::after{
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 133.5%;
-    transform: translate(-50%, -50%);
-    background-color: var(--main-color);
-    height: 100%;
-    width: calc(var(--index)*0.05);
-} */
 
 .navCardLink {
   font-size: var(--index);
