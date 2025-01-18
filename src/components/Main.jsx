@@ -27,12 +27,12 @@ const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filter
           const [symbol, value] = Object.entries(data).find(([sym]) => sym === item.symbol) || [];
           return value?.lastClosePrice !== undefined ? { ...item, index, symbol, lastClosePrice: value.lastClosePrice } : null;
         })
-        .filter((item) => item !== null && item !== undefined);
-      setAnalysisData(updatedData);
+        .filter((item) => item !== null && item !== undefined); // Фильтрация данных
+      setAnalysisData(updatedData); // Обновление данных для анализа
     }
   }, [analysis, filterLimit, pointsState, isLogedIn]);
 
-  // dont't delete this useEffect if you dont't want any bugs with loader
+  // dont't delete is useEffect if you dont't want any bugs with loadder
     useEffect(() => {
       if (analysisData.length > 0) {
         setLoading(false);

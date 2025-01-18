@@ -38,37 +38,53 @@ const App = () => {
     return CryptoJS.AES.encrypt(JSON.stringify(data), 'your-secret-key').toString();
   };
 
+  useEffect(() => {
+
+    const analysisFunction = async () => {
+      try {
+        const analysisGet = collection(db, 'analysis');
+        const q = query(analysisGet, where('inactive', '==', false));
+        const allAnalysis = await getDocs(q);
+
+
+        const fetchedData = [];
+        allAnalysis.forEach((doc) => {
+          const analysisId = doc.id;
+          const analysisMain = doc.data();
+          const lines = pointsState && pointsState.filter((state) => state.analysis_id === analysisId);
+          fetchedData.push({
+            lines,
+            ...analysisMain,
+            analysisId,
+          });
+        });
+
+        const points = collection(db, 'points');
+        const allPoints = await getDocs(points);
+
+        const pointNew = [];
+
+        allPoints.forEach((docs) => {
+          const data = docs.data();
+          pointNew.push({ ...data });
+        });
+        setPointsState(pointNew);
+
+        setMains(fetchedData.sort((a, b) => b.created_at - a.created_at));
+        setAnalysis(fetchedData.sort((a, b) => b.created_at - a.created_at));
+
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+    analysisFunction()
+  }, [analysis])
+
+
   const handleLogin = async (inputValue) => {
     let foundUser = null;
     try {
-      const analysisGet = collection(db, 'analysis');
-      const q = await query(analysisGet, where('inactive', '==', false));
-      const allAnalysis = await getDocs(q);
-
-      const fetchedData = [];
-
-      allAnalysis.forEach((doc) => {
-        const analysisId = doc.id;
-        const analysisMain = doc.data();
-        const lines = pointsState && pointsState.filter((state) => state.analysis_id === analysisId);
-        fetchedData.push({
-          lines,
-          ...analysisMain,
-          analysisId,
-        });
-      });
-      setMains(fetchedData.sort((a, b) => a.created_at - b.created_at));
-      setAnalysis(fetchedData.sort((a, b) => b.created_at - a.created_at));
-      const points = collection(db, 'points');
-      const allPoints = await getDocs(points);
-      let pointNew = [];
-      allPoints.forEach((docs) => {
-        const data = docs.data();
-        pointNew.push({ ...data });
-      });
-
-      setPointsState(pointNew);
-
       const User = localStorage.getItem('subscriptionType');
       let userForm = '';
       if (User) {
@@ -76,6 +92,7 @@ const App = () => {
       } else {
         userForm = inputValue;
       }
+
       const usersCollection = collection(db, 'user');
       const user_query = await query(usersCollection, where('user_id', '==', userForm));
       const querySnapshot = await getDocs(user_query);
@@ -87,8 +104,9 @@ const App = () => {
       } else {
         querySnapshot.forEach((docs) => {
           const userData = docs.data();
-          if (userData.is_blocked === true) {
+          if (userData.is_blocked === true || querySnapshot.empty) {
             alert(`Hurmatli Foydalanuvchi siz bloklangansiz iltimos admin bilan bog'laning`);
+            setIsLogedIn(false)
             loginAnalytics('userBlock');
             localStorage.clear();
             window.location.reload();
@@ -118,11 +136,13 @@ const App = () => {
           }
         });
       }
+
     } catch (error) {
       console.error();
     }
   };
-  
+
+
 
   const decryptData = (data) => {
     if (!data) {
