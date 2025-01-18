@@ -16,10 +16,10 @@ const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filter
   const navigate = useNavigate();
 
   const handleNavigate = (id, symbol) => {
+    setLoading(false)
     navigate(`/chart/${id}`, { replace: true });
     chartAnalyticsOpen(symbol);
   };
-
   useEffect(() => {
     if (analysis) {
       const updatedData = analysis
@@ -27,19 +27,19 @@ const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filter
           const [symbol, value] = Object.entries(data).find(([sym]) => sym === item.symbol) || [];
           return value?.lastClosePrice !== undefined ? { ...item, index, symbol, lastClosePrice: value.lastClosePrice } : null;
         })
-        .filter((item) => item !== null && item !== undefined); // Filter by limit
+        .filter((item) => item !== null && item !== undefined);
       setAnalysisData(updatedData);
     }
-    // if (analysis) {
-    //   const updatedData = analysis
-    //     .map((item, index) => {
-    //       const [symbol, value] = Object.entries(data).find(([sym]) => sym === item.symbol) || [];
-    //       return value?.lastClosePrice !== undefined ? { ...item, index, symbol, lastClosePrice: value.lastClosePrice } : null;
-    //     })
-    //     .filter((item) => item !== null && item !== undefined); // Filter out null or undefined items
-    //   setAnalysisData(updatedData);
-    // }
   }, [analysis, filterLimit, pointsState, isLogedIn]);
+
+  // dont't delete this useEffect if you dont't want any bugs with loader
+    useEffect(() => {
+      if (analysisData.length > 0) {
+        setLoading(false);
+      }
+    }, [analysisData]);
+
+  // 
 
   useEffect(() => {
     setChartsPerPage(isGrid);
@@ -51,9 +51,13 @@ const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filter
     const lastChartIndex = currentPage * ChartsPerPage;
     const firstChartIndex = lastChartIndex - ChartsPerPage;
     const paginatedData = analysisData.slice(firstChartIndex, lastChartIndex);
-    setCurrentChart(paginatedData); // Убедитесь, что здесь нет дублирования
-    console.log(paginatedData);
-  }, [analysisData, currentPage, ChartsPerPage]);
+
+    // setCurrentChart(analysisData.slice(firstChartIndex, lastChartIndex))
+    // const lastChartIndex = currentPage * ChartsPerPage;
+    // const firstChartIndex = lastChartIndex - ChartsPerPage;
+
+    setCurrentChart(paginatedData);
+  }, [analysis, currentPage, analysisData, ChartsPerPage]);
 
   const getVisiblePages = () => {
     const pages = [];
@@ -92,14 +96,14 @@ const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filter
 
   useEffect(() => {
     const fetchData = async () => {
-      if (analysisData.length === 0) {
+      if (analysisData.length === 0 && !loading) { 
         setLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 4000)); // Simulated delay
+        await new Promise((resolve) => setTimeout(resolve, 4000));
         setLoading(false);
       }
     };
     fetchData();
-  }, [analysisData]);
+  }, [analysisData, loading]); 
 
   const calculateTimeDifference = (targetTime) => {
     const targetDate = targetTime.seconds * 1000; // Convert target time to milliseconds
@@ -131,10 +135,10 @@ const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filter
           <div className="main">
             {currentChart.map((item) => {
               return filterLimit > item.index ? (
-                <div onClick={() => handleNavigate(item.analysisId, item.symbol)} key={item.symbol} className="card">
+                <div onClick={() => handleNavigate(item.analysisId, item.symbol)} key={item.index} className="card">
                   <div className="nav-card" style={{ background: 'var(--main-color)', width: '100%' }}>
                     <div className="info">
-                      <big>{item.symbol + item.index}</big>
+                      <big>{item.symbol}</big>
                     </div>
                     <div className="salary">
                       <i>{'$' + item.lastClosePrice}</i>
@@ -144,7 +148,7 @@ const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filter
                     </div>
                   </div>
                   <div className="image">
-                    <Chart isCard={isCard} isUser={isUser} isLogedIn={isLogedIn} analysis={analysis} data={item.symbol} timeFrameId={item.timeframe_id} line={item.lines} />
+                    <Chart isCard={isCard} isUser={isUser} isLogedIn={isLogedIn} analysis={analysis} data={item.symbol} timeFrame_id={item.timeframe_id} line={item.lines} />
                   </div>
                   <div className="texx">
                     <p>
@@ -154,12 +158,11 @@ const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filter
                   </div>
                 </div>
               ) : (
-                <div className="card" key={item.symbol}>
+                <div className="card" key={item.index}>
                   <div className="nav-card" style={{ background: 'var(--block-card-color)' }}>
                     <div className="info">
                       <big className="block-info">{item.symbol}</big>
                     </div>
-                    <p>{item.index}</p>
                     <div className="salary block-salary">
                       <i>{'$' + item.lastClosePrice}</i>
                     </div>
@@ -208,8 +211,8 @@ const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filter
                   key={index}
                   onClick={() => {
                     paginate(page);
-                    handleScroll();
                     PaginationAnalytics(page);
+                    handleScroll();
                   }}
                   className={page === currentPage ? 'active' : ''}
                 >

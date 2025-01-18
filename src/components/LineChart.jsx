@@ -11,11 +11,11 @@ import axios from 'axios';
 import { AnalysisContext } from '../context/Context';
 import { chartAnalyticsClose, ConatactAnalytics, logoAnalytics, pageAnalytics } from '../analytics/Analytics';
 
-const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
+const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_id }) => {
   const [analysisData, setAnalysisData] = useState([]);
   const [analysisSymbols, setAnalysisSymbols] = useState('');
 
-  const [timeFrameIdState, setTimeFrameIdState] = useState('1d');
+  const [timeFrameIdState, setTimeFrameIdState] = useState('');
   const { id } = useParams();
   const [cursor, setCursor] = useState('grab');
   const handleMouseDown = () => setCursor('grabbing');
@@ -23,7 +23,6 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
   const handleMouseLeave = () => setCursor('crosshair');
 
   const analysis = useContext(AnalysisContext);
-
   const chartContainerRef = useRef(null);
   const [candlestickData, setCandlestickData] = useState([]);
   const [isMouseDown] = useState(false);
@@ -55,7 +54,18 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
       }
     } else {
       setAnalysisSymbols(data.toString());
+      if (timeFrame_id) {
+        if (timeFrame_id === 'four_hours') {
+          setTimeFrameIdState('4h');
+        } else if (timeFrame_id === 'one_hour') {
+          setTimeFrameIdState('1h');
+        } else if (timeFrame_id === 'daily') {
+          setTimeFrameIdState('1d');
+        }
+      }
+
     }
+
     const fetchBitCoinData = async () => {
       try {
         const response = await axios.get('https://api.binance.com/api/v3/klines', {
@@ -151,24 +161,32 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
         analysisData
           .filter((item) => item.position === 'lower' || item.position === 'upper')
           .map((item) => {
-            const date = new Date(item.date.seconds * 1000);
-            const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+            const date = new Date(item.date.seconds * 1000); // Firebase timestampni UTC asosida o'qish
+
+            date.setHours(date.getHours() + 5);
+
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Oyni 2 xonali qilib formatlash
+            const day = String(date.getDate()).padStart(2, '0'); // Sanani 2 xonali qilib formatlash
+            const hours = String(date.getHours()).padStart(2, '0'); // Soatni 2 xonali qilib formatlash
+            const minutes = String(date.getMinutes()).padStart(2, '0'); // Daqiqalarni 2 xonali qilib formatlash
+            const seconds = String(date.getSeconds()).padStart(2, '0'); // Soniyalarni 2 xonali qilib formatlash
+
             return {
-              time: formattedDate,
-              value: item.price,
+              time: new Date(`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`).getTime() / 1000, // Unix timestamp (lightweight-charts uchun)
+              value: item.price,       // Narx qiymati
+              // Qo'shimcha: Faqat ko'rsatish uchun (zarur bo'lsa)
+              displayTime: `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`, // Sana va vaqt ko'rinishida
             };
           })
-          .sort((a, b) => new Date(a.time) - new Date(b.time)),
+          .sort((a, b) => a.time - b.time), // Unix timestamp bo'yicha tartiblash
       );
 
-      //   console.log(analysisData.map(item => new Date(item.date.seconds *1000).toISOString().split('T')[0]));
 
       // lineSeries1.setData([
-      //   {time: new Date('2024-08-05').getTime() / 1000, value:79543},
-      //   {time: new Date('2024-08-10').getTime() / 1000,value:89053}
+      //   {time: new Date('2025-01-10 18:00:00').getTime() / 1000, value:9.56},
+      //   {time: new Date('2025-01-18 8:00:00').getTime() / 1000,value: 9.90}
       // ])
-      // console.log(analysisData.map(item => item.date.seconds));
-
       const singleData = analysisData
         .filter((item) => item.position === 'single')
         .map((item) => ({
@@ -309,10 +327,10 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line }) => {
         style={
           isCard === false
             ? {
-                width: 'calc(var(--index)*30)',
-                height: 'calc(var(--index)*15.5)',
-                transform: 'translateY(0px)',
-              }
+              width: 'calc(var(--index)*30)',
+              height: 'calc(var(--index)*15.5)',
+              transform: 'translateY(0px)',
+            }
             : { width: '100%', height: '77dvh', cursor }
         }
         onMouseDown={handleMouseDown}

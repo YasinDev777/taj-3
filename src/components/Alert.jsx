@@ -66,13 +66,12 @@ const Alert = ({ isLogedIn, isUser, setAlertShown, alertShown }) => {
       if (currentTime > subscriptionDateEnd - 7 * 24 * 60 * 60 * 1000 && currentTime < subscriptionDateEnd && !alertShowState) {
         setAlertShown(true);
         setLimit(false);
-        localStorage.setItem('alert1', false);
       }
       if (currentTime >= subscriptionDateEnd - 24 * 60 * 60 * 1000 && currentTime < subscriptionDateEnd && !alertShowState2) {
         // 1 kun qoldi alerti
         setAlertShown(true);
         setLimit(true);
-        localStorage.setItem('alert2', false);
+      localStorage.setItem('alert1', false);
       }
       if (currentTime >= subscriptionDateEnd && !alertShowState) {
         // Obuna muddati tugadi alerti
