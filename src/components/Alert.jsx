@@ -63,18 +63,21 @@ const Alert = ({ isLogedIn, isUser, setAlertShown, alertShown }) => {
         localStorage.removeItem('alert1');
         localStorage.removeItem('alert2');
       }
-      if (currentTime > subscriptionDateEnd - 7 * 24 * 60 * 60 * 1000 && !alertShowState) {
+      if (currentTime > subscriptionDateEnd - 7 * 24 * 60 * 60 * 1000 && currentTime < subscriptionDateEnd && !alertShowState) {
         setAlertShown(true);
         setLimit(false);
       }
-      if (currentTime > subscriptionDateEnd - 1 * 24 * 60 * 60 * 1000 && !alertShowState2) {
+      if (currentTime >= subscriptionDateEnd - 24 * 60 * 60 * 1000 && currentTime < subscriptionDateEnd && !alertShowState2) {
+        // 1 kun qoldi alerti
         setAlertShown(true);
         setLimit(true);
+      localStorage.setItem('alert1', false);
       }
-      if (currentTime > subscriptionDateEnd) {
+      if (currentTime >= subscriptionDateEnd && !alertShowState) {
+        // Obuna muddati tugadi alerti
         updateSubscriptionToFree(isUser);
         localStorage.setItem('alert1', false);
-        localStorage.setItem('alert2', false);
+        localStorage.setItem('alert2', false); // Keyingi marta noto'g'ri alert chiqmasligi uchun
       }
     }
   }, [isLogedIn, subscriptionDateEnd, alertShown]);

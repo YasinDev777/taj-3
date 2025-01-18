@@ -1,4 +1,4 @@
-import { collection, addDoc, Timestamp } from 'firebase/firestore';
+import { collection, addDoc, Timestamp, getDocs, query, where } from 'firebase/firestore';
 
 import { db } from '../firebase';
 import CryptoJS from 'crypto-js';
@@ -33,17 +33,32 @@ const decryptData = (data) => {
   const bytes = CryptoJS.AES.decrypt(data, 'your-secret-key');
   return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 };
-const userId = localStorage.getItem('subscriptionType');
-
-// Filterni Firebase'ga yozish funksiyasi
-
-export const openWebsite = async () => {
+// userDocId funksiyasi
+const userDocId = async () => {
+  const userId = localStorage.getItem('subscriptionType');
   try {
+    const usersCollection = collection(db, 'user');
+    const user_query = query(usersCollection, where('user_id', '==', decryptData(userId)));
+    const querySnapshot = await getDocs(user_query);
+    for (const docs of querySnapshot.docs) {
+      return docs.id; // Birinchi hujjatning ID-sini qaytaradi
+    }
+    return 'anonymous'; // Agar hujjat topilmasa, 'anonymous' qaytaradi
+  } catch (err) {
+    console.error('Xatolik yuz berdi:', err);
+    return 'anonymous';
+  }
+};
+
+// Analytics uchun umumiy funksiya
+const addAnalytics = async (action, param, paramValue) => {
+  try {
+    const userId = await userDocId(); // user_id-ni oladi
     await addDoc(collection(db, 'analytics'), {
-      action: 'open',
-      param: 'entered site',
-      param_value: 'entered website',
-      user_id: decryptData(userId),
+      action: action,
+      param: param,
+      param_value: paramValue,
+      user_id: userId, // Har doim user_id qo'shiladi
       created_at: Timestamp.now(),
       browser: browserName,
       operatingSystem: operatingSystem,
@@ -53,248 +68,73 @@ export const openWebsite = async () => {
     console.error('Xatolik yuz berdi:', error);
   }
 };
+// openWebsite funksiyasi
+export const openWebsite = async () => {
+  await addAnalytics('open', 'entered site', 'entered website');
+};
 
-// Filter Analytics start
+// Filter funksiyalari
 export const FilterAnalaysisAnalytics = async (actionTypeValue) => {
-  try {
-    await addDoc(collection(db, 'analytics'), {
-      action: 'filter',
-      param: 'Analysis',
-      param_value: actionTypeValue,
-      user_id: decryptData(userId),
-      created_at: Timestamp.now(),
-      browser: browserName,
-      operatingSystem: operatingSystem,
-      device: device,
-    });
-  } catch (error) {
-    console.error('Xatolik yuz berdi:', error);
-  }
+  await addAnalytics('filter', 'Analysis', actionTypeValue);
 };
 
 export const FilterAnalaysisTypeAnalytics = async (actionType, actionTypeValue) => {
-  try {
-    await addDoc(collection(db, 'analytics'), {
-      action: 'filter',
-      param: actionType,
-      param_value: actionTypeValue,
-      user_id: decryptData(userId),
-      created_at: Timestamp.now(),
-      browser: browserName,
-      operatingSystem: operatingSystem,
-      device: device,
-    });
-  } catch (error) {
-    console.error('Xatolik yuz berdi:', error);
-  }
+  await addAnalytics('filter', actionType, actionTypeValue);
 };
+
 export const FilterGridAnalytics = async (actionTypeValue) => {
-  try {
-    await addDoc(collection(db, 'analytics'), {
-      action: 'filter',
-      param: 'filterGrid',
-      param_value: actionTypeValue,
-      user_id: decryptData(userId),
-      created_at: Timestamp.now(),
-      browser: browserName,
-      operatingSystem: operatingSystem,
-      device: device,
-    });
-  } catch (error) {
-    console.error('Xatolik yuz berdi:', error);
-  }
+  await addAnalytics('filter', 'filterGrid', actionTypeValue);
 };
+
 export const FilterTimeFrameAnalytics = async (actionTypeValue) => {
-  try {
-    await addDoc(collection(db, 'analytics'), {
-      action: 'filter',
-      param: 'filterTimeFrame',
-      param_value: actionTypeValue,
-      user_id: decryptData(userId),
-      created_at: Timestamp.now(),
-      browser: browserName,
-      operatingSystem: operatingSystem,
-      device: device,
-    });
-  } catch (error) {
-    console.error('Xatolik yuz berdi:', error);
-  }
+  await addAnalytics('filter', 'filterTimeFrame', actionTypeValue);
 };
+
 export const FilterClearAnalytics = async () => {
-  try {
-    await addDoc(collection(db, 'analytics'), {
-      action: 'filterClear',
-      param: 'clearIcon',
-      param_value: 'clear',
-      user_id: decryptData(userId),
-      created_at: Timestamp.now(),
-      browser: browserName,
-      operatingSystem: operatingSystem,
-      device: device,
-    });
-  } catch (error) {
-    console.error('Xatolik yuz berdi:', error);
-  }
+  await addAnalytics('filterClear', 'clearIcon', 'clear');
 };
 // Filter Analytics end
 
 // Pagination Analytics start
 export const PaginationAnalytics = async (pageAction) => {
-  try {
-    await addDoc(collection(db, 'analytics'), {
-      action: 'pagination',
-      param: 'paginating',
-      param_value: pageAction,
-      user_id: decryptData(userId),
-      created_at: Timestamp.now(),
-      browser: browserName,
-      operatingSystem: operatingSystem,
-      device: device,
-    });
-  } catch (error) {
-    console.error('Xatolik yuz berdi:', error);
-  }
+  await addAnalytics('pagination', 'paginating', pageAction);
 };
 // Pagination Analytics end
 
 // Video Analytics start
 export const VideoAnalytics = async (alert) => {
-  try {
-    await addDoc(collection(db, 'analytics'), {
-      action: 'videoPlayAlert',
-      param: 'videoAlert',
-      param_value: alert,
-      user_id: decryptData(userId),
-      created_at: Timestamp.now(),
-      browser: browserName,
-      operatingSystem: operatingSystem,
-      device: device,
-    });
-  } catch (error) {
-    console.error('Xatolik yuz berdi:', error);
-  }
+  await addAnalytics('videoPlayAlert', 'videoAlert', alert);
 };
 // Video Analytics end
 
 // chart Analytics start
 export const chartAnalyticsOpen = async (symbol) => {
-  try {
-    await addDoc(collection(db, 'analytics'), {
-      action: 'chart',
-      param: 'openChart',
-      param_value: symbol,
-      user_id: decryptData(userId),
-      created_at: Timestamp.now(),
-      browser: browserName,
-      operatingSystem: operatingSystem,
-      device: device,
-    });
-  } catch (error) {
-    console.error('Xatolik yuz berdi:', error);
-  }
+  await addAnalytics('chart', 'openChart', symbol);
 };
 export const chartAnalyticsClose = async (symbol) => {
-  try {
-    await addDoc(collection(db, 'analytics'), {
-      action: 'chart',
-      param: 'exitChart',
-      param_value: symbol,
-      user_id: decryptData(userId),
-      created_at: Timestamp.now(),
-      browser: browserName,
-      operatingSystem: operatingSystem,
-      device: device,
-    });
-  } catch (error) {
-    console.error('Xatolik yuz berdi:', error);
-  }
+  await addAnalytics('chart', 'exitChart', symbol);
 };
 // chart Analytics end
 
 // Login Analytics start
 export const loginAnalytics = async (action) => {
-  try {
-    await addDoc(collection(db, 'analytics'), {
-      action: 'login',
-      param: 'authentication',
-      param_value: action,
-      user_id: decryptData(userId),
-      created_at: Timestamp.now(),
-      browser: browserName,
-      operatingSystem: operatingSystem,
-      device: device,
-    });
-  } catch (error) {
-    console.error('Xatolik yuz berdi:', error);
-  }
+  await addAnalytics('login', 'authentication', action);
 };
 // Login Analytics end
 
 // Page Analytics start
 export const pageAnalytics = async (action) => {
-  try {
-    await addDoc(collection(db, 'analytics'), {
-      action: 'page',
-      param: 'page',
-      param_value: action,
-      user_id: decryptData(userId),
-      created_at: Timestamp.now(),
-      browser: browserName,
-      operatingSystem: operatingSystem,
-      device: device,
-    });
-  } catch (error) {
-    console.error('Xatolik yuz berdi:', error);
-  }
+  await addAnalytics('page', 'page', action);
 };
 // Page Analytics end
 
 export const BlockChartAnalytics = async (action) => {
-  try {
-    await addDoc(collection(db, 'analytics'), {
-      action: 'get',
-      param: 'getButton',
-      param_value: action,
-      user_id: decryptData(userId),
-      created_at: Timestamp.now(),
-      browser: browserName,
-      operatingSystem: operatingSystem,
-      device: device,
-    });
-  } catch (error) {
-    console.error('Xatolik yuz berdi:', error);
-  }
+  await addAnalytics('get', 'getButton', action);
 };
 
 export const ConatactAnalytics = async (action) => {
-  try {
-    await addDoc(collection(db, 'analytics'), {
-      action: 'contact',
-      param: 'conatctAdmin',
-      param_value: action,
-      user_id: decryptData(userId),
-      created_at: Timestamp.now(),
-      browser: browserName,
-      operatingSystem: operatingSystem,
-      device: device,
-    });
-  } catch (error) {
-    console.error('Xatolik yuz berdi:', error);
-  }
+  await addAnalytics('contact', 'conatctAdmin', action);
 };
 export const logoAnalytics = async () => {
-  try {
-    await addDoc(collection(db, 'analytics'), {
-      action: 'logo',
-      param: 'navbarLogo',
-      param_value: 'clicked',
-      user_id: decryptData(userId),
-      created_at: Timestamp.now(),
-      browser: browserName,
-      operatingSystem: operatingSystem,
-      device: device,
-    });
-  } catch (error) {
-    console.error('Xatolik yuz berdi:', error);
-  }
+  await addAnalytics('logo', 'navbarLogo', 'clicked');
 };

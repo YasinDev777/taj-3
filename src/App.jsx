@@ -28,11 +28,11 @@ const App = () => {
   const [isLogedIn, setIsLogedIn] = useState(false);
   const [filterLimit, setFilterLimit] = useState(1);
   const [alertShown, setAlertShown] = useState(false);
+  const [mains, setMains] = useState([]);
   const [analysis, setAnalysis] = useState([]);
   const [pointsState, setPointsState] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
-  const [mains, setMains] = useState([]);
 
   const encryptData = (data) => {
     return CryptoJS.AES.encrypt(JSON.stringify(data), 'your-secret-key').toString();
@@ -59,7 +59,6 @@ const App = () => {
       });
       setMains(fetchedData.sort((a, b) => a.created_at - b.created_at));
       setAnalysis(fetchedData.sort((a, b) => b.created_at - a.created_at));
-
       const points = collection(db, 'points');
       const allPoints = await getDocs(points);
       let pointNew = [];
@@ -81,7 +80,7 @@ const App = () => {
       const user_query = await query(usersCollection, where('user_id', '==', userForm));
       const querySnapshot = await getDocs(user_query);
       if (querySnapshot.empty) {
-        alert("Bunday ma'lumotga ega User afsuski topilmadi!");
+        alert("Bunday ma'lumotga ega Foydalanuvchi afsuski topilmadi!");
         loginAnalytics('invalid');
         localStorage.clear();
         return;
@@ -123,6 +122,7 @@ const App = () => {
       console.error();
     }
   };
+  
 
   const decryptData = (data) => {
     if (!data) {
@@ -156,7 +156,7 @@ const App = () => {
       const response = await axios.get(API_URL, {
         params: {
           symbol: symbol,
-          interval: '1s',
+          interval: '1h',
           limit: 10,
         },
       });
@@ -173,7 +173,6 @@ const App = () => {
           lastClosePrice = formattedData[formattedData.length - 1].close;
         }
       }
-
       if (symbol) {
         setData((prevData) => ({
           ...prevData,
