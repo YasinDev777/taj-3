@@ -38,15 +38,11 @@ const App = () => {
     return CryptoJS.AES.encrypt(JSON.stringify(data), 'your-secret-key').toString();
   };
 
-  useEffect(() => {
-
     const analysisFunction = async () => {
       try {
         const analysisGet = collection(db, 'analysis');
         const q = query(analysisGet, where('inactive', '==', false));
-        const allAnalysis = await getDocs(q);
-
-
+        const allAnalysis = await getDocs(q)
         const fetchedData = [];
         allAnalysis.forEach((doc) => {
           const analysisId = doc.id;
@@ -58,28 +54,21 @@ const App = () => {
             analysisId,
           });
         });
-
         const points = collection(db, 'points');
         const allPoints = await getDocs(points);
-
         const pointNew = [];
-
         allPoints.forEach((docs) => {
           const data = docs.data();
           pointNew.push({ ...data });
         });
         setPointsState(pointNew);
-
         setMains(fetchedData.sort((a, b) => b.created_at - a.created_at));
         setAnalysis(fetchedData.sort((a, b) => b.created_at - a.created_at));
-
       }
       catch (err) {
         console.log(err);
       }
     }
-    analysisFunction()
-  }, [analysis])
 
 
   const handleLogin = async (inputValue) => {
@@ -97,7 +86,7 @@ const App = () => {
       const user_query = await query(usersCollection, where('user_id', '==', userForm));
       const querySnapshot = await getDocs(user_query);
       if (querySnapshot.empty) {
-        alert("Bunday ma'lumotga ega Foydalanuvchi afsuski topilmadi!");
+        alert("Bunday ma'lumotga ega foydalanuvchi afsuski topilmadi!");
         loginAnalytics('invalid');
         localStorage.clear();
         return;
@@ -105,7 +94,7 @@ const App = () => {
         querySnapshot.forEach((docs) => {
           const userData = docs.data();
           if (userData.is_blocked === true || querySnapshot.empty) {
-            alert(`Hurmatli Foydalanuvchi siz bloklangansiz iltimos admin bilan bog'laning`);
+            alert(`Hurmatli foydalanuvchi siz bloklangansiz iltimos admin bilan bog'laning`);
             setIsLogedIn(false)
             loginAnalytics('userBlock');
             localStorage.clear();
@@ -176,8 +165,8 @@ const App = () => {
       const response = await axios.get(API_URL, {
         params: {
           symbol: symbol,
-          interval: '1h',
-          limit: 10,
+          interval: '1d',
+          limit: 1000,
         },
       });
       let lastClosePrice = '';
@@ -214,6 +203,7 @@ const App = () => {
 
   useEffect(() => {
     handleLogin();
+    analysisFunction();
     const storedLogin = localStorage.getItem('isLogedIn');
     const storedUser = localStorage.getItem('userName');
     if (storedLogin === 'true' && storedUser) {

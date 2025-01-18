@@ -29,6 +29,8 @@ const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filter
         })
         .filter((item) => item !== null && item !== undefined); // Фильтрация данных
       setAnalysisData(updatedData); // Обновление данных для анализа
+      console.log(updatedData);
+      
     }
   }, [analysis, filterLimit, pointsState, isLogedIn]);
 
@@ -51,13 +53,12 @@ const Main = ({ isCard, analysis, isGrid, isAlert, setIsAlert, isLogedIn, filter
     const lastChartIndex = currentPage * ChartsPerPage;
     const firstChartIndex = lastChartIndex - ChartsPerPage;
     const paginatedData = analysisData.slice(firstChartIndex, lastChartIndex);
-
     // setCurrentChart(analysisData.slice(firstChartIndex, lastChartIndex))
     // const lastChartIndex = currentPage * ChartsPerPage;
     // const firstChartIndex = lastChartIndex - ChartsPerPage;
 
     setCurrentChart(paginatedData);
-  }, [analysis, currentPage, analysisData, ChartsPerPage]);
+  }, [analysis, currentPage, ChartsPerPage]);
 
   const getVisiblePages = () => {
     const pages = [];
