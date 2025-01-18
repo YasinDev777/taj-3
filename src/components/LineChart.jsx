@@ -86,7 +86,6 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_i
 
           if (formattedData.length > 0) {
             const lastDataPointTime = formattedData[formattedData.length - 1].time;
-
             const extendedData = [...formattedData];
             const endDate = new Date(new Date().setDate(new Date().getDate() + 100)).getTime() / 1000;
             let currentTime = lastDataPointTime;
@@ -163,7 +162,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_i
           .map((item) => {
             const date = new Date(item.date.seconds * 1000); // Firebase timestampni UTC asosida o'qish
 
-            date.setHours(date.getHours() + 5);
+            date.setHours(date.getHours());
 
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0'); // Oyni 2 xonali qilib formatlash
