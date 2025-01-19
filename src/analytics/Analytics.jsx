@@ -12,7 +12,7 @@ let operatingSystem = '';
 if (navigator && navigator.platform) {
   operatingSystem = navigator.platform;
 } else {
-  console.log('Operating system information not available.');
+  operatingSystem = "not found"
 }
 
 // which device
@@ -36,6 +36,9 @@ const decryptData = (data) => {
 // userDocId funksiyasi
 const userDocId = async () => {
   const userId = localStorage.getItem('subscriptionType');
+  if (process.env.NODE_ENV !== 'production') {
+    return 'anonymous';
+  }
   try {
     const usersCollection = collection(db, 'user');
     const user_query = query(usersCollection, where('user_id', '==', decryptData(userId)));
@@ -52,8 +55,12 @@ const userDocId = async () => {
 
 // Analytics uchun umumiy funksiya
 const addAnalytics = async (action, param, paramValue) => {
+  if (process.env.NODE_ENV !== 'production') {
+    return;
+  }
   try {
     const userId = await userDocId(); // user_id-ni oladi
+    console.log(action, param, paramValue)
     await addDoc(collection(db, 'analytics'), {
       action: action,
       param: param,

@@ -16,8 +16,9 @@ import { loginAnalytics, openWebsite } from './analytics/Analytics';
 
 const App = () => {
   const [selectValues, setSelectValues] = useState(null);
-  const [screeningTypeValueId, setScreeningTypeValueId] = useState(null);
-  const [timeFrameId, setTimeFrameId] = useState(null);
+  const [selectValuesId, setSelectValuesId] = useState("");
+  const [screeningTypeValueId, setScreeningTypeValueId] = useState("");
+  const [timeFrameId, setTimeFrameId] = useState("");
   const [foundTimeId, setFoundTimeId] = useState('');
   const [isGrid, setIsGrid] = useState(6);
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,55 +34,60 @@ const App = () => {
   const [pointsState, setPointsState] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
+  const [loading, setLoading] = useState(true);
 
   const encryptData = (data) => {
     return CryptoJS.AES.encrypt(JSON.stringify(data), 'your-secret-key').toString();
   };
 
   useEffect(() => {
-
+    let isMounted = true;
+    setLoading(true);
+  
     const analysisFunction = async () => {
       try {
         const analysisGet = collection(db, 'analysis');
         const q = query(analysisGet, where('inactive', '==', false));
         const allAnalysis = await getDocs(q);
-
-
+        const points = collection(db, 'points');
+        const allPoints = await getDocs(points);
+        const pointNew = [];
+  
         const fetchedData = [];
+        allPoints.forEach((docs) => {
+          const data = docs.data();
+          pointNew.push({ ...data });
+        });
         allAnalysis.forEach((doc) => {
           const analysisId = doc.id;
           const analysisMain = doc.data();
-          const lines = pointsState && pointsState.filter((state) => state.analysis_id === analysisId);
+          const lines = pointNew.filter((state) => state.analysis_id === analysisId);
           fetchedData.push({
             lines,
             ...analysisMain,
             analysisId,
           });
-        });
-
-        const points = collection(db, 'points');
-        const allPoints = await getDocs(points);
-
-        const pointNew = [];
-
-        allPoints.forEach((docs) => {
-          const data = docs.data();
-          pointNew.push({ ...data });
-        });
-        setPointsState(pointNew);
-
-        setMains(fetchedData.sort((a, b) => b.created_at - a.created_at));
-        setAnalysis(fetchedData.sort((a, b) => b.created_at - a.created_at));
-
+        });  
+        if (isMounted) {
+          setPointsState(pointNew);
+          setMains(fetchedData.sort((a, b) => b.created_at - a.created_at));
+          setAnalysis(fetchedData.sort((a, b) => b.created_at - a.created_at));  
+        }
+      } catch (err) {
+        console.log('Ошибка при загрузке данных:', err);
+        setLoading(false);
+      }finally{
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
       }
-      catch (err) {
-        console.log(err);
-      }
-    }
-    analysisFunction()
-  }, [analysis])
-
-
+    };
+    analysisFunction();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+  
   const handleLogin = async (inputValue) => {
     let foundUser = null;
     try {
@@ -92,12 +98,11 @@ const App = () => {
       } else {
         userForm = inputValue;
       }
-
       const usersCollection = collection(db, 'user');
       const user_query = await query(usersCollection, where('user_id', '==', userForm));
       const querySnapshot = await getDocs(user_query);
       if (querySnapshot.empty) {
-        alert("Bunday ma'lumotga ega Foydalanuvchi afsuski topilmadi!");
+        alert("Bunday ma'lumotga ega foydalanuvchi afsuski topilmadi!");
         loginAnalytics('invalid');
         localStorage.clear();
         return;
@@ -105,7 +110,7 @@ const App = () => {
         querySnapshot.forEach((docs) => {
           const userData = docs.data();
           if (userData.is_blocked === true || querySnapshot.empty) {
-            alert(`Hurmatli Foydalanuvchi siz bloklangansiz iltimos admin bilan bog'laning`);
+            alert(`Hurmatli foydalanuvchi siz bloklangansiz iltimos admin bilan bog'laning`);
             setIsLogedIn(false)
             loginAnalytics('userBlock');
             localStorage.clear();
@@ -142,8 +147,6 @@ const App = () => {
     }
   };
 
-
-
   const decryptData = (data) => {
     if (!data) {
       return null;
@@ -153,20 +156,28 @@ const App = () => {
   };
 
   useEffect(() => {
-    const main = [...mains];
-    const selectFilter = () => {
-      setCurrentPage(1);
-      const filtered = main.filter((item) => {
-        const isTypeMatch = !selectValues || item.screening_type_id === selectValues;
-        const isValueMatch = !screeningTypeValueId || item.screening_type_value_id === screeningTypeValueId;
-        const forTimeFrameId = !timeFrameId || item.timeframe_id === timeFrameId;
-        return isTypeMatch && isValueMatch && forTimeFrameId;
-      });
+  const main = [...mains];   
+  if (selectValuesId || selectValuesId === null || screeningTypeValueId || timeFrameId || timeFrameId ===null) {
+    
+  const selectFilter = () => {
+    setLoading(true); // Загрузкани бошлаш
+    setTimeout(() => {
+      setLoading(false); // Загрузкани тугатиш
+    }, 1000); // 1 секунд кутиш
+    setCurrentPage(1);
+    const filtered = main.filter((item) => {
+      const isTypeMatch = !selectValuesId || item.screening_type_id === selectValuesId;
+      const isValueMatch = !screeningTypeValueId || item.screening_type_value_id === screeningTypeValueId;
+      const forTimeFrameId = !timeFrameId || item.timeframe_id === timeFrameId;
+      return isTypeMatch && isValueMatch && forTimeFrameId;
+    });
+    setAnalysis(filtered);
+  };
+  selectFilter();
+}   
 
-      setAnalysis(filtered);
-    };
-    selectFilter();
-  }, [selectValues, screeningTypeValueId, timeFrameId]);
+}, [selectValuesId, screeningTypeValueId, timeFrameId]);
+
 
   const [data, setData] = useState({});
 
@@ -176,8 +187,8 @@ const App = () => {
       const response = await axios.get(API_URL, {
         params: {
           symbol: symbol,
-          interval: '1h',
-          limit: 10,
+          interval: '1d',
+          limit: 1000,
         },
       });
       let lastClosePrice = '';
@@ -239,6 +250,8 @@ const App = () => {
     openWebsite();
   }, []);
 
+  
+
   return (
     <div className="app">
       {location.pathname.includes('/chart') || location.pathname === '/login' ? null : (
@@ -259,6 +272,8 @@ const App = () => {
             selectValues={selectValues}
             foundTimeId={foundTimeId}
             setFoundTimeId={setFoundTimeId}
+            selectValuesId={selectValuesId}
+            setSelectValuesId={setSelectValuesId}
             screeningTypeValueId={screeningTypeValueId}
             setScreeningTypeValueId={setScreeningTypeValueId}
             setTimeFrameId={setTimeFrameId}
@@ -292,6 +307,8 @@ const App = () => {
                 selectedPreset={selectedPreset}
                 selectedTicker={selectedTicker}
                 selectedTime={selectedTime}
+                loading={loading}
+                setLoading={setLoading}
               />
             }
           />

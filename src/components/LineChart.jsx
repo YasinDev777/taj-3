@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { createChart } from 'lightweight-charts';
 import { PiHeadsetBold } from 'react-icons/pi';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FiArrowRightCircle } from 'react-icons/fi';
 import { BsArrowLeftCircle } from 'react-icons/bs';
 import axios from 'axios';
@@ -161,21 +161,17 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_i
           .filter((item) => item.position === 'lower' || item.position === 'upper')
           .map((item) => {
             const date = new Date(item.date.seconds * 1000); // Firebase timestampni UTC asosida o'qish
-
             date.setHours(date.getHours());
-
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0'); // Oyni 2 xonali qilib formatlash
             const day = String(date.getDate()).padStart(2, '0'); // Sanani 2 xonali qilib formatlash
             const hours = String(date.getHours()).padStart(2, '0'); // Soatni 2 xonali qilib formatlash
-            const minutes = String(date.getMinutes()).padStart(2, '0'); // Daqiqalarni 2 xonali qilib formatlash
-            const seconds = String(date.getSeconds()).padStart(2, '0'); // Soniyalarni 2 xonali qilib formatlash
-
+            const timeforHours = new Date(`${year}-${month}-${day} ${hours}:00:00`).getTime() / 1000
+            const timeforDay = new Date(`${year}-${month}-${day}`).getTime() / 1000
             return {
-              time: new Date(`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`).getTime() / 1000, // Unix timestamp (lightweight-charts uchun)
-              value: item.price,       // Narx qiymati
+              time: timeFrameIdState === '1d' ? timeforDay : timeforHours, // Unix timestamp (lightweight-charts uchun)
+              value: item.price, // Narx qiymati
               // Qo'shimcha: Faqat ko'rsatish uchun (zarur bo'lsa)
-              displayTime: `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`, // Sana va vaqt ko'rinishida
             };
           })
           .sort((a, b) => a.time - b.time), // Unix timestamp bo'yicha tartiblash
@@ -297,11 +293,17 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_i
     }
   }, [isMouseDown]);
 
+  const navigate = useNavigate()
+  const home = ()=>{
+    navigate("/")
+    chartAnalyticsClose(analysisSymbols)
+  }
+
   return (
     <div>
       <div className="nav" id="nav" style={isCard === false ? { display: 'none' } : { display: 'flex' }}>
         <div className="logo-name">
-          <Link to="/" onClick={() => logoAnalytics()}>
+          <Link to="/" onClick={logoAnalytics()} >
             AHSAN LABS
           </Link>
         </div>
@@ -337,9 +339,9 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_i
         onMouseLeave={handleMouseLeave}
       >
         <div className="exit-svg" style={isCard === false ? { display: 'none' } : { display: 'flex' }}>
-          <Link to="/" onClick={() => chartAnalyticsClose(analysisSymbols)}>
+          <div onClick={home}>
             <BsArrowLeftCircle className="exitsvg" />
-          </Link>
+          </div>
         </div>
       </div>
     </div>
