@@ -30,6 +30,8 @@ const Filter = ({
   selectedTime,
   setSelectedTime,
   setCurrentPage,
+  setSelectValuesId,
+  selectValuesId
 }) => {
   const [forFilterData, setForFilterData] = useState([]);
   const [forTimeData] = useState([]);
@@ -170,6 +172,7 @@ const Filter = ({
                       onClick={() => {
                         setOpen(!open);
                         setScreeningTypeValueId(null);
+                        setSelectValuesId(null)
                         setSelectedPreset('All');
                         setSelectValues(null);
                         setSelectedTicker('All');
@@ -189,6 +192,7 @@ const Filter = ({
                             setSelectValues(item.data.type_id);
                             setSelectedTicker('All');
                             setScreeningTypeValueId(null);
+                            setSelectValuesId(item.data.type_id)
                             FilterAnalaysisAnalytics(item.data.type_id);
                           }}
                         >

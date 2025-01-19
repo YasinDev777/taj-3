@@ -19,7 +19,6 @@ const Alert = ({ isLogedIn, isUser, setAlertShown, alertShown }) => {
       if (!querySnapshot.empty) {
         const userDoc = querySnapshot.docs[0]; // Hujjatni olamiz
         const userRef = doc(db, 'user', userDoc.id); // Hujjat manzilini aniqlaymiz
-
         await updateDoc(userRef, { subscription_type: 'free' }); // Yangilash
       } else {
         console.log('Foydalanuvchi topilmadi.');
@@ -73,7 +72,7 @@ const Alert = ({ isLogedIn, isUser, setAlertShown, alertShown }) => {
         setLimit(true);
       localStorage.setItem('alert1', false);
       }
-      if (currentTime >= subscriptionDateEnd && !alertShowState) {
+      if (currentTime >= subscriptionDateEnd) {
         // Obuna muddati tugadi alerti
         updateSubscriptionToFree(isUser);
         localStorage.setItem('alert1', false);
