@@ -303,7 +303,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_i
     <div>
       <div className="nav" id="nav" style={isCard === false ? { display: 'none' } : { display: 'flex' }}>
         <div className="logo-name">
-          <Link to="/" onClick={logoAnalytics()} >
+          <Link to="/" onClick={logoAnalytics} >
             AHSAN LABS
           </Link>
         </div>
