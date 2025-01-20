@@ -31,7 +31,6 @@ const Filter = ({
   setSelectedTime,
   setCurrentPage,
   setSelectValuesId,
-  selectValuesId
 }) => {
   const [forFilterData, setForFilterData] = useState([]);
   const [forTimeData] = useState([]);

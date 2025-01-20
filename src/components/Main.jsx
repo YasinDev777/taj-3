@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, memo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Chart from '../components/LineChart';
 import { BiLockOpen } from 'react-icons/bi';
 import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
