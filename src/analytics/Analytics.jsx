@@ -60,7 +60,6 @@ const addAnalytics = async (action, param, paramValue) => {
   }
   try {
     const userId = await userDocId(); // user_id-ni oladi
-    console.log(action, param, paramValue)
     await addDoc(collection(db, 'analytics'), {
       action: action,
       param: param,

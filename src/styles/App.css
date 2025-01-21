@@ -99,7 +99,18 @@ a {
     height: calc(var(--index) * 5);
   }
   .chart-container-mobile{
-    height: 75dvh !important
+    height: calc(var(--index)*40) !important
+  }
+}
+
+@media (max-width: 460px){
+  .chart-container-mobile{
+    height: calc(var(--index)*46) !important
+  }
+}
+@media (max-width: 330px){
+  .chart-container-mobile{
+    height: calc(var(--index)*55) !important
   }
 }
 
