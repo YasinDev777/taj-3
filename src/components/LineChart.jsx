@@ -115,7 +115,58 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_i
   }, [pointsState, id, data, analysisSymbols]);
 
   useEffect(() => {
+    function defaultTickMarkFormatter(timePoint, tickMarkType, locale) {
+      const formatOptions = {};
+
+      switch (tickMarkType) {
+        case 0: //TickMarkType.Year:
+          formatOptions.year = 'numeric';
+          break;
+
+        case 1: // TickMarkType.Month:
+          formatOptions.month = 'short';
+          break;
+
+        case 2: //TickMarkType.DayOfMonth:
+          formatOptions.day = 'numeric';
+          break;
+
+        case 3: //TickMarkType.Time:
+          formatOptions.hour12 = false;
+          formatOptions.hour = '2-digit';
+          formatOptions.minute = '2-digit';
+          break;
+
+        case 4: //TickMarkType.TimeWithSeconds:
+          formatOptions.hour12 = false;
+          formatOptions.hour = '2-digit';
+          formatOptions.minute = '2-digit';
+          formatOptions.second = '2-digit';
+          break;
+
+        default:
+        // ensureNever(tickMarkType);
+      }
+      const date = timePoint.businessDay === undefined
+        ? new Date(timePoint.timestamp * 1000)
+        : new Date(Date.UTC(timePoint.businessDay.year, timePoint.businessDay.month - 1, timePoint.businessDay.day));
+
+      const localDateFromUtc = new Date(
+        date.getUTCFullYear(),
+        date.getUTCMonth(),
+        date.getUTCDate(),
+        date.getUTCHours(),
+        date.getUTCMinutes(),
+        date.getUTCSeconds(),
+        date.getUTCMilliseconds()
+      );
+
+      return localDateFromUtc.toLocaleString(locale, formatOptions);
+    }
+    const localTimezoneOffset = new Date().getTimezoneOffset() * 60
     if (chartContainerRef.current && candlestickData.length > 0) {
+
+
       const chart = createChart(chartContainerRef.current, {
         width: chartContainerRef.current.clientWidth,
         height: chartContainerRef.current.clientHeight,
@@ -128,6 +179,11 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_i
           barSpacing: 5,
           leftOffset: -10,
           fixRightEdge: true,
+          timeVisible: true,
+          tickMarkFormatter: (time, tickMarkType, locale) => {
+            return defaultTickMarkFormatter({ timestamp: time - localTimezoneOffset },
+              tickMarkType, locale)
+          },
         },
         handleScale: isCard,
         handleScroll: isCard,
@@ -137,6 +193,29 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_i
         },
         crosshair: isDarkMode ? darkMode.crosshair : lightMode.crosshair,
       });
+        if (isCard === undefined) {
+          chart.subscribeCrosshairMove((param) => {
+            if (!param || !param.time) {
+              customTimeLabel.style.display = 'none'; // Agar crosshair chetda bo'lsa, yashirish
+              return;
+            }
+
+            // Asosiy vaqtni olish va formatlash
+            const originalTime = param.time; // Unix timestamp (seconds)
+            const modifiedTime = new Date(originalTime * 1000); // Millisekundga aylantirish
+
+            const formattedTime = `${modifiedTime.getFullYear()}-${String(modifiedTime.getMonth() + 1).padStart(2, '0')}-${String(modifiedTime.getDate()).padStart(2, '0')} ${String(modifiedTime.getHours()).padStart(2, '0')}:${String(modifiedTime.getMinutes()).padStart(2, '0')}`;
+
+            // Labelni yangilash
+            customTimeLabel.textContent = formattedTime;
+            customTimeLabel.style.display = 'block';
+
+            // Crosshair joylashuvi bilan sinxronlashtirish
+            const chartRect = document.querySelector('canvas').getBoundingClientRect();
+            customTimeLabel.style.left = `${chartRect.left + param.point.x - 55}px`; // X koordinatasi
+            customTimeLabel.style.top = `${chartRect.top + chartRect.height - 30}px`; // Y koordinatasi
+          });
+        }
 
       const candlestickSeries = chart.addCandlestickSeries({
         upColor: isDarkMode ? '#27a691' : '#4caf50',
@@ -156,20 +235,20 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_i
         axisLabelVisible: false,
       });
 
+
       lineSeries1.setData(
         analysisData
           .filter((item) => item.position === 'lower' || item.position === 'upper')
           .map((item) => {
             const date = new Date(item.date.seconds * 1000); // Firebase timestampni UTC asosida o'qish
-            date.setHours(date.getHours());
+            // date.setHours(date.getHours() + 5); // 5 soatni qo'shish
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0'); // Oyni 2 xonali qilib formatlash
             const day = String(date.getDate()).padStart(2, '0'); // Sanani 2 xonali qilib formatlash
             const hours = String(date.getHours()).padStart(2, '0'); // Soatni 2 xonali qilib formatlash
             const timeforHours = new Date(`${year}-${month}-${day} ${hours}:00:00`).getTime() / 1000
-            const timeforDay = new Date(`${year}-${month}-${day}`).getTime() / 1000
             return {
-              time: timeFrameIdState === '1d' ? timeforDay : timeforHours, // Unix timestamp (lightweight-charts uchun)
+              time: timeforHours, // Unix timestamp (lightweight-charts uchun)
               value: item.price, // Narx qiymati
               // Qo'shimcha: Faqat ko'rsatish uchun (zarur bo'lsa)
             };
@@ -196,13 +275,34 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_i
         axisLabelVisible: true,
       });
 
-      chart.timeScale().fitContent();
+      // Crosshair vaqt labeli uchun element yaratish
+      const customTimeLabel = document.createElement('div');
+      customTimeLabel.style.position = 'absolute';
+      customTimeLabel.style.background = 'black';
+      customTimeLabel.style.color = 'white';
+      customTimeLabel.style.padding = '5px';
+      customTimeLabel.style.borderRadius = '5px';
+      customTimeLabel.style.fontSize = '12px';
+      customTimeLabel.style.display = 'none'; // Avval yashiringan
+      document.body.appendChild(customTimeLabel);
+
+      // Crosshair harakati kuzatiladi
+     
+
+
+
 
       const handleResize = () => {
         chart.applyOptions({
+          crosshair: {
+            vertLine: {
+              labelVisible: false, // Asl labelni yashirish
+            },
+          },
           width: chartContainerRef.current.clientWidth,
           height: chartContainerRef.current.clientHeight,
         });
+
       };
 
       if (!candlestickData || candlestickData.length === 0) return;
@@ -210,13 +310,13 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_i
         from: candlestickData[candlestickData.length - (isCard === false ? 200 : 260)]?.time || candlestickData[0]?.time,
         to: candlestickData[candlestickData.length - 1]?.time,
       });
-
       window.addEventListener('resize', handleResize);
       return () => {
         window.removeEventListener('resize', handleResize);
         chart.remove();
       };
     }
+
   }, [analysisData, candlestickData, isMouseDown]);
 
   const darkMode = {
@@ -233,6 +333,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_i
       borderColor: 'rgba(255, 255, 255, 0.2)',
       rightOffset: 12,
       barSpacing: 8,
+
     },
     rightPriceScale: {
       borderColor: 'rgba(255, 255, 255, 0.2)',
@@ -241,6 +342,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_i
     crosshair: {
       mode: 0,
       vertLine: {
+        labelVisible: false, // Asl labelni yashirish
         color: 'rgba(44, 43, 43, 0.589)',
         width: 1,
         style: 3,
@@ -250,7 +352,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_i
         color: 'rgba(44, 43, 43, 0.589)',
         width: 1,
         style: 3,
-        visible: true,
+        timeVisible: false,
       },
     },
   };
@@ -294,7 +396,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_i
   }, [isMouseDown]);
 
   const navigate = useNavigate()
-  const home = ()=>{
+  const home = () => {
     navigate("/")
     chartAnalyticsClose(analysisSymbols)
   }
@@ -303,7 +405,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, timeFrame_i
     <div>
       <div className="nav" id="nav" style={isCard === false ? { display: 'none' } : { display: 'flex' }}>
         <div className="logo-name">
-          <Link to="/" onClick={logoAnalytics()} >
+          <Link to="/" onClick={logoAnalytics} >
             AHSAN LABS
           </Link>
         </div>
