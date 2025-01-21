@@ -36,7 +36,7 @@ const decryptData = (data) => {
 // userDocId funksiyasi
 const userDocId = async () => {
   const userId = localStorage.getItem('subscriptionType');
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV == 'production') {
     return 'anonymous';
   }
   try {
@@ -76,7 +76,7 @@ const addAnalytics = async (action, param, paramValue) => {
 };
 // openWebsite funksiyasi
 export const openWebsite = async () => {
-  await addAnalytics('open', 'entered site', 'entered website');
+  await addAnalytics('open', 'enteredSite', 'enteredWebsite');
 };
 
 // Filter funksiyalari
