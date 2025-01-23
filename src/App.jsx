@@ -269,10 +269,9 @@ const App = () => {
     openWebsite();
   }, []);
 
-
-
   return (
     <div className="app">
+      <div className="div"></div>
       {location.pathname.includes('/chart') || location.pathname === '/login' ? null : (
         <>
           <Navbar isVideo={isVideo} setIsVideo={setIsVideo} setIsAlert={setIsAlert} isAlert={isAlert} isUser={isUser} isLogedIn={isLogedIn} />
