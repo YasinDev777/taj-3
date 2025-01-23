@@ -50,8 +50,6 @@ useEffect(() => {
       
       // Проверка данных перед использованием
       filteredItems.forEach((item) => {
-        const value = data?.[item.symbol]; // Используем безопасный доступ
-
         const foundItem = forFilterTimeData.find(
           (timeData) => timeData.timeframe_id === item.timeframe_id
         );
