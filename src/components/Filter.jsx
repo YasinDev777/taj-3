@@ -44,8 +44,7 @@ const Filter = ({
 
         const screeningTypesValue = collection(db, 'screening_type_value');
         const screeningTypesValueGet = await getDocs(screeningTypesValue);
-        const timeFrameData = collection(db, 'timeframe');
-        const timeFrameDataGet = await getDocs(timeFrameData);
+       
         const screeningTypesValueGetMain = [];
         screeningTypesValueGet.forEach((docs) => {
           const data = docs.data();
@@ -60,12 +59,8 @@ const Filter = ({
           setForFilterData(screeningTypesGetMain);
         });
 
-        const timeframeGetMain = [];
-        timeFrameDataGet.forEach((docs) => {
-          const data = docs.data();
-          timeframeGetMain.push(data);
-          forFilterTimeData.push(data);
-        });
+        // const timeframeGetMain = [];
+       
       } catch (error) {
         console.log(error);
       }
