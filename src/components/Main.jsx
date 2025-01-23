@@ -21,6 +21,7 @@ const Main = memo(({
   currentPage,
   setCurrentPage,
   loading,
+  forFilterTimeData
 }) => {
   const [chartsPerPage, setChartsPerPage] = useState(isGrid);
   const [currentChart, setCurrentChart] = useState([]);
@@ -81,6 +82,29 @@ const Main = memo(({
   const handleScroll = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  useEffect(() => {
+    if (analysis && data && forFilterTimeData) {
+      const updatedData = analysis.map((item, index) => {
+        const value = data[item.symbol]?.lastClosePrice;
+        const foundItem = forFilterTimeData.find(
+          (timeData) => timeData.timeframe_id === item.timeframe_id
+        );
+  
+        return {
+          ...item,
+          index,
+          lastClosePrice: value !== undefined ? value : 'No aniq',
+          timeName: foundItem ? foundItem.name : 'No aniq',
+        };
+      });
+  
+      const lastChartIndex = currentPage * chartsPerPage;
+      const firstChartIndex = lastChartIndex - chartsPerPage;
+      setCurrentChart(updatedData.slice(firstChartIndex, lastChartIndex));
+    }
+  }, [analysis, data, forFilterTimeData, currentPage, chartsPerPage, loading]);
+  
   const totalPages = Math.ceil(analysis.length / chartsPerPage);
 
   return (
@@ -122,6 +146,7 @@ const Main = memo(({
                       data={item.symbol}
                       timeFrame_id={item.timeframe_id}
                       line={item.lines}
+                      forFilterTimeData={forFilterTimeData}
                     />
                   </div>
                   <div className="texx">
@@ -129,6 +154,7 @@ const Main = memo(({
                       Aniqlandi:
                       <span> {calculateTimeDifference(item.created_at)} </span>
                     </p>
+                    <p>{item.timeName}</p>
                   </div>
                 </Link>
               ) : (

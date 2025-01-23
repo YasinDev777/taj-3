@@ -31,11 +31,11 @@ const Filter = ({
   setSelectedTime,
   setCurrentPage,
   setSelectValuesId,
+  forFilterTimeData
 }) => {
   const [forFilterData, setForFilterData] = useState([]);
   const [forTimeData] = useState([]);
-  const [forFilterTimeData] = useState([]);
-
+ 
   useEffect(() => {
     const fetchs = async () => {
       try {
