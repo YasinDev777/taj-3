@@ -87,15 +87,12 @@ const Main = memo(({
     if (analysis && data && forFilterTimeData) {
       const updatedData = analysis.map((item, index) => {
         const value = data[item.symbol]?.lastClosePrice;
-        const foundItem = forFilterTimeData.find(
-          (timeData) => timeData.timeframe_id === item.timeframe_id
-        );
+        
   
         return {
           ...item,
           index,
-          lastClosePrice: value !== undefined ? value : 'No aniq',
-          timeName: foundItem ? foundItem.name : 'No aniq',
+          lastClosePrice: value,
         };
       });
   
@@ -115,6 +112,7 @@ const Main = memo(({
         <>
           <div className="main">
             {currentChart.map((item) => {
+              
               return filterLimit > item.index ? (
                 <Link
                   to={`/chart/${item.analysisId}`}
@@ -146,7 +144,7 @@ const Main = memo(({
                       data={item.symbol}
                       line={item.lines}
                       forFilterTimeData={forFilterTimeData}
-                      foundedTimeframe={item.timeName}
+                      foundedTimeframe={item.timeFrameNames.toString()}
                     />
                   </div>
                   <div className="texx">
@@ -154,7 +152,7 @@ const Main = memo(({
                       Aniqlandi:
                       <span> {calculateTimeDifference(item.created_at)} </span>
                     </p>
-                    <p>{item.timeName}</p>
+                    <p>{item.timeFrameNames.toString()}</p>
                   </div>
                 </Link>
               ) : (

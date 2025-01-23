@@ -9,7 +9,7 @@ import axios from 'axios';
 import { AnalysisContext } from '../context/Context';
 import { chartAnalyticsClose, ConatactAnalytics, logoAnalytics, pageAnalytics } from '../analytics/Analytics';
 
-const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTimeframe}) => {
+const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTimeframe }) => {
   const [analysisData, setAnalysisData] = useState([]);
   const [analysisSymbols, setAnalysisSymbols] = useState('');
 
@@ -42,20 +42,14 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
     if (!data && analysis) {
       const filteredItems = analysis.filter((item) => item.analysisId === id);
       if (filteredItems.length > 0) {
-        
-        // if (analysis && data && forFilterTimeData) {
-          setTimeFrameIdState(foundedTimeframe)
-        // }
-
+        setTimeFrameIdState(filteredItems[0].timeFrameNames.toString())
         setAnalysisSymbols(filteredItems[0].symbol);
+      } else {
+        console.log(filteredItems.timeframe_id);
       }
     } else {
       setAnalysisSymbols(data.toString());
-      // if (timeFrame_id) {
-        // if (analysis && data && forFilterTimeData) {
-          setTimeFrameIdState(foundedTimeframe)
-        // }
-      // }
+      setTimeFrameIdState(foundedTimeframe)
     }
 
     const fetchBitCoinData = async () => {
@@ -185,29 +179,29 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
         },
         crosshair: isDarkMode ? darkMode.crosshair : lightMode.crosshair,
       });
-        if (isCard === undefined) {
-          chart.subscribeCrosshairMove((param) => {
-            if (!param || !param.time) {
-              customTimeLabel.style.display = 'none'; // Agar crosshair chetda bo'lsa, yashirish
-              return;
-            }
+      if (isCard === undefined) {
+        chart.subscribeCrosshairMove((param) => {
+          if (!param || !param.time) {
+            customTimeLabel.style.display = 'none'; // Agar crosshair chetda bo'lsa, yashirish
+            return;
+          }
 
-            // Asosiy vaqtni olish va formatlash
-            const originalTime = param.time; // Unix timestamp (seconds)
-            const modifiedTime = new Date(originalTime * 1000); // Millisekundga aylantirish
+          // Asosiy vaqtni olish va formatlash
+          const originalTime = param.time; // Unix timestamp (seconds)
+          const modifiedTime = new Date(originalTime * 1000); // Millisekundga aylantirish
 
-            const formattedTime = `${modifiedTime.getFullYear()}-${String(modifiedTime.getMonth() + 1).padStart(2, '0')}-${String(modifiedTime.getDate()).padStart(2, '0')} ${String(modifiedTime.getHours()).padStart(2, '0')}:${String(modifiedTime.getMinutes()).padStart(2, '0')}`;
+          const formattedTime = `${modifiedTime.getFullYear()}-${String(modifiedTime.getMonth() + 1).padStart(2, '0')}-${String(modifiedTime.getDate()).padStart(2, '0')} ${String(modifiedTime.getHours()).padStart(2, '0')}:${String(modifiedTime.getMinutes()).padStart(2, '0')}`;
 
-            // Labelni yangilash
-            customTimeLabel.textContent = formattedTime;
-            customTimeLabel.style.display = 'block';
+          // Labelni yangilash
+          customTimeLabel.textContent = formattedTime;
+          customTimeLabel.style.display = 'block';
 
-            // Crosshair joylashuvi bilan sinxronlashtirish
-            const chartRect = document.querySelector('canvas').getBoundingClientRect();
-            customTimeLabel.style.left = `${chartRect.left + param.point.x - 55}px`; // X koordinatasi
-            customTimeLabel.style.top = `${chartRect.top + chartRect.height - 30}px`; // Y koordinatasi
-          });
-        }
+          // Crosshair joylashuvi bilan sinxronlashtirish
+          const chartRect = document.querySelector('canvas').getBoundingClientRect();
+          customTimeLabel.style.left = `${chartRect.left + param.point.x - 55}px`; // X koordinatasi
+          customTimeLabel.style.top = `${chartRect.top + chartRect.height - 30}px`; // Y koordinatasi
+        });
+      }
 
       const candlestickSeries = chart.addCandlestickSeries({
         upColor: isDarkMode ? '#27a691' : '#4caf50',

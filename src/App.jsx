@@ -43,7 +43,7 @@ const App = () => {
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
-  
+
     const analysisFunction = async () => {
       try {
         const analysisGet = collection(db, 'analysis');
@@ -51,32 +51,51 @@ const App = () => {
         const allAnalysis = await getDocs(q);
         const points = collection(db, 'points');
         const allPoints = await getDocs(points);
+
+
+// timeframe bu yerga ko'chirildi
+        const timeFrameData = collection(db, 'timeframe');
+        const timeFrameDataGet = await getDocs(timeFrameData);
+        timeFrameDataGet.forEach((docs) => {
+          const data = docs.data();
+          forFilterTimeData.push(data);
+        });
+
         const pointNew = [];
-  
+
         const fetchedData = [];
         allPoints.forEach((docs) => {
           const data = docs.data();
           pointNew.push({ ...data });
         });
+
         allAnalysis.forEach((doc) => {
           const analysisId = doc.id;
           const analysisMain = doc.data();
           const lines = pointNew.filter((state) => state.analysis_id === analysisId);
+
+
+          const timeFrameNames = forFilterTimeData
+          .filter((item) => item.timeframe_id === analysisMain.timeframe_id)
+          .map((item) => item.name);
+        
           fetchedData.push({
             lines,
             ...analysisMain,
             analysisId,
+            timeFrameNames
+
           });
-        });  
+        });
         if (isMounted) {
           setPointsState(pointNew);
           setMains(fetchedData.sort((a, b) => b.created_at - a.created_at));
-          setAnalysis(fetchedData.sort((a, b) => b.created_at - a.created_at));  
+          setAnalysis(fetchedData.sort((a, b) => b.created_at - a.created_at));
         }
       } catch (err) {
         console.log('Ошибка при загрузке данных:', err);
         setLoading(false);
-      }finally{
+      } finally {
         setTimeout(() => {
           setLoading(false);
         }, 1000);
@@ -87,7 +106,7 @@ const App = () => {
       isMounted = false;
     };
   }, []);
-  
+
   const handleLogin = async (inputValue) => {
     let foundUser = null;
     try {
@@ -156,27 +175,27 @@ const App = () => {
   };
 
   useEffect(() => {
-  const main = [...mains];   
-  if (selectValuesId || selectValuesId === null || screeningTypeValueId || timeFrameId || timeFrameId ===null) {
-    
-  const selectFilter = () => {
-    setLoading(true); // Загрузкани бошлаш
-    setTimeout(() => {
-      setLoading(false); // Загрузкани тугатиш
-    }, 1000); // 1 секунд кутиш
-    setCurrentPage(1);
-    const filtered = main.filter((item) => {
-      const isTypeMatch = !selectValuesId || item.screening_type_id === selectValuesId;
-      const isValueMatch = !screeningTypeValueId || item.screening_type_value_id === screeningTypeValueId;
-      const forTimeFrameId = !timeFrameId || item.timeframe_id === timeFrameId;
-      return isTypeMatch && isValueMatch && forTimeFrameId;
-    });
-    setAnalysis(filtered);
-  };
-  selectFilter();
-}   
+    const main = [...mains];
+    if (selectValuesId || selectValuesId === null || screeningTypeValueId || timeFrameId || timeFrameId === null) {
 
-}, [selectValuesId, screeningTypeValueId, timeFrameId]);
+      const selectFilter = () => {
+        setLoading(true); // Загрузкани бошлаш
+        setTimeout(() => {
+          setLoading(false); // Загрузкани тугатиш
+        }, 1000); // 1 секунд кутиш
+        setCurrentPage(1);
+        const filtered = main.filter((item) => {
+          const isTypeMatch = !selectValuesId || item.screening_type_id === selectValuesId;
+          const isValueMatch = !screeningTypeValueId || item.screening_type_value_id === screeningTypeValueId;
+          const forTimeFrameId = !timeFrameId || item.timeframe_id === timeFrameId;
+          return isTypeMatch && isValueMatch && forTimeFrameId;
+        });
+        setAnalysis(filtered);
+      };
+      selectFilter();
+    }
+
+  }, [selectValuesId, screeningTypeValueId, timeFrameId]);
 
 
   const [data, setData] = useState({});
@@ -250,7 +269,7 @@ const App = () => {
     openWebsite();
   }, []);
 
-  
+
 
   return (
     <div className="app">
