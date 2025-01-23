@@ -269,8 +269,6 @@ const App = () => {
     openWebsite();
   }, []);
 
-
-
   return (
     <div className="app">
       {location.pathname.includes('/chart') || location.pathname === '/login' ? null : (
