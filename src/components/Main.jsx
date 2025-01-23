@@ -144,7 +144,6 @@ const Main = memo(({
                       isLogedIn={isLogedIn}
                       analysis={analysis}
                       data={item.symbol}
-                      timeFrame_id={item.timeframe_id}
                       line={item.lines}
                       forFilterTimeData={forFilterTimeData}
                     />
