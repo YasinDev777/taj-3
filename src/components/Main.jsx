@@ -146,6 +146,7 @@ const Main = memo(({
                       data={item.symbol}
                       line={item.lines}
                       forFilterTimeData={forFilterTimeData}
+                      foundedTimeframe={item.timeName}
                     />
                   </div>
                   <div className="texx">

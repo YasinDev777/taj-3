@@ -11,12 +11,11 @@ import axios from 'axios';
 import { AnalysisContext } from '../context/Context';
 import { chartAnalyticsClose, ConatactAnalytics, logoAnalytics, pageAnalytics } from '../analytics/Analytics';
 
-const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, forFilterTimeData }) => {
+const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTimeframe }) => {
   const [analysisData, setAnalysisData] = useState([]);
   const [analysisSymbols, setAnalysisSymbols] = useState('');
 
   const [timeFrameIdState, setTimeFrameIdState] = useState('');
-  const [timeFrameNamed, setTimeFrameNamed] = useState('')
   const { id } = useParams();
   const [cursor, setCursor] = useState('grab');
   const handleMouseDown = () => setCursor('grabbing');
@@ -46,55 +45,18 @@ useEffect(() => {
     const filteredItems = analysis.filter((item) => item.analysisId === id);
 
     if (filteredItems.length > 0) {
-      const names = [];
-      
-      // Проверка данных перед использованием
-      filteredItems.forEach((item) => {
-        const foundItem = forFilterTimeData.find(
-          (timeData) => timeData.timeframe_id === item.timeframe_id
-        );
-
-        if (foundItem) {
-          names.push(foundItem.name);
-          setTimeFrameNamed(foundItem);
-        }
-      });
-
-      if (names.length > 0) {
-        names.forEach((name) => setTimeFrameIdState(name));
-      }
-
+      setTimeFrameIdState(foundedTimeframe)
       setAnalysisSymbols(filteredItems[0]?.symbol || ''); // Безопасно извлекаем символ
+      console.log(timeFrameIdState);
     }
-    console.log(filteredItems);
   } else {
-    setAnalysisSymbols(data?.toString() || ''); // Проверяем, что data существует
-    const names = [];
-
-    analysis.forEach((item) => {
-      const foundItem = forFilterTimeData.find(
-        (timeData) => timeData.timeframe_id === item.timeframe_id
-      );
-      if (foundItem) {
-        names.push(foundItem.name);
-      }
-    });
-
-    if (names.length > 0) {
-      names.forEach((name) => setTimeFrameIdState(name));
-      setTimeFrameNamed(names);
-      console.log(timeFrameNamed);
-    }
+    setAnalysisSymbols(data?.toString() || ''); // Проверяем, что data существует 
+    setTimeFrameIdState(foundedTimeframe) 
+    console.log(foundedTimeframe);
   }
-
+  
   const fetchBitCoinData = async () => {
     try {
-      // Проверяем, что analysisSymbols и timeFrameIdState установлены
-      if (!analysisSymbols || !timeFrameIdState) {
-        console.warn('Symbols or time frame is not set');
-        return;
-      }
-
       const response = await axios.get('https://api.binance.com/api/v3/klines', {
         params: {
           symbol: analysisSymbols,
@@ -102,7 +64,6 @@ useEffect(() => {
           limit: 1000,
         },
       });
-
       if (response.data) {
         const formattedData = response.data.map((item) => ({
           time: item[0] / 1000,
@@ -274,9 +235,10 @@ useEffect(() => {
             const month = String(date.getMonth() + 1).padStart(2, '0'); // Oyni 2 xonali qilib formatlash
             const day = String(date.getDate()).padStart(2, '0'); // Sanani 2 xonali qilib formatlash
             const hours = String(date.getHours()).padStart(2, '0'); // Soatni 2 xonali qilib formatlash
-            const timeforHours = new Date(`${year}-${month}-${day} ${hours}:00:00`).getTime() / 1000
+            const timeforHours = new Date(`${year}-${month}-${day} ${hours}:00`).getTime() / 1000
+            const timefordails = new Date(`${year}-${month}-${day}`).getTime() / 1000
             return {
-              time: timeforHours, // Unix timestamp (lightweight-charts uchun)
+              time: timeFrameIdState === '1h' ? timeforHours : timefordails, // Unix timestamp (lightweight-charts uchun)
               value: item.price, // Narx qiymati
               // Qo'shimcha: Faqat ko'rsatish uchun (zarur bo'lsa)
             };
@@ -316,10 +278,6 @@ useEffect(() => {
 
       // Crosshair harakati kuzatiladi
 
-
-
-
-
       const handleResize = () => {
         chart.applyOptions({
           crosshair: {
@@ -335,7 +293,7 @@ useEffect(() => {
 
       if (!candlestickData || candlestickData.length === 0) return;
       chart.timeScale().setVisibleRange({
-        from: candlestickData[candlestickData.length - (isCard === false ? 200 : 260)]?.time || candlestickData[0]?.time,
+        from: candlestickData[candlestickData.length - (isCard === false ? 150 : 260)]?.time || candlestickData[0]?.time,
         to: candlestickData[candlestickData.length - 1]?.time,
       });
       window.addEventListener('resize', handleResize);
