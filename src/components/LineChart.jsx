@@ -1,5 +1,3 @@
-/* eslint-disable no-dupe-keys */
-/* eslint-disable react/prop-types */
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { createChart } from 'lightweight-charts';
@@ -11,7 +9,7 @@ import axios from 'axios';
 import { AnalysisContext } from '../context/Context';
 import { chartAnalyticsClose, ConatactAnalytics, logoAnalytics, pageAnalytics } from '../analytics/Analytics';
 
-const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTimeframe }) => {
+const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTimeframe}) => {
   const [analysisData, setAnalysisData] = useState([]);
   const [analysisSymbols, setAnalysisSymbols] = useState('');
 
@@ -40,68 +38,73 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
     fetchAnalysisData();
   }, [pointsState, data, line]);
 
-useEffect(() => {
-  if (!data && analysis) {
-    const filteredItems = analysis.filter((item) => item.analysisId === id);
+  useEffect(() => {
+    if (!data && analysis) {
+      const filteredItems = analysis.filter((item) => item.analysisId === id);
+      if (filteredItems.length > 0) {
+        
+        // if (analysis && data && forFilterTimeData) {
+          setTimeFrameIdState(foundedTimeframe)
+        // }
 
-    if (filteredItems.length > 0) {
-      setTimeFrameIdState(foundedTimeframe)
-      setAnalysisSymbols(filteredItems[0]?.symbol || ''); // Безопасно извлекаем символ
-      console.log(timeFrameIdState);
-    }
-  } else {
-    setAnalysisSymbols(data?.toString() || ''); // Проверяем, что data существует 
-    setTimeFrameIdState(foundedTimeframe) 
-    console.log(foundedTimeframe);
-  }
-  
-  const fetchBitCoinData = async () => {
-    try {
-      const response = await axios.get('https://api.binance.com/api/v3/klines', {
-        params: {
-          symbol: analysisSymbols,
-          interval: timeFrameIdState,
-          limit: 1000,
-        },
-      });
-      if (response.data) {
-        const formattedData = response.data.map((item) => ({
-          time: item[0] / 1000,
-          open: parseFloat(item[1]),
-          high: parseFloat(item[2]),
-          low: parseFloat(item[3]),
-          close: parseFloat(item[4]),
-        }));
-
-        if (formattedData.length > 0) {
-          const lastDataPointTime = formattedData[formattedData.length - 1].time;
-          const extendedData = [...formattedData];
-          const endDate = new Date(new Date().setDate(new Date().getDate() + 100)).getTime() / 1000;
-          let currentTime = lastDataPointTime;
-
-          while (currentTime < endDate) {
-            currentTime += 24 * 60 * 60;
-            extendedData.push({
-              time: currentTime,
-              open: NaN,
-              high: NaN,
-              low: NaN,
-              close: NaN,
-            });
-          }
-
-          setCandlestickData(extendedData);
-        }
+        setAnalysisSymbols(filteredItems[0].symbol);
       }
-    } catch (error) {
-      console.error('Error fetching data:', error.message);
+    } else {
+      setAnalysisSymbols(data.toString());
+      // if (timeFrame_id) {
+        // if (analysis && data && forFilterTimeData) {
+          setTimeFrameIdState(foundedTimeframe)
+        // }
+      // }
     }
-  };
 
-  if (analysisSymbols) {
-    fetchBitCoinData();
-  }
-}, [pointsState, id, data, analysisSymbols]);
+    const fetchBitCoinData = async () => {
+      try {
+        const response = await axios.get('https://api.binance.com/api/v3/klines', {
+          params: {
+            symbol: analysisSymbols,
+            interval: timeFrameIdState,
+            limit: 1000,
+          },
+        });
+        if (response.data) {
+          const formattedData = response.data.map((item) => ({
+            time: item[0] / 1000,
+            open: parseFloat(item[1]),
+            high: parseFloat(item[2]),
+            low: parseFloat(item[3]),
+            close: parseFloat(item[4]),
+          }));
+
+          if (formattedData.length > 0) {
+            const lastDataPointTime = formattedData[formattedData.length - 1].time;
+            const extendedData = [...formattedData];
+            const endDate = new Date(new Date().setDate(new Date().getDate() + 100)).getTime() / 1000;
+            let currentTime = lastDataPointTime;
+
+            while (currentTime < endDate) {
+              currentTime += 24 * 60 * 60;
+              extendedData.push({
+                time: currentTime,
+                open: NaN,
+                high: NaN,
+                low: NaN,
+                close: NaN,
+              });
+            }
+
+            setCandlestickData(extendedData);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error.message);
+      }
+    };
+
+    if (analysisSymbols) {
+      fetchBitCoinData();
+    }
+  }, [pointsState, id, data, analysisSymbols]);
 
   useEffect(() => {
     function defaultTickMarkFormatter(timePoint, tickMarkType, locale) {
@@ -182,29 +185,29 @@ useEffect(() => {
         },
         crosshair: isDarkMode ? darkMode.crosshair : lightMode.crosshair,
       });
-      if (isCard === undefined) {
-        chart.subscribeCrosshairMove((param) => {
-          if (!param || !param.time) {
-            customTimeLabel.style.display = 'none'; // Agar crosshair chetda bo'lsa, yashirish
-            return;
-          }
+        if (isCard === undefined) {
+          chart.subscribeCrosshairMove((param) => {
+            if (!param || !param.time) {
+              customTimeLabel.style.display = 'none'; // Agar crosshair chetda bo'lsa, yashirish
+              return;
+            }
 
-          // Asosiy vaqtni olish va formatlash
-          const originalTime = param.time; // Unix timestamp (seconds)
-          const modifiedTime = new Date(originalTime * 1000); // Millisekundga aylantirish
+            // Asosiy vaqtni olish va formatlash
+            const originalTime = param.time; // Unix timestamp (seconds)
+            const modifiedTime = new Date(originalTime * 1000); // Millisekundga aylantirish
 
-          const formattedTime = `${modifiedTime.getFullYear()}-${String(modifiedTime.getMonth() + 1).padStart(2, '0')}-${String(modifiedTime.getDate()).padStart(2, '0')} ${String(modifiedTime.getHours()).padStart(2, '0')}:${String(modifiedTime.getMinutes()).padStart(2, '0')}`;
+            const formattedTime = `${modifiedTime.getFullYear()}-${String(modifiedTime.getMonth() + 1).padStart(2, '0')}-${String(modifiedTime.getDate()).padStart(2, '0')} ${String(modifiedTime.getHours()).padStart(2, '0')}:${String(modifiedTime.getMinutes()).padStart(2, '0')}`;
 
-          // Labelni yangilash
-          customTimeLabel.textContent = formattedTime;
-          customTimeLabel.style.display = 'block';
+            // Labelni yangilash
+            customTimeLabel.textContent = formattedTime;
+            customTimeLabel.style.display = 'block';
 
-          // Crosshair joylashuvi bilan sinxronlashtirish
-          const chartRect = document.querySelector('canvas').getBoundingClientRect();
-          customTimeLabel.style.left = `${chartRect.left + param.point.x - 55}px`; // X koordinatasi
-          customTimeLabel.style.top = `${chartRect.top + chartRect.height - 30}px`; // Y koordinatasi
-        });
-      }
+            // Crosshair joylashuvi bilan sinxronlashtirish
+            const chartRect = document.querySelector('canvas').getBoundingClientRect();
+            customTimeLabel.style.left = `${chartRect.left + param.point.x - 55}px`; // X koordinatasi
+            customTimeLabel.style.top = `${chartRect.top + chartRect.height - 30}px`; // Y koordinatasi
+          });
+        }
 
       const candlestickSeries = chart.addCandlestickSeries({
         upColor: isDarkMode ? '#27a691' : '#4caf50',
@@ -235,12 +238,11 @@ useEffect(() => {
             const month = String(date.getMonth() + 1).padStart(2, '0'); // Oyni 2 xonali qilib formatlash
             const day = String(date.getDate()).padStart(2, '0'); // Sanani 2 xonali qilib formatlash
             const hours = String(date.getHours()).padStart(2, '0'); // Soatni 2 xonali qilib formatlash
-            const timeforHours = new Date(`${year}-${month}-${day} ${hours}:00`).getTime() / 1000
-            const timefordails = new Date(`${year}-${month}-${day}`).getTime() / 1000
+            const timeforHours = new Date(`${year}-${month}-${day} ${hours}:00:00`).getTime() / 1000
+            const timeforDaily = new Date(`${year}-${month}-${day}`).getTime() / 1000
             return {
-              time: timeFrameIdState === '1h' ? timeforHours : timefordails, // Unix timestamp (lightweight-charts uchun)
+              time: timeFrameIdState === '1h' ? timeforHours : timeforDaily, // Unix timestamp (lightweight-charts uchun)
               value: item.price, // Narx qiymati
-              // Qo'shimcha: Faqat ko'rsatish uchun (zarur bo'lsa)
             };
           })
           .sort((a, b) => a.time - b.time), // Unix timestamp bo'yicha tartiblash
@@ -293,7 +295,7 @@ useEffect(() => {
 
       if (!candlestickData || candlestickData.length === 0) return;
       chart.timeScale().setVisibleRange({
-        from: candlestickData[candlestickData.length - (isCard === false ? 150 : 260)]?.time || candlestickData[0]?.time,
+        from: candlestickData[candlestickData.length - (isCard === false ? 200 : 260)]?.time || candlestickData[0]?.time,
         to: candlestickData[candlestickData.length - 1]?.time,
       });
       window.addEventListener('resize', handleResize);

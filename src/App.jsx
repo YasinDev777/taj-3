@@ -36,7 +36,6 @@ const App = () => {
   const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [forFilterTimeData] = useState([]);
-
   const encryptData = (data) => {
     return CryptoJS.AES.encrypt(JSON.stringify(data), 'your-secret-key').toString();
   };
