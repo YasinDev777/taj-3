@@ -16,7 +16,6 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
   const [analysisSymbols, setAnalysisSymbols] = useState('');
 
   const [timeFrameIdState, setTimeFrameIdState] = useState('');
-  const [timeFrameNamed, setTimeFrameNamed] = useState('')
   const { id } = useParams();
   const [cursor, setCursor] = useState('grab');
   const handleMouseDown = () => setCursor('grabbing');
