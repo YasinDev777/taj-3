@@ -208,6 +208,9 @@
   color: var(--text-color);
   font-weight: 300;
   font-size: calc(var(--index) * 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /* @keyframes anim {

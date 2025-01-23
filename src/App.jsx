@@ -35,6 +35,7 @@ const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(true);
+  const [forFilterTimeData] = useState([]);
 
   const encryptData = (data) => {
     return CryptoJS.AES.encrypt(JSON.stringify(data), 'your-secret-key').toString();
@@ -281,6 +282,7 @@ const App = () => {
             isUser={isUser}
             setCurrentPage={setCurrentPage}
             setIsVideo={setIsVideo}
+            forFilterTimeData={forFilterTimeData}
             setIsLogedIn={setIsLogedIn}
           />
         </>
@@ -309,10 +311,11 @@ const App = () => {
                 selectedTime={selectedTime}
                 loading={loading}
                 setLoading={setLoading}
+                forFilterTimeData={forFilterTimeData}
               />
             }
           />
-          <Route path="/chart/:id" element={<Chart isUser={isUser} isLogedIn={isLogedIn} pointsState={pointsState} analysis={analysis} />} />
+          <Route path="/chart/:id" element={<Chart isUser={isUser} isLogedIn={isLogedIn} pointsState={pointsState} analysis={analysis} forFilterTimeData={forFilterTimeData} />} />
           <Route path="/login" element={<Login setIsUser={setIsUser} setIsLogedIn={setIsLogedIn} handleLogin={handleLogin} />} />
         </Routes>
       </AnalysisContext.Provider>
