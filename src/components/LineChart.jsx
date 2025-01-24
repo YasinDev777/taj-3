@@ -73,11 +73,19 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
           if (formattedData.length > 0) {
             const lastDataPointTime = formattedData[formattedData.length - 1].time;
             const extendedData = [...formattedData];
-            const endDate = new Date(new Date().setDate(new Date().getDate() + 100)).getTime() / 1000;
             let currentTime = lastDataPointTime;
 
+            let endDate = new Date(new Date().setDate(new Date().getDate() + 100)).getTime() / 1000
+            let time = ""
+            if(timeFrameIdState === "1d") {
+              time = 24 * 60 * 60
+            } else {
+              endDate =  new Date(new Date().setDate(new Date().getDate() + 3)).getTime() / 1000
+              time = 60 * 60
+            }
+            console.log(endDate);
             while (currentTime < endDate) {
-              currentTime += 24 * 60 * 60;
+              currentTime += time;
               extendedData.push({
                 time: currentTime,
                 open: NaN,

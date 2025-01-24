@@ -83,24 +83,7 @@ const Main = memo(({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  useEffect(() => {
-    if (analysis && data && forFilterTimeData) {
-      const updatedData = analysis.map((item, index) => {
-        const value = data[item.symbol]?.lastClosePrice;
-        
-  
-        return {
-          ...item,
-          index,
-          lastClosePrice: value,
-        };
-      });
-  
-      const lastChartIndex = currentPage * chartsPerPage;
-      const firstChartIndex = lastChartIndex - chartsPerPage;
-      setCurrentChart(updatedData.slice(firstChartIndex, lastChartIndex));
-    }
-  }, [analysis, data, forFilterTimeData, currentPage, chartsPerPage, loading]);
+
   
   const totalPages = Math.ceil(analysis.length / chartsPerPage);
 
