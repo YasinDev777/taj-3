@@ -2,7 +2,6 @@
   "name": "taj-3",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://pro-api.coinmarketcap.com",
   "dependencies": {
     "@tanstack/react-query": "^5.64.1",
     "@testing-library/jest-dom": "^5.17.0",
