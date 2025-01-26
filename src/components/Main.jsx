@@ -31,14 +31,18 @@ const Main = memo(({
       const updatedData = analysis
         .map((item, index) => {
           const value = data[item.symbol]?.lastClosePrice;
-          return value !== undefined ? { ...item, index, lastClosePrice: value } : null;
+          const active_card = data[item.symbol]?.active_card;
+          return value !== undefined ? { ...item, index, lastClosePrice: value, active_card: active_card } : null;
         })
-        .filter(Boolean);
+        .filter(Boolean)
+        .filter((item) => item.active_card === true && item.lastClosePrice !== undefined)
+  
       const lastChartIndex = currentPage * chartsPerPage;
       const firstChartIndex = lastChartIndex - chartsPerPage;
       setCurrentChart(updatedData.slice(firstChartIndex, lastChartIndex));
     }
   }, [data, currentPage, chartsPerPage]);
+  
   
   useEffect(() => setChartsPerPage(isGrid), [isGrid]);
 
@@ -83,24 +87,26 @@ const Main = memo(({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-
+  // currentChart.map((item) => {
+  //   console.log(item.active_card);
+  // })
   
+  const filteredChart = currentChart.filter((item) => item.active_card === true);
+
   const totalPages = Math.ceil(analysis.length / chartsPerPage);
 
   return (
     <div className="main1">
       {loading ? (
-        <Loader /> // Показываем загрузчик, пока данные грузятся
+        <Loader />
       ) : analysis.length > 0 && currentChart.length > 0 ? (
         <>
           <div className="main">
-            {currentChart.map((item) => {
-              
+            {filteredChart.map((item) => {
               return filterLimit > item.index ? (
                 <Link
                   to={`/chart/${item.analysisId}`}
                   onClick={()=>chartAnalyticsOpen(item.symbol)}
-                  // onClick={() => handleNavigate(item.analysisId, item.symbol)}
                   key={item.index}
                   className="card"
                 >
@@ -222,7 +228,11 @@ const Main = memo(({
         </>
       ) : (
         <div className="chartNone">
+        {
+          currentChart.some((item) => item.lastClosePrice === undefined) ?
+          <h1>Analizlar mavjud emas. <br /> Server bilan muammo</h1> :
           <h1>Analizlar mavjud emas</h1>
+        }
         </div>
       )}
     </div>

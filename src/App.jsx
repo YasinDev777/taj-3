@@ -52,8 +52,6 @@ const App = () => {
         const points = collection(db, 'points');
         const allPoints = await getDocs(points);
 
-
-// timeframe bu yerga ko'chirildi
         const timeFrameData = collection(db, 'timeframe');
         const timeFrameDataGet = await getDocs(timeFrameData);
         timeFrameDataGet.forEach((docs) => {
@@ -76,15 +74,14 @@ const App = () => {
 
 
           const timeFrameNames = forFilterTimeData
-          .filter((item) => item.timeframe_id === analysisMain.timeframe_id)
-          .map((item) => item.name);
-        
+            .filter((item) => item.timeframe_id === analysisMain.timeframe_id)
+            .map((item) => item.name);
+
           fetchedData.push({
             lines,
             ...analysisMain,
             analysisId,
             timeFrameNames
-
           });
         });
         if (isMounted) {
@@ -197,11 +194,17 @@ const App = () => {
 
   }, [selectValuesId, screeningTypeValueId, timeFrameId]);
 
-
   const [data, setData] = useState({});
 
   const fetchKlines = async (symbol) => {
     const API_URL = `https://api.binance.com/api/v3/klines`;
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    const sevenDaysInMilliseconds = 7 * 24 * 60 * 60 * 1000;
+    const oneDayAndFiveHoursInMilliseconds = (1 * 24 * 60 * 60 * 1000) + (5 * 60 * 60 * 1000);
+    const newDate = new Date(currentDate.getTime() - sevenDaysInMilliseconds + oneDayAndFiveHoursInMilliseconds);
+    const getTime = newDate.getTime();
+
     try {
       const response = await axios.get(API_URL, {
         params: {
@@ -219,18 +222,20 @@ const App = () => {
           low: parseFloat(item[3]),
           close: parseFloat(item[4]),
         }));
-        if (formattedData.length > 0) {
+
+        if (formattedData.length > 0 ) {
           lastClosePrice = formattedData[formattedData.length - 1].close;
+          if (symbol) {
+            setData((prevData) => ({
+              ...prevData,
+              [symbol]: {
+                data: response.data,
+                lastClosePrice: lastClosePrice,
+                active_card: formattedData[formattedData.length - 7].time === (getTime / 1000) ? true : false,
+              },
+            }));
+          }
         }
-      }
-      if (symbol) {
-        setData((prevData) => ({
-          ...prevData,
-          [symbol]: {
-            data: response.data,
-            lastClosePrice: lastClosePrice,
-          },
-        }));
       }
     } catch (err) {
       console.log(err);
