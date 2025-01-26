@@ -83,7 +83,6 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
               endDate =  new Date(new Date().setDate(new Date().getDate() + 3)).getTime() / 1000
               time = 60 * 60
             }
-            console.log(endDate);
             while (currentTime < endDate) {
               currentTime += time;
               extendedData.push({

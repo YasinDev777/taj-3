@@ -118,6 +118,7 @@ const Filter = ({
     setSelectedTime('All');
     setSelectValues(null);
     setScreeningTypeValueId(null);
+    setSelectValuesId(null)
     setTimeFrameId(null);
     setIsGrid(6);
     FilterClearAnalytics();
