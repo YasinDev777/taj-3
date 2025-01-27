@@ -73,7 +73,6 @@ const App = () => {
           const analysisMain = doc.data();
           const lines = pointNew.filter((state) => state.analysis_id === analysisId);
 
-
           const timeFrameNames = forFilterTimeData
             .filter((item) => item.timeframe_id === analysisMain.timeframe_id)
             .map((item) => item.name);
@@ -274,8 +273,6 @@ const App = () => {
   useEffect(() => {
     openWebsite();
   }, []);
-
-  console.log(activeCardFilter);
 
   return (
     <div className="app">
