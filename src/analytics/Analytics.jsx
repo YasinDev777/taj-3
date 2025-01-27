@@ -36,7 +36,7 @@ const decryptData = (data) => {
 // userDocId funksiyasi
 const userDocId = async () => {
   const userId = localStorage.getItem('subscriptionType');
-  if (process.env.NODE_ENV == 'production') {
+  if (process.env.NODE_ENV !== 'production') {
     return 'anonymous';
   }
   try {
@@ -53,7 +53,6 @@ const userDocId = async () => {
   }
 };
 
-// Analytics uchun umumiy funksiya
 const addAnalytics = async (action, param, paramValue) => {
   if (process.env.NODE_ENV !== 'production') {
     return;
