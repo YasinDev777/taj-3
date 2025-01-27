@@ -20,12 +20,9 @@ const Alert = ({ isLogedIn, isUser, setAlertShown, alertShown }) => {
         const userDoc = querySnapshot.docs[0]; // Hujjatni olamiz
         const userRef = doc(db, 'user', userDoc.id); // Hujjat manzilini aniqlaymiz
         await updateDoc(userRef, { subscription_type: 'free' }); // Yangilash
-      } else {
-        console.log('Foydalanuvchi topilmadi.');
       }
     } catch (error) {
-      console.error("Subscription turini o'zgartirishda xatolik:", error);
-      alert("Xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
+      console.error( error);
     }
   };
 
@@ -38,11 +35,9 @@ const Alert = ({ isLogedIn, isUser, setAlertShown, alertShown }) => {
         const userDoc = querySnapshot.docs[0].data();
         const expirationDate = userDoc.subscription_expiration_date.seconds * 1000;
         setSubscriptionDateEnd(expirationDate);
-      } else {
-        alert('Foydalanuvchi topilmadi.');
       }
     } catch (error) {
-      console.error("Subscription ma'lumotlarini olishda xatolik:", error);
+      console.error(error);
     }
   };
 

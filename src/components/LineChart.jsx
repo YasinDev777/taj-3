@@ -192,7 +192,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
       if (isCard === undefined) {
         chart.subscribeCrosshairMove((param) => {
           if (!param || !param.time) {
-            customTimeLabel.style.display = 'none'; // Agar crosshair chetda bo'lsa, yashirish
+            customTimeLabel.style.display = 'none'; // Agar crosshair chetda bo'lsa, yashirish  
             return;
           }
 
@@ -211,6 +211,16 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
           customTimeLabel.style.left = `${chartRect.left + param.point.x - 55}px`; // X koordinatasi
           customTimeLabel.style.top = `${chartRect.top + chartRect.height - 30}px`; // Y koordinatasi
         });
+        const customTimeLabel = document.createElement('div');
+        customTimeLabel.style.position = 'absolute';
+        customTimeLabel.style.background = 'black';
+        customTimeLabel.style.color = 'white';
+        customTimeLabel.style.padding = '5px';
+        customTimeLabel.style.borderRadius = '5px';
+        customTimeLabel.style.fontSize = '12px';
+        customTimeLabel.style.display = 'none'; // Avval yashiringan
+        document.body.appendChild(customTimeLabel);
+  
       }
 
       const candlestickSeries = chart.addCandlestickSeries({
@@ -272,16 +282,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
       });
 
       // Crosshair vaqt labeli uchun element yaratish
-      const customTimeLabel = document.createElement('div');
-      customTimeLabel.style.position = 'absolute';
-      customTimeLabel.style.background = 'black';
-      customTimeLabel.style.color = 'white';
-      customTimeLabel.style.padding = '5px';
-      customTimeLabel.style.borderRadius = '5px';
-      customTimeLabel.style.fontSize = '12px';
-      customTimeLabel.style.display = 'none'; // Avval yashiringan
-      document.body.appendChild(customTimeLabel);
-
+     
       // Crosshair harakati kuzatiladi
 
       const handleResize = () => {
