@@ -36,6 +36,7 @@ const App = () => {
   const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [forFilterTimeData] = useState([]);
+  const [activeCardFilter] = useState([])
   const encryptData = (data) => {
     return CryptoJS.AES.encrypt(JSON.stringify(data), 'your-secret-key').toString();
   };
@@ -176,10 +177,10 @@ const App = () => {
     if (selectValuesId || selectValuesId === null || screeningTypeValueId || timeFrameId || timeFrameId === null) {
 
       const selectFilter = () => {
-        setLoading(true); // Загрузкани бошлаш
+        setLoading(true); 
         setTimeout(() => {
-          setLoading(false); // Загрузкани тугатиш
-        }, 1000); // 1 секунд кутиш
+          setLoading(false);
+        }, 1000);
         setCurrentPage(1);
         const filtered = main.filter((item) => {
           const isTypeMatch = !selectValuesId || item.screening_type_id === selectValuesId;
@@ -228,10 +229,10 @@ const App = () => {
           if (symbol) {
             setData((prevData) => ({
               ...prevData,
-              [symbol]: {
-                data: response.data,
-                lastClosePrice: lastClosePrice,
-                active_card: formattedData[formattedData.length - 7].time === (getTime / 1000) ? true : false,
+                [symbol]: {
+                  data: response.data,
+                  lastClosePrice: lastClosePrice,
+                  active_card: formattedData[formattedData.length - 7].time === (getTime / 1000) ? true : false,
               },
             }));
           }
@@ -273,6 +274,8 @@ const App = () => {
   useEffect(() => {
     openWebsite();
   }, []);
+
+  console.log(activeCardFilter);
 
   return (
     <div className="app">
@@ -333,6 +336,7 @@ const App = () => {
                 loading={loading}
                 setLoading={setLoading}
                 forFilterTimeData={forFilterTimeData}
+                activeCardFilter={activeCardFilter}
               />
             }
           />
