@@ -21,25 +21,43 @@ const Main = memo(({
   currentPage,
   setCurrentPage,
   loading,
-  forFilterTimeData
+  forFilterTimeData,
+  activeCardFilter
 }) => {
   const [chartsPerPage, setChartsPerPage] = useState(isGrid);
   const [currentChart, setCurrentChart] = useState([]);
 
   useEffect(() => {
     if (analysis && data) {
+      // Создаем массив с объединением данных анализа и данных цен
       const updatedData = analysis
-        .map((item, index) => {
+        .map((item,) => {
           const value = data[item.symbol]?.lastClosePrice;
-          return value !== undefined ? { ...item, index, lastClosePrice: value } : null;
+          const active_card = data[item.symbol]?.active_card;
+          return value !== undefined
+            ? { ...item,  lastClosePrice: value, active_card: active_card }
+            : null;
         })
         .filter(Boolean);
+
+      // Удаляем элементы, где active_card === false через splice
+      const filteredData = []; // Янги массив яратиш
+      let index = 0; // Индексни бошлаш
+
+      for (let i = 0; i < updatedData.length; i++) {
+        if (updatedData[i].active_card === true) {
+          const newItem = { ...updatedData[i], index: index++ }; // Индекс қўшиш
+          filteredData.push(newItem); // filteredData массивига қўшиш
+        }
+      }
+
       const lastChartIndex = currentPage * chartsPerPage;
       const firstChartIndex = lastChartIndex - chartsPerPage;
-      setCurrentChart(updatedData.slice(firstChartIndex, lastChartIndex));
+      setCurrentChart(filteredData.slice(firstChartIndex, lastChartIndex));
     }
   }, [data, currentPage, chartsPerPage]);
-  
+
+
   useEffect(() => setChartsPerPage(isGrid), [isGrid]);
 
   const calculateTimeDifference = (targetTime) => {
@@ -83,24 +101,30 @@ const Main = memo(({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // currentChart.map((item) => {
+  //   console.log(item.active_card);
+  // })
 
-  
+  const filteredChart2 = currentChart.filter((item) => item.active_card === false);
+  const filteredChart = currentChart.filter((item) => item.active_card === true && item.lastClosePrice !== undefined);
+  activeCardFilter.length = 0;
+  activeCardFilter.push(...filteredChart2);
+
   const totalPages = Math.ceil(analysis.length / chartsPerPage);
 
   return (
     <div className="main1">
       {loading ? (
-        <Loader /> // Показываем загрузчик, пока данные грузятся
+        <Loader />
       ) : analysis.length > 0 && currentChart.length > 0 ? (
         <>
           <div className="main">
-            {currentChart.map((item) => {
-              
+
+            {filteredChart.map((item) => {
               return filterLimit > item.index ? (
                 <Link
                   to={`/chart/${item.analysisId}`}
-                  onClick={()=>chartAnalyticsOpen(item.symbol)}
-                  // onClick={() => handleNavigate(item.analysisId, item.symbol)}
+                  onClick={() => chartAnalyticsOpen(item.symbol)}
                   key={item.index}
                   className="card"
                 >
@@ -222,7 +246,11 @@ const Main = memo(({
         </>
       ) : (
         <div className="chartNone">
-          <h1>Analizlar mavjud emas</h1>
+          {
+            currentChart.some((item) => item.lastClosePrice === undefined) ?
+              <h1>Analizlar mavjud emas. <br /> Server bilan muammo</h1> :
+              <h1>Analizlar mavjud emas</h1>
+          }
         </div>
       )}
     </div>

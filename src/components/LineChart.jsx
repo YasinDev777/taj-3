@@ -113,33 +113,27 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
   useEffect(() => {
     function defaultTickMarkFormatter(timePoint, tickMarkType, locale) {
       const formatOptions = {};
-
       switch (tickMarkType) {
         case 0: //TickMarkType.Year:
           formatOptions.year = 'numeric';
           break;
-
         case 1: // TickMarkType.Month:
           formatOptions.month = 'short';
           break;
-
         case 2: //TickMarkType.DayOfMonth:
           formatOptions.day = 'numeric';
           break;
-
         case 3: //TickMarkType.Time:
           formatOptions.hour12 = false;
           formatOptions.hour = '2-digit';
           formatOptions.minute = '2-digit';
           break;
-
         case 4: //TickMarkType.TimeWithSeconds:
           formatOptions.hour12 = false;
           formatOptions.hour = '2-digit';
           formatOptions.minute = '2-digit';
           formatOptions.second = '2-digit';
           break;
-
         default:
         // ensureNever(tickMarkType);
       }
@@ -161,8 +155,6 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
     }
     const localTimezoneOffset = new Date().getTimezoneOffset() * 60
     if (chartContainerRef.current && candlestickData.length > 0) {
-
-
       const chart = createChart(chartContainerRef.current, {
         width: chartContainerRef.current.clientWidth,
         height: chartContainerRef.current.clientHeight,
@@ -192,11 +184,10 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
       if (isCard === undefined) {
         chart.subscribeCrosshairMove((param) => {
           if (!param || !param.time) {
-            customTimeLabel.style.display = 'none'; // Agar crosshair chetda bo'lsa, yashirish  
+            customTimeLabel.style.display = 'none';
             return;
           }
 
-          // Asosiy vaqtni olish va formatlash
           const originalTime = param.time; // Unix timestamp (seconds)
           const modifiedTime = new Date(originalTime * 1000); // Millisekundga aylantirish
 
@@ -241,7 +232,6 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
         axisLabelVisible: false,
       });
 
-
       lineSeries1.setData(
         analysisData
           .filter((item) => item.position === 'lower' || item.position === 'upper')
@@ -262,11 +252,11 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
           .sort((a, b) => a.time - b.time), // Unix timestamp bo'yicha tartiblash
       );
 
-
       // lineSeries1.setData([
       //   {time: new Date('2025-01-10 18:00:00').getTime() / 1000, value:9.56},
       //   {time: new Date('2025-01-18 8:00:00').getTime() / 1000,value: 9.90}
       // ])
+
       const singleData = analysisData
         .filter((item) => item.position === 'single')
         .map((item) => ({
@@ -284,7 +274,6 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
       // Crosshair vaqt labeli uchun element yaratish
      
       // Crosshair harakati kuzatiladi
-
       const handleResize = () => {
         chart.applyOptions({
           crosshair: {
@@ -309,7 +298,6 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
         chart.remove();
       };
     }
-
   }, [analysisData, candlestickData, isMouseDown]);
 
   const darkMode = {
@@ -335,7 +323,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
     crosshair: {
       mode: 0,
       vertLine: {
-        labelVisible: false, // Asl labelni yashirish
+        labelVisible: false,
         color: 'rgba(44, 43, 43, 0.589)',
         width: 1,
         style: 3,
@@ -433,7 +421,7 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
       >
-        <div className="exit-svg" style={isCard === false ? { display: 'none' } : { display: 'flex' }}>
+        <div className="exit-svg" style={isCard === false ? {display: "none"} : { display: "flex" }}>
           <div onClick={home}>
             <BsArrowLeftCircle className="exitsvg" />
           </div>
