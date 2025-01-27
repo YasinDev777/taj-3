@@ -52,7 +52,6 @@ const App = () => {
         const allAnalysis = await getDocs(q);
         const points = collection(db, 'points');
         const allPoints = await getDocs(points);
-
         const timeFrameData = collection(db, 'timeframe');
         const timeFrameDataGet = await getDocs(timeFrameData);
         timeFrameDataGet.forEach((docs) => {
@@ -90,12 +89,11 @@ const App = () => {
           setAnalysis(fetchedData.sort((a, b) => b.created_at - a.created_at));
         }
       } catch (err) {
-        console.log('Ошибка при загрузке данных:', err);
         setLoading(false);
       } finally {
         setTimeout(() => {
           setLoading(false);
-        }, 1000);
+        }, 1500);
       }
     };
     analysisFunction();
@@ -119,7 +117,7 @@ const App = () => {
       const querySnapshot = await getDocs(user_query);
       if (querySnapshot.empty) {
         alert("Bunday ma'lumotga ega foydalanuvchi afsuski topilmadi!");
-        loginAnalytics('invalid');
+        loginAnalytics('login', 'authentication','invalid');
         localStorage.clear();
         return;
       } else {
@@ -128,7 +126,7 @@ const App = () => {
           if (userData.is_blocked === true || querySnapshot.empty) {
             alert(`Hurmatli foydalanuvchi siz bloklangansiz iltimos admin bilan bog'laning`);
             setIsLogedIn(false)
-            loginAnalytics('userBlock');
+            loginAnalytics('login', 'authentication','userBlock');
             localStorage.clear();
             window.location.reload();
           } else {
@@ -138,7 +136,7 @@ const App = () => {
             localStorage.setItem('isLogedIn', 'true');
             localStorage.setItem('subscriptionType', encryptData(foundUser.user_id));
             if (inputValue) {
-              loginAnalytics('valid');
+              loginAnalytics('login', 'authentication','valid',docs.id);
             }
             navigate('/');
             switch (userData.subscription_type) {
@@ -176,10 +174,6 @@ const App = () => {
     if (selectValuesId || selectValuesId === null || screeningTypeValueId || timeFrameId || timeFrameId === null) {
 
       const selectFilter = () => {
-        setLoading(true); 
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
         setCurrentPage(1);
         const filtered = main.filter((item) => {
           const isTypeMatch = !selectValuesId || item.screening_type_id === selectValuesId;
@@ -187,6 +181,10 @@ const App = () => {
           const forTimeFrameId = !timeFrameId || item.timeframe_id === timeFrameId;
           return isTypeMatch && isValueMatch && forTimeFrameId;
         });
+        setLoading(true); // Загрузкани бошлаш
+        setTimeout(() => {
+          setLoading(false); // Загрузкани тугатиш
+        }, 1500); // 1 секунд кутиш
         setAnalysis(filtered);
       };
       selectFilter();

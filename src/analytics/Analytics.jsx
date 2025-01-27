@@ -33,7 +33,8 @@ const decryptData = (data) => {
   const bytes = CryptoJS.AES.decrypt(data, 'your-secret-key');
   return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 };
-// userDocId funksiyasi
+
+
 const userDocId = async () => {
   const userId = localStorage.getItem('subscriptionType');
   if (process.env.NODE_ENV !== 'production') {
@@ -53,12 +54,14 @@ const userDocId = async () => {
   }
 };
 
-const addAnalytics = async (action, param, paramValue) => {
+
+// Analytics uchun umumiy funksiya
+const addAnalytics = async (action, param, paramValue,userIdValid) => {
   if (process.env.NODE_ENV !== 'production') {
     return;
   }
   try {
-    const userId = await userDocId(); // user_id-ni oladi
+    const userId = userIdValid ? userIdValid : await userDocId(); // user_id-ni 
     await addDoc(collection(db, 'analytics'), {
       action: action,
       param: param,
@@ -122,8 +125,8 @@ export const chartAnalyticsClose = async (symbol) => {
 // chart Analytics end
 
 // Login Analytics start
-export const loginAnalytics = async (action) => {
-  await addAnalytics('login', 'authentication', action);
+export const loginAnalytics = async (action,actionType ,actionTypeValue , userId) => {
+  await addAnalytics(action,actionType ,actionTypeValue , userId);
 };
 // Login Analytics end
 

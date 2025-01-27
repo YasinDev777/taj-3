@@ -20,8 +20,8 @@ const Login = ({ setIsLogedIn, setIsUser, handleLogin }) => {
       const text = await navigator.clipboard.readText();
       setInputValue(text);
     } catch (err) {
-      console.error('Xatolik yuz berdi:', err);
-      alert('Text quyishda xatolik yuz berdi. Ruxsat borligini tekshiring.');
+      console.error(err);
+      alert();
     }
   };
 
