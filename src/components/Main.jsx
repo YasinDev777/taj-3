@@ -121,7 +121,6 @@ const Main = memo(({
           <div className="main">
 
             {filteredChart.map((item) => {
-              console.log(item.index);
               return filterLimit > item.index ? (
                 <Link
                   to={`/chart/${item.analysisId}`}
