@@ -79,6 +79,9 @@ const Chart = ({ isCard, isUser, isLogedIn, pointsState, data, line, foundedTime
             let time = ""
             if(timeFrameIdState === "1d") {
               time = 24 * 60 * 60
+            } else if(timeFrameIdState === "4h") {
+              endDate =  new Date(new Date().setDate(new Date().getDate() + 20)).getTime() / 1000
+              time = 4 * 60 * 60
             } else {
               endDate =  new Date(new Date().setDate(new Date().getDate() + 3)).getTime() / 1000
               time = 60 * 60
