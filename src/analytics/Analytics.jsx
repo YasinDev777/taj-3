@@ -37,6 +37,7 @@ const decryptData = (data) => {
 
 const userDocId = async () => {
   const userId = localStorage.getItem('subscriptionType');
+
   if (process.env.NODE_ENV !== 'production') {
     return 'anonymous';
   }
