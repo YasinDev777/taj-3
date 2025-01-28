@@ -60,6 +60,7 @@ a {
   cursor: grabbing;
 }
 .chart-container {
+  position: relative;
   cursor: crosshair;
   transform: translateY(3%);
 }
