@@ -21,7 +21,6 @@ const Main = memo(({
   currentPage,
   setCurrentPage,
   loading,
-  forFilterTimeData,
   activeCardFilter
 }) => {
   const [chartsPerPage, setChartsPerPage] = useState(isGrid);
@@ -150,8 +149,8 @@ const Main = memo(({
                       analysis={analysis}
                       data={item.symbol}
                       line={item.lines}
-                      forFilterTimeData={forFilterTimeData}
                       foundedTimeframe={item.timeFrameNames.toString()}
+                      screeningTypeValue={item.screening_type_value_id}
                     />
                   </div>
                   <div className="texx">
