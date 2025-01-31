@@ -1,43 +1,44 @@
+
 {
     "home":{
-        "videoOpeningText": "Foydalanish videosi",
-        "videoGuide": "Video qo'llanma",
+        "videoOpeningText": "",
+        "videoGuide": "",
         "video":"",
-        "foundText": "Aniqlandi",
-        "minutesAgo":" daqiqa oldin",
-        "hoursAgo":" soat oldin",
-        "hour":"soat",
-        "day":" kun",
-        "dayAgo":" kun oldin",
-        "analysis":"Texnik analizlar",
-        "open":"Kirish",
-        "getCloseChartButton":"Qo'lga kiritish",
-        "alertTitle":"Yana bir qadam",
-        "alertTitleContinue":"Analizlarni ko'rish uchun ro'yxatdan o'ting!",
-        "alertTitleDesc":"Pastdagi tugmani bosing va telegram orqali admin bilan bog'laning!",
-        "close":"Chiqish",
-        "connection":"Bag'lanish"
+        "foundText": "",
+        "minutesAgo":"",
+        "hoursAgo":"",
+        "hour":"",
+        "day":"",
+        "dayAgo":"",
+        "analysis":"",
+        "open":"",
+        "getCloseChartButton":"",
+        "alertTitle":"",
+        "alertTitleContinue":"",
+        "alertTitleDesc":"",
+        "close":"",
+        "connection":""
     },
-    "login":{
-        "firstCarouselTitle":"Kripto bozoridagi eng so'nggi texnik analizlar",
-        "firstCarouselDesc":"Ahsan Labs orqali eng yangi tahlillar va halol kripto imkoniyatlarini kuzating.",
-        "secondCarouselTitle":"Bozorda ishonchli tahlil bilan ish boshlang",
-        "secondCarouselDesc":"Ahsan Labs orqali eng yangi tahlillar bilan ish boshlab daromadingizni oshiring!",
-        "thirdCarouselTitle":"Biz bilan vaqtingizni tejang",
-        "thirdCarouselDesc":"Ahsan Labs orqali eng yangi tahlillar va halol kripto imkoniyatlarini oson filterlar bilan kuzating.",
-        "inputTitle":"Tokenni kiriting",
-        "open":"Kirish",
-        "inputDesc":"bilan bog'laning va",
-        "inputDescContinue":"tokeninginzni oling."
+    "login": {
+        "firstCarouselTitle": "Kripto bozoridagi eng so'nggi texnik analizlar",
+        "firstCarouselDesc": "Ahsan Labs orqali eng yangi tahlillar va halol kripto imkoniyatlarini kuzating.",
+        "secondCarouselTitle": "Bozorda ishonchli tahlil bilan ish boshlang",
+        "secondCarouselDesc": "Ahsan Labs orqali eng yangi tahlillar bilan ish boshlab daromadingizni oshiring!",
+        "thirdCarouselTitle": "Biz bilan vaqtingizni tejang",
+        "thirdCarouselDesc": "Ahsan Labs orqali eng yangi tahlillar va halol kripto imkoniyatlarini oson filterlar bilan kuzating.",
+        "inputTitle": "Tokenni kiriting",
+        "open": "Kirish",
+        "inputDesc": "bilan bog'laning va",
+        "inputDescContinue": "tokeninginzni oling."
     },
-    "alert":{
-        "invalidAlert":"Bunday ma'lumotga ega foydalanuvchi afsuski topilmadi!",
-        "blockUserAlert":"Hurmatli foydalanuvchi siz bloklangansiz iltimos admin bilan bog'laning",
-        "note":"Eslatma:",
-        "dearText":"Hurmatli",
-        "note1Week":"1 haftadan so’ng obunangiz bekor qilinadi. Iltimos, admin bilan bog’laning!",
-        "note1Day":"1 kundan so’ng obunangiz bekor qilinadi. Iltimos, admin bilan bog’laning!",
-        "headText":"Diqqat:",
-        "buy":"Sotib olish"
+    "alert": {
+        "invalidAlert": "Bunday ma'lumotga ega foydalanuvchi afsuski topilmadi!",
+        "blockUserAlert": "Hurmatli foydalanuvchi siz bloklangansiz iltimos admin bilan bog'laning",
+        "note": "Eslatma:",
+        "dearText": "Hurmatli",
+        "note1Week": "1 haftadan so’ng obunangiz bekor qilinadi. Iltimos, admin bilan bog’laning!",
+        "note1Day": "1 kundan so’ng obunangiz bekor qilinadi. Iltimos, admin bilan bog’laning!",
+        "headText": "Diqqat:",
+        "buy": "Sotib olish"
     }
 }
