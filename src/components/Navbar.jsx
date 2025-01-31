@@ -13,6 +13,12 @@ const Navbar = ({ isVideo, setIsVideo, setIsAlert, isUser, isLogedIn }) => {
           <Link to="/" onClick={() => logoAnalytics()}>
             AHSAN LABS
           </Link>
+          <div className="betaButton">
+            <h1>BETA</h1>
+            <div className="betaButtonTooltip">
+            Sayt test rejimda ishlamoqda
+            </div>
+          </div>
         </div>
         <div className="options">
           <button
