@@ -35,11 +35,13 @@ const decryptData = (data) => {
   const bytes = CryptoJS.AES.decrypt(data, "your-secret-key");
   return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 };
-// userDocId funksiyasi
+
+
 const userDocId = async () => {
   const userId = localStorage.getItem("subscriptionType");
   if (process.env.NODE_ENV === "production") {
     return "anonymous";
+
   }
   try {
     const usersCollection = collection(db, "user");
@@ -58,9 +60,11 @@ const userDocId = async () => {
   }
 };
 
+
 // Analytics uchun umumiy funksiya
-const addAnalytics = async (action, param, paramValue, userIdValid) => {
-  if (process.env.NODE_ENV === "production") {
+
+const addAnalytics = async (action, param, paramValue,userIdValid) => {
+  if (process.env.NODE_ENV !== 'production') {
     return;
   }
   try {
