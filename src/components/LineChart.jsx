@@ -254,7 +254,7 @@ const Chart = ({
           }px`; // X koordinatasi
           customTimeLabel.style.top = `${
             chartRect.top + chartRect.height - 30
-          }px`; // Y koordinatasi
+          }px`;
         });
 
         const customTimeLabel = document.createElement('div');
@@ -264,7 +264,7 @@ const Chart = ({
         customTimeLabel.style.padding = '5px';
         customTimeLabel.style.borderRadius = '5px';
         customTimeLabel.style.fontSize = '12px';
-        customTimeLabel.style.display = 'none'; // Avval yashiringan
+        customTimeLabel.style.display = 'none';
         document.body.appendChild(customTimeLabel);
         }
 

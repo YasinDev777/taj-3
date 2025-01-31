@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect, memo } from 'react';
 import { Link } from 'react-router-dom';
 import Chart from '../components/LineChart';
@@ -28,7 +27,7 @@ const Main = memo(({
 
   useEffect(() => {
     if (analysis && data) {
-      // Создаем массив с объединением данных анализа и данных цен
+
       const updatedData = analysis
         .map((item,) => {
           const value = data[item.symbol]?.lastClosePrice;
@@ -39,9 +38,8 @@ const Main = memo(({
         })
         .filter(Boolean);
 
-      // Удаляем элементы, где active_card === false через splice
-      const filteredData = []; // Янги массив яратиш
-      let index = 0; // Индексни бошлаш
+      const filteredData = []; 
+      let index = 0;
 
       for (let i = 0; i < updatedData.length; i++) {
         if (updatedData[i].active_card === true) {
@@ -99,10 +97,6 @@ const Main = memo(({
   const handleScroll = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  // currentChart.map((item) => {
-  //   console.log(item.active_card);
-  // })
 
   const filteredChart2 = currentChart.filter((item) => item.active_card === false);
   const filteredChart = currentChart.filter((item) => item.active_card === true && item.lastClosePrice !== undefined);

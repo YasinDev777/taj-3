@@ -11,12 +11,10 @@ import { db } from "../firebase";
 import CryptoJS from "crypto-js";
 import Bowser from "bowser";
 
+const deviceType = browserInfo.getPlatformType();
 const browserInfo = Bowser.getParser(window.navigator.userAgent);
 const browserName = browserInfo.getBrowserName();
 let osName = "";
-const deviceType = browserInfo.getPlatformType(); // 'mobile', 'tablet', 'desktop'
-
-// Android va iOS ni aniqlash uchun regex
 
 const isAndroid = /Android/i.test(navigator.userAgent);
 const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
