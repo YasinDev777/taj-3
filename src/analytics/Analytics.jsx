@@ -11,10 +11,10 @@ import { db } from "../firebase";
 import CryptoJS from "crypto-js";
 import Bowser from "bowser";
 
-const deviceType = browserInfo.getPlatformType();
-const browserInfo = Bowser.getParser(window.navigator.userAgent);
-const browserName = browserInfo.getBrowserName();
 let osName = "";
+const browserInfo = Bowser.getParser(window.navigator.userAgent);
+const deviceType = browserInfo.getPlatformType();
+const browserName = browserInfo.getBrowserName();
 
 const isAndroid = /Android/i.test(navigator.userAgent);
 const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
