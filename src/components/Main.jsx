@@ -25,33 +25,39 @@ const Main = memo(({
   const [chartsPerPage, setChartsPerPage] = useState(isGrid);
   const [currentChart, setCurrentChart] = useState([]);
 
+  const [totallength, setTotallength] = useState("")
+
   useEffect(() => {
+
+
     if (analysis && data) {
-
+      // `analysis` ichidagi elementlarni `data` obyektidan tekshiramiz
       const updatedData = analysis
-        .map((item,) => {
-          const value = data[item.symbol]?.lastClosePrice;
-          const active_card = data[item.symbol]?.active_card;
-          return value !== undefined
-            ? { ...item,  lastClosePrice: value, active_card: active_card }
-            : null;
-        })
-        .filter(Boolean);
+          .map((item) => {
+              const matchedData = data[item.symbol]; // Objektdan `symbol` bo‘yicha ma’lumot olish
+              if (matchedData) {
+                  return {
+                      ...item,
+                      lastClosePrice: matchedData.lastClosePrice,
+                      active_card: matchedData.active_card
+                  };
+              }
+              return null;
+          })  
+          .filter(Boolean); // `null` qiymatlarni olib tashlaymiz
 
-      const filteredData = []; 
-      let index = 0;
-
-      for (let i = 0; i < updatedData.length; i++) {
-        if (updatedData[i].active_card === true) {
-          const newItem = { ...updatedData[i], index: index++ }; // Индекс қўшиш
-          filteredData.push(newItem); // filteredData массивига қўшиш
-        }
-      }
-
+          setTotallength(updatedData.length);
+      // `active_card === true` bo'lganlarni qoldiramiz va indeks qo'shamiz
+      const filteredData = updatedData
+          .filter(item => item.active_card === true)
+          .map((item, index) => ({ ...item, index }));
+  
+      // Paginatsiya hisoblash
       const lastChartIndex = currentPage * chartsPerPage;
       const firstChartIndex = lastChartIndex - chartsPerPage;
       setCurrentChart(filteredData.slice(firstChartIndex, lastChartIndex));
-    }
+  }
+  
   }, [data, currentPage, chartsPerPage]);
 
 
@@ -103,7 +109,7 @@ const Main = memo(({
   activeCardFilter.length = 0;
   activeCardFilter.push(...filteredChart2);
 
-  const totalPages = Math.ceil(analysis.length / chartsPerPage);
+  const totalPages = Math.ceil(totallength / chartsPerPage);
 
   return (
     <div className="main1">
