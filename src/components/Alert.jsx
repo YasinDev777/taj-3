@@ -45,7 +45,7 @@ const Alert = ({ isLogedIn, isUser, setAlertShown, alertShown }) => {
     if (isUser) {
       fetchSubscriptionData(isUser);
     }
-  }, [isUser]); // Faqat isUser ga qarash, chunki subscriptionDateEnd ni qaramlikka olishning keragi yo'q
+  }, [isUser]);
 
   useEffect(() => {
     const currentTime = new Date().getTime();
@@ -62,16 +62,14 @@ const Alert = ({ isLogedIn, isUser, setAlertShown, alertShown }) => {
         setLimit(false);
       }
       if (currentTime >= subscriptionDateEnd - 24 * 60 * 60 * 1000 && currentTime < subscriptionDateEnd && !alertShowState2) {
-        // 1 kun qoldi alerti
         setAlertShown(true);
         setLimit(true);
       localStorage.setItem('alert1', false);
       }
       if (currentTime >= subscriptionDateEnd) {
-        // Obuna muddati tugadi alerti
         updateSubscriptionToFree(isUser);
         localStorage.setItem('alert1', false);
-        localStorage.setItem('alert2', false); // Keyingi marta noto'g'ri alert chiqmasligi uchun
+        localStorage.setItem('alert2', false);
       }
     }
   }, [isLogedIn, subscriptionDateEnd, alertShown]);

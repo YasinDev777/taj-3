@@ -11,12 +11,10 @@ import { db } from "../firebase";
 import CryptoJS from "crypto-js";
 import Bowser from "bowser";
 
-const browserInfo = Bowser.getParser(window.navigator.userAgent);
-const browserName = browserInfo.getBrowserName();
 let osName = "";
-const deviceType = browserInfo.getPlatformType(); // 'mobile', 'tablet', 'desktop'
-
-// Android va iOS ni aniqlash uchun regex
+const browserInfo = Bowser.getParser(window.navigator.userAgent);
+const deviceType = browserInfo.getPlatformType();
+const browserName = browserInfo.getBrowserName();
 
 const isAndroid = /Android/i.test(navigator.userAgent);
 const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -35,11 +33,13 @@ const decryptData = (data) => {
   const bytes = CryptoJS.AES.decrypt(data, "your-secret-key");
   return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 };
-// userDocId funksiyasi
+
+
 const userDocId = async () => {
   const userId = localStorage.getItem("subscriptionType");
   if (process.env.NODE_ENV === "production") {
     return "anonymous";
+
   }
   try {
     const usersCollection = collection(db, "user");
@@ -58,9 +58,11 @@ const userDocId = async () => {
   }
 };
 
+
 // Analytics uchun umumiy funksiya
-const addAnalytics = async (action, param, paramValue, userIdValid) => {
-  if (process.env.NODE_ENV === "production") {
+
+const addAnalytics = async (action, param, paramValue,userIdValid) => {
+  if (process.env.NODE_ENV !== 'production') {
     return;
   }
   try {

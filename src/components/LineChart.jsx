@@ -254,18 +254,19 @@ const Chart = ({
           }px`; // X koordinatasi
           customTimeLabel.style.top = `${
             chartRect.top + chartRect.height - 30
-          }px`; // Y koordinatasi
+          }px`;
         });
-        const customTimeLabel = document.createElement("div");
-        customTimeLabel.style.position = "absolute";
-        customTimeLabel.style.background = "black";
-        customTimeLabel.style.color = "white";
-        customTimeLabel.style.padding = "5px";
-        customTimeLabel.style.borderRadius = "5px";
-        customTimeLabel.style.fontSize = "12px";
-        customTimeLabel.style.display = "none"; // Avval yashiringan
+
+        const customTimeLabel = document.createElement('div');
+        customTimeLabel.style.position = 'absolute';
+        customTimeLabel.style.background = 'black';
+        customTimeLabel.style.color = 'white';
+        customTimeLabel.style.padding = '5px';
+        customTimeLabel.style.borderRadius = '5px';
+        customTimeLabel.style.fontSize = '12px';
+        customTimeLabel.style.display = 'none';
         document.body.appendChild(customTimeLabel);
-      }
+        }
 
       const candlestickSeries = chart.addCandlestickSeries({
         upColor: isDarkMode ? "#27a691" : "#4caf50",

@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect, memo } from 'react';
 import { Link } from 'react-router-dom';
 import Chart from '../components/LineChart';
@@ -29,33 +28,8 @@ const Main = memo(({
   const [totallength, setTotallength] = useState("")
 
   useEffect(() => {
-    // if (analysis && data) {
-    //   // Создаем массив с объединением данных анализа и данных цен
-    //   const updatedData = analysis
-    //     .map((item) => {
-    //       const value = data[item.symbol]?.lastClosePrice;
-    //       const active_card = data[item.symbol]?.active_card;
-    //       return value !== undefined
-    //         ? { ...item,  lastClosePrice: value, active_card: active_card }
-    //         : null;
-    //     })
-    //     .filter(Boolean);
-    //   // Удаляем элементы, где active_card === false через splice
-    //   const filteredData = []; // Янги массив яратиш
-    //   let index = 0; // Индексни бошлаш
 
-    //   for (let i = 0; i < updatedData.length; i++) {
-    //     if (updatedData[i].active_card === true) {
-    //       const newItem = { ...updatedData[i], index: index++ }; // Индекс қўшиш
-    //       filteredData.push(newItem); // filteredData массивига қўшиш
-    //     }
-    //   }
 
-    //   const lastChartIndex = currentPage * chartsPerPage;
-    //   const firstChartIndex = lastChartIndex - chartsPerPage;
-    //   setCurrentChart(filteredData.slice(firstChartIndex, lastChartIndex));
-    //   // console.log(filteredData);
-    // }
     if (analysis && data) {
       // `analysis` ichidagi elementlarni `data` obyektidan tekshiramiz
       const updatedData = analysis
@@ -129,10 +103,6 @@ const Main = memo(({
   const handleScroll = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  // currentChart.map((item) => {
-  //   console.log(item.active_card);
-  // })
 
   const filteredChart2 = currentChart.filter((item) => item.active_card === false);
   const filteredChart = currentChart.filter((item) => item.active_card === true && item.lastClosePrice !== undefined);
