@@ -46,13 +46,13 @@ const Main = memo(({
           })  
           .filter(Boolean); // `null` qiymatlarni olib tashlaymiz
 
-          setTotallength(updatedData.length);
-      // `active_card === true` bo'lganlarni qoldiramiz va indeks qo'shamiz
-      const filteredData = updatedData
+          // `active_card === true` bo'lganlarni qoldiramiz va indeks qo'shamiz
+          const filteredData = updatedData
           .filter(item => item.active_card === true)
           .map((item, index) => ({ ...item, index }));
-  
-      // Paginatsiya hisoblash
+          
+          // Paginatsiya hisoblash
+          setTotallength(filteredData.length);
       const lastChartIndex = currentPage * chartsPerPage;
       const firstChartIndex = lastChartIndex - chartsPerPage;
       setCurrentChart(filteredData.slice(firstChartIndex, lastChartIndex));
