@@ -9,13 +9,11 @@ import { db } from '../firebase';
 const Alert = ({ isLogedIn, isUser, setAlertShown, alertShown }) => {
   const [subscriptionDateEnd, setSubscriptionDateEnd] = useState(null);
   const [limit, setLimit] = useState(true);
-
   const updateSubscriptionToFree = async (userName) => {
     try {
       const usersCollection = collection(db, 'user');
       const userQuery = query(usersCollection, where('name', '==', userName));
       const querySnapshot = await getDocs(userQuery);
-
       if (!querySnapshot.empty) {
         const userDoc = querySnapshot.docs[0]; // Hujjatni olamiz
         const userRef = doc(db, 'user', userDoc.id); // Hujjat manzilini aniqlaymiz
@@ -40,7 +38,6 @@ const Alert = ({ isLogedIn, isUser, setAlertShown, alertShown }) => {
       console.error(error);
     }
   };
-
   useEffect(() => {
     if (isUser) {
       fetchSubscriptionData(isUser);
