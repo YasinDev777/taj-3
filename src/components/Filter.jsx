@@ -132,7 +132,7 @@ const Filter = ({
             <h1>Texnik analizlar</h1>
             <p>Chart patterns</p>
           </div>
-          <button
+          {/* <button
             className="video-btn2"
             onClick={() => {
               setIsVideo(!isVideo);
@@ -141,7 +141,7 @@ const Filter = ({
             style={isVideo === true ? { display: 'none' } : { display: 'flex' }}
           >
             <RxVideo /> Foydalanish videosi
-          </button>
+          </button> */}
         </div>
         <nav>
           <div className="fixed-div">
