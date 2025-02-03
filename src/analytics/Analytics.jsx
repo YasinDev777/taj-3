@@ -34,12 +34,10 @@ const decryptData = (data) => {
   return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 };
 
-
 const userDocId = async () => {
   const userId = localStorage.getItem("subscriptionType");
   if (process.env.NODE_ENV === "production") {
     return "anonymous";
-
   }
   try {
     const usersCollection = collection(db, "user");
@@ -49,18 +47,15 @@ const userDocId = async () => {
     );
     const querySnapshot = await getDocs(user_query);
     for (const docs of querySnapshot.docs) {
-      return docs.id; // Birinchi hujjatning ID-sini qaytaradi
+      return docs.id;
     }
-    return "anonymous"; // Agar hujjat topilmasa, 'anonymous' qaytaradi
+    return "anonymous";
   } catch (err) {
     console.error("Xatolik yuz berdi:", err);
     return "anonymous";
   }
 };
-
-
 // Analytics uchun umumiy funksiya
-
 const addAnalytics = async (action, param, paramValue,userIdValid) => {
   if (process.env.NODE_ENV !== 'production') {
     return;
