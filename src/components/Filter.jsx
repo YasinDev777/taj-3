@@ -7,10 +7,10 @@ import Alert from './Alert';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import { FaLock } from 'react-icons/fa6';
+import { useSelector, useDispatch } from 'react-redux';
+
 import { FilterAnalaysisAnalytics, FilterAnalaysisTypeAnalytics, FilterClearAnalytics, FilterGridAnalytics, FilterTimeFrameAnalytics, VideoAnalytics } from '../analytics/Analytics';
 const Filter = ({
-  setIsVideo,
-  isVideo,
   isUser,
   alertShown,
   isLogedIn,
@@ -33,6 +33,13 @@ const Filter = ({
   setSelectValuesId,
   forFilterTimeData
 }) => {
+  const video = useSelector((state) => state.video.video);
+  
+    const dispatch = useDispatch();
+  
+    const handleVideoChange = () => {
+      dispatch({ type: 'IsVideo' });
+    };
   const [forFilterData, setForFilterData] = useState([]);
   const [forTimeData] = useState([]);
 
@@ -142,10 +149,10 @@ const Filter = ({
             <p className='text-lg'>Chart patterns</p>
           </div>
           <button
-            // style={isVideo === true ? { display: 'none' } : { display: 'flex' }}
+            // style={video === true ? { display: 'none' } : { display: 'flex' }}
             className="hidden max-lg:flex text-base underline"
             onClick={() => {
-              setIsVideo(!isVideo);
+              handleVideoChange()
               VideoAnalytics('open');
             }}
           >

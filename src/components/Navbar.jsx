@@ -1,13 +1,44 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { FiArrowRightCircle } from "react-icons/fi";
+
 import {
   ConatactAnalytics,
   logoAnalytics,
   pageAnalytics,
   VideoAnalytics,
 } from "../analytics/Analytics";
-const Navbar = ({ isVideo, setIsVideo, setIsAlert, isUser, isLogedIn }) => {
+import React, { useCallback, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { FiArrowRightCircle } from 'react-icons/fi';
+import { useSelector, useDispatch } from 'react-redux';
+const Navbar = ({ setIsAlert, isUser, isLogedIn }) => {
+
+  const video = useSelector((state) => state.video.video);
+
+  const dispatch = useDispatch();
+
+  const handleVideoChange = () => {
+    dispatch({ type: 'IsVideo' });
+  };
+
+
+
+  ///// 
+  const data = useSelector((state) => state.data.data);
+
+  console.log(data);
+  ///////
+
+
+  const handleVideoClick = useCallback(() => {
+    setIsVideo(prevState => !prevState);
+    VideoAnalytics('open');
+  }, [video]);
+
+  const handleLoginClick = useCallback(() => {
+    setIsVideo(false); // video oynasini yopish
+    pageAnalytics('toLoginPage');
+  }, [video]);
+
+
   return (
     <>
       <div className="flex justify-between items-center h-20 px-8 bg-white">
@@ -42,11 +73,9 @@ const Navbar = ({ isVideo, setIsVideo, setIsAlert, isUser, isLogedIn }) => {
           <Link to="/roadmap">Yo'l xaritasi</Link>
           <button
             className="video-btn"
-            onClick={() => {
-              setIsVideo(!isVideo);
-              VideoAnalytics("open");
-            }}
-            style={isVideo === true ? { display: "none" } : { display: "flex" }}
+           
+            style={video === true ? { display: "none" } : { display: "flex" }}
+            onClick={handleVideoChange}
           >
             Foydalanish videosi
           </button>
@@ -60,15 +89,9 @@ const Navbar = ({ isVideo, setIsVideo, setIsAlert, isUser, isLogedIn }) => {
             <img className="w-7 max-md-plus:w-5" src="./images/telegramIcon.svg" alt="" />
           </Link>
           {isLogedIn === false ? (
-            <Link
-              to="/login"
-              onClick={() => {
-                setIsVideo(false);
-                pageAnalytics("toLoginPage");
-              }}
-            >
+              <Link to="/login" onClick={handleLoginClick}>
               <button
-                onClick={() => setIsAlert(false)}
+              onClick={() => setIsAlert(false)}
                 className="flex items-center gap-2 bg-black text-white rounded-full text-2xl px-5 py-1 max-md-plus:gap-1 max-md-plus:text-xs px"
               >
                 Kirish <FiArrowRightCircle />
@@ -80,7 +103,6 @@ const Navbar = ({ isVideo, setIsVideo, setIsAlert, isUser, isLogedIn }) => {
         </div>
       </div>
     </>
-  );
-};
-
+  )
+}
 export default Navbar;
