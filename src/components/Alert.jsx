@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RiErrorWarningLine } from 'react-icons/ri';
@@ -86,27 +85,28 @@ const Alert = ({ isLogedIn, isUser, setAlertShown, alertShown }) => {
   };
 
   return (
-    <div className="warning-alert" style={alertShown ? { display: 'flex' } : { display: 'none' }}>
+    <div className="w-11/12 m-auto my-5 flex justify-between items-center bg-blockCard text-white  p-5 pr-8 rounded-2xl" style={alertShown ? { display: 'flex' } : { display: 'none' }}>
       {limit === false ? (
-        <div className="war-texts">
-          <h3>
+        <div>
+          <h3 className='flex gap-2 items-center text-2xl'>
             <RiErrorWarningLine /> Eslatma:
           </h3>
-          <p>Hurmatli, {isUser} 1 haftadan so’ng obunangiz bekor qilinadi. Iltimos, admin bilan bog’laning!</p>
+          <p className='pl-8'>Hurmatli, {isUser} 1 haftadan so’ng obunangiz bekor qilinadi. Iltimos, admin bilan bog’laning!</p>
         </div>
       ) : (
-        <div className="war-texts">
-          <h3>
+        <div>
+          <h3 className='flex gap-2 items-center text-2xl'>
             <RiErrorWarningLine /> Diqqat:
           </h3>
           <p>Hurmatli, {isUser} 1 kundan so’ng obunangiz bekor qilinadi. Iltimos, admin bilan bog’laning!</p>
         </div>
       )}
-      <div className="war-options">
-        <Link to="https://t.me/ahsanlabs_admin" target="blank">
+      <div className="flex items-center gap-8">
+        <Link to="https://t.me/ahsanlabs_admin" className='border p-2 rounded-md' target="blank">
           <button>Sotib olish</button>
         </Link>
-        <BiX onClick={handleCloseAlert} />
+        <div className="border bottom-1 h-10 bg-white"></div>
+        <BiX onClick={handleCloseAlert} className='text-2xl' />
       </div>
     </div>
   );

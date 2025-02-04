@@ -176,7 +176,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 99;
+  z-index: 10;
   -webkit-backdrop-filter: calc(var(--index) * 0.5);
   -moz-backdrop-filter: calc(var(--index) * 0.5);
   -o-backdrop-filter: calc(var(--index) * 0.5);
