@@ -16,9 +16,18 @@ const Navbar = ({ setIsAlert, isUser, isLogedIn }) => {
   const handleVideoChange = () => {
     dispatch({ type: 'IsVideo' });
   };
+
+
+
+  ///// 
+  const data = useSelector((state) => state.data.data);
+
+  console.log(data);
+  ///////
+
   
   const handleVideoClick = useCallback(() => {
-    setIsVideo(prevState => !prevState);   
+    setIsVideo(prevState => !prevState);
     VideoAnalytics('open');
   }, [video]);
 
