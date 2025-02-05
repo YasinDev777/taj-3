@@ -34,12 +34,12 @@ const Filter = ({
   forFilterTimeData
 }) => {
   const video = useSelector((state) => state.video.video);
-  
-    const dispatch = useDispatch();
-  
-    const handleVideoChange = () => {
-      dispatch({ type: 'IsVideo' });
-    };
+
+  const dispatch = useDispatch();
+
+  const handleVideoChange = () => {
+    dispatch({ type: 'IsVideo' });
+  };
   const [forFilterData, setForFilterData] = useState([]);
   const [forTimeData] = useState([]);
 
@@ -101,7 +101,7 @@ const Filter = ({
 
   // useEffect(() => {
   //   const handleClickOutside = (event) => {
-  //     if (!event.target.closest('.options-div')) {
+  //     if (!open) {
   //       setOpen(false);
   //       setOpen1(false);
   //       setOpen2(false);
@@ -115,7 +115,7 @@ const Filter = ({
   //   };
   // }, []);
 
-  const handleToDefoult = () => {
+  const handleToDefault = () => {
     setOpen(false);
     setOpen1(false);
     setOpen2(false);
@@ -130,7 +130,7 @@ const Filter = ({
     setIsGrid(6);
     FilterClearAnalytics();
   };
-  const firstDropDownAll = ()=>{
+  const firstDropDownAll = () => {
     setOpen(!open);
     setScreeningTypeValueId(null);
     setSelectValuesId(null)
@@ -142,10 +142,10 @@ const Filter = ({
   return (
     <>
       <Alert alertShown={alertShown} isLogedIn={isLogedIn} isUser={isUser} setAlertShown={setAlertShown} setIsLogedIn={setIsLogedIn} />
-      <div className="flex m-auto mt-5 w-11/12 bg-white justify-between items-center relative p-8 rounded-t-3xl max-lg:block max-sm:p-3 max-xs:w-[95%]">
+      <div className="flex w-[98%] m-auto mt-5 bg-white justify-between items-center relative p-8 rounded-t-3xl max-lg:block max-sm:p-3">
         <div className="max-lg:w-full max-lg:flex max-lg:justify-between max-lg:items-center">
-          <div className="">
-            <h1 className='text-3xl max-xl:text-2xl'>Texnik analizlar</h1>
+          <div>
+            <h1 className="text-3xl max-xl:text-2xl max-xs:text-sm">Texnik analizlar</h1>
             <p className='text-lg'>Chart patterns</p>
           </div>
           <button
@@ -156,7 +156,7 @@ const Filter = ({
               VideoAnalytics('open');
             }}
           >
-           Foydalanish videosi
+            Foydalanish videosi
           </button>
         </div>
         <div className="flex shadow-[0_0_5px_5px_#0000000D] rounded-xl w-4/5 items-center justify-between p-4 max-xl:w-full max-xl:my-4 max-xs:shadow-none max-xs:p-0 max-xs:py-1">
@@ -187,11 +187,7 @@ const Filter = ({
                     forFilterData.map((item, index) => (
                       <div
                         key={index}
-                        className={`px-4 py-2 text-sm border-t-2 hover:bg-gray-100 cursor-pointer max-sm:px-2 ${
-                          item.data.is_locked 
-                            ? 'text-gray-400 pointer-events-none' 
-                            : 'text-gray-700'
-                        }`}
+                        className={`px-4 py-2 text-sm border-t-2 hover:bg-gray-100 cursor-pointer max-sm:px-2 ${item.data.is_locked ? 'text-gray-400 pointer-events-none' : 'text-gray-700'}`}
                         onClick={() => {
                           setOpen(!open);
                           setSelectedPreset(item.data.name);
@@ -216,7 +212,7 @@ const Filter = ({
             <span className="text-sm text-gray-500 max-md-plus:hidden">{selectedPreset}</span>
             <div className="relative">
               <div
-                className="flex items-center justify-between w-36 p-2 text-gray-700 bg-white border border-gray-300 rounded-md cursor-pointer hover:border-gray-400 max-sm:w-24"
+                className={`flex items-center justify-between w-36 p-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:border-gray-400 max-sm:w-24  ${selectValues ? "cursor-pointer" : "cursor-not-allowed"}`}
                 onClick={() => {
                   setOpen1(!open1);
                   setOpen(open === true ? false : false);
@@ -343,7 +339,7 @@ const Filter = ({
               </div>
             </div>
           </div>
-          <LuFilterX className="text-xl hover:text-gray-600 transition-all max-sm:text-base" onClick={handleToDefoult} />
+          <LuFilterX className="text-xl hover:text-gray-600 transition-all max-sm:text-base cursor-pointer" onClick={handleToDefault} />
         </div>
       </div>
     </>

@@ -85,13 +85,13 @@ const Alert = ({ isLogedIn, isUser, setAlertShown, alertShown }) => {
   };
 
   return (
-    <div className="w-11/12 m-auto my-5 flex justify-between items-center bg-blockCard text-white  p-5 pr-8 rounded-2xl" style={alertShown ? { display: 'flex' } : { display: 'none' }}>
+    <div className="w-11/12 m-auto my-5 flex justify-between items-center bg-blockCard text-white  p-5 pr-8 rounded-2xl max-sm:w-[98%] max-sm:p-2 max-sm:pr-3 max-sm:rounded-lg" style={alertShown ? { display: 'flex' } : { display: 'none' }}>
       {limit === false ? (
         <div>
-          <h3 className='flex gap-2 items-center text-2xl'>
+          <h3 className='flex gap-2 items-center text-2xl max-sm:text-base'>
             <RiErrorWarningLine /> Eslatma:
           </h3>
-          <p className='pl-8'>Hurmatli, {isUser} 1 haftadan so’ng obunangiz bekor qilinadi. Iltimos, admin bilan bog’laning!</p>
+          <p className='pl-8 max-sm:text-[8px] max-sm:pl-6 '>Hurmatli, {isUser} 1 haftadan so’ng obunangiz bekor qilinadi. Iltimos, admin bilan bog’laning!</p>
         </div>
       ) : (
         <div>
@@ -101,12 +101,12 @@ const Alert = ({ isLogedIn, isUser, setAlertShown, alertShown }) => {
           <p>Hurmatli, {isUser} 1 kundan so’ng obunangiz bekor qilinadi. Iltimos, admin bilan bog’laning!</p>
         </div>
       )}
-      <div className="flex items-center gap-8">
-        <Link to="https://t.me/ahsanlabs_admin" className='border p-2 rounded-md' target="blank">
+      <div className="flex items-center gap-8 max-sm:gap-3">
+        <Link to="https://t.me/ahsanlabs_admin" className='border p-2 rounded-md max-sm:w-[85px] max-sm:text-sm ' target="blank">
           <button>Sotib olish</button>
         </Link>
-        <div className="border bottom-1 h-10 bg-white"></div>
-        <BiX onClick={handleCloseAlert} className='text-2xl' />
+        <div className="border bottom-1 h-10 bg-white max-sm:hidden "></div>
+        <BiX onClick={handleCloseAlert} className='text-2xl cursor-pointer' />
       </div>
     </div>
   );

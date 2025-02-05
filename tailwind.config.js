@@ -27,7 +27,6 @@ module.exports = {
         "max-lg": { max: "1024px" },  // 1024px dan kichik
         "max-xl": { max: "1280px" },  // 1280px dan kichik
         "max-2xl": { max: "1536px" }, // 1536px dan kichik
-
       },
       animation: {
         float: "float 3.5s infinite",

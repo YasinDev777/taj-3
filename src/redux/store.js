@@ -1,18 +1,17 @@
 // src/redux/store.js
-import { createStore, combineReducers } from 'redux';
-
+import { configureStore } from "@reduxjs/toolkit";
+import klinesReducer from "./slices/BinanceApi";
+import fetchBitCoinData from "./slices/BinanceApiForChart";
 import isVidoes from './reducers/isVideos';
 import data from './reducers/data';
 
-
-// Reducerlarni birlashtirish (combineReducers)
-const rootReducer = combineReducers({
-  video: isVidoes,
-  data: data,
-
+const store = configureStore({
+    reducer: {
+        video: isVidoes,
+        data: data,
+        klines: klinesReducer,
+        candlestick: fetchBitCoinData,
+    },
 });
-
-// Store yaratish
-const store = createStore(rootReducer);
 
 export default store;

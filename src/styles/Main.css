@@ -6,7 +6,7 @@
   align-items: flex-end;
   margin: 0 auto;
   overflow: hidden;
-  border-radius: 0 calc(var(--index) * 0.5) calc(var(--index) * 0.5);
+  border-radius: 0 0 calc(var(--index) * 0.5)  calc(var(--index) * 0.5);
 }
 
 .main {

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect, memo, useRef, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Chart from '../components/LineChart';
 import { BiLockOpen } from 'react-icons/bi';
@@ -7,84 +7,78 @@ import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
 import { LuScanSearch } from 'react-icons/lu';
 import Loader from './Loader';
 import { BlockChartAnalytics, chartAnalyticsOpen, PaginationAnalytics } from '../analytics/Analytics';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchKlines } from '../redux/slices/BinanceApi';
+import imageBlur from "../assets/chartimg.jpg";
+import { AnalysisContext } from '../context/Context';
 const Main = memo(({
   isCard,
-  analysis,
   isGrid,
   isAlert,
   setIsAlert,
   isLogedIn,
   filterLimit,
   isUser,
-  data,
   currentPage,
   setCurrentPage,
   loading,
   activeCardFilter
 }) => {
+
+  const analysis = useContext(AnalysisContext);
+
+
   const [chartsPerPage, setChartsPerPage] = useState(isGrid);
   const [currentChart, setCurrentChart] = useState([]);
 
   const [totallength, setTotallength] = useState("")
 
+  /////
+  const dispatch = useDispatch();
+  const prevAnalysisRef = useRef(analysis);
   useEffect(() => {
-    // if (analysis && data) {
-    //   // Создаем массив с объединением данных анализа и данных цен
-    //   const updatedData = analysis
-    //     .map((item) => {
-    //       const value = data[item.symbol]?.lastClosePrice;
-    //       const active_card = data[item.symbol]?.active_card;
-    //       return value !== undefined
-    //         ? { ...item,  lastClosePrice: value, active_card: active_card }
-    //         : null;
-    //     })
-    //     .filter(Boolean);
-    //   // Удаляем элементы, где active_card === false через splice
-    //   const filteredData = []; // Янги массив яратиш
-    //   let index = 0; // Индексни бошлаш
+    if (JSON.stringify(prevAnalysisRef.current) !== JSON.stringify(analysis)) {
+      const activeSymbols = new Set(analysis.map((item) => item.symbol));
+      activeSymbols.forEach((symbol) => {
+        dispatch(fetchKlines(symbol));
+      });
+      prevAnalysisRef.current = analysis; // Yangi qiymatni eslab qolamiz
+    }
+  }, [dispatch, analysis]);
+  
+  const { data } = useSelector((state) => state.klines);
 
-    //   for (let i = 0; i < updatedData.length; i++) {
-    //     if (updatedData[i].active_card === true) {
-    //       const newItem = { ...updatedData[i], index: index++ }; // Индекс қўшиш
-    //       filteredData.push(newItem); // filteredData массивига қўшиш
-    //     }
-    //   }
-
-    //   const lastChartIndex = currentPage * chartsPerPage;
-    //   const firstChartIndex = lastChartIndex - chartsPerPage;
-    //   setCurrentChart(filteredData.slice(firstChartIndex, lastChartIndex));
-    //   // console.log(filteredData);
-    // }
+  useEffect(() => {
     if (analysis && data) {
-      // `analysis` ichidagi elementlarni `data` obyektidan tekshiramiz
       const updatedData = analysis
-          .map((item) => {
-              const matchedData = data[item.symbol]; // Objektdan `symbol` bo‘yicha ma’lumot olish
-              if (matchedData) {
-                  return {
-                      ...item,
-                      lastClosePrice: matchedData.lastClosePrice,
-                      active_card: matchedData.active_card
-                  };
-              }
-              return null;
-          })  
-          .filter(Boolean); // `null` qiymatlarni olib tashlaymiz
+        .map((item) => {
+          const matchedData = data[item.symbol]; // Objektdan `symbol` bo‘yicha ma’lumot olish
+          if (matchedData) {
+            return {
+              ...item,
+              lastClosePrice: matchedData.lastClosePrice,
+              active_card: matchedData.active_card
+            };
+          }
+          return null;
+        })
+        .filter(Boolean); // `null` qiymatlarni olib tashlaymiz
 
-          setTotallength(updatedData.length);
+      setTotallength(updatedData.length);
       // `active_card === true` bo'lganlarni qoldiramiz va indeks qo'shamiz
       const filteredData = updatedData
-          .filter(item => item.active_card === true)
-          .map((item, index) => ({ ...item, index }));
-  
+        .filter(item => item.active_card === true)
+        .map((item, index) => ({ ...item, index }));
+
       // Paginatsiya hisoblash
       const lastChartIndex = currentPage * chartsPerPage;
       const firstChartIndex = lastChartIndex - chartsPerPage;
       setCurrentChart(filteredData.slice(firstChartIndex, lastChartIndex));
-  }
-  
+    }
   }, [data, currentPage, chartsPerPage]);
+
+
+
 
 
   useEffect(() => setChartsPerPage(isGrid), [isGrid]);
@@ -142,7 +136,7 @@ const Main = memo(({
   const totalPages = Math.ceil(totallength / chartsPerPage);
 
   return (
-    <div className="main1">
+    <div className="main1 w-[98%]">
       {loading ? (
         <Loader />
       ) : analysis.length > 0 && currentChart.length > 0 ? (
@@ -201,7 +195,7 @@ const Main = memo(({
                       <big className="block-info">{item.symbol}</big>
                     </div>
                     <div className="salary block-salary">
-                      <i>{'$' + item.lastClosePrice}</i>
+                      <i>{'$' + 194.32}</i>
                     </div>
                     <div className="navCardLink" style={{ cursor: 'default' }}>
                       <LuScanSearch className="scanIcon" />
@@ -218,7 +212,7 @@ const Main = memo(({
                         Qo’lga kiritish <BiLockOpen />
                       </button>
                     </div>
-                    <img src="/images/chartimg.jpg" alt="" />
+                    <img src={imageBlur} alt="" />
                   </div>
                   <div className="texx">
                     <p>

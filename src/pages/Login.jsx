@@ -8,7 +8,11 @@ import { Link, useNavigate } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/pagination";
 import { ConatactAnalytics, pageAnalytics } from "../analytics/Analytics";
-
+import ChatBotImage from "../assets/ChatBot.png"
+import ethImage from "../assets/ETH.png"
+import solImage from "../assets/SOL.png"
+import workingImage from "../assets/Working.png"
+import starAtlasImage from "../assets/StarAtlas.png"
 const Login = ({ setIsLogedIn, setIsUser, handleLogin }) => {
   const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
@@ -22,7 +26,6 @@ const Login = ({ setIsLogedIn, setIsUser, handleLogin }) => {
       alert();
     }
   };
-
   const handleChange = (event) => {
     setInputValue(event.target.value);
   };
@@ -45,12 +48,12 @@ const Login = ({ setIsLogedIn, setIsUser, handleLogin }) => {
 
   return (
     <div className="w-full h-dvh flex items-center justify-center bg-body">
-      <div class="w-11/12 h-[90%] rounded-2xl bg-white overflow-hidden grid grid-cols-2 max-md:grid-cols-1">
-        <div class="w-full h-full bg-main flex items-start justify-between flex-col max-md:hidden">
+      <div className="w-11/12 h-[90%] rounded-2xl bg-white overflow-hidden grid grid-cols-2 max-md:grid-cols-1">
+        <div className="w-full h-full bg-main flex items-start justify-between flex-col max-md:hidden">
           <div className="text-white cursor-pointer pl-5 pt-5 text-3xl absolute z-10">
-            <Link to="/" onClick={() => pageAnalytics("exitLoginPage")}>
+            <a href="/" onClick={() => pageAnalytics("exitLoginPage")}>
               <BsArrowLeftCircle />
-            </Link>
+            </a>
           </div>
           <div className="w-full h-full mt-7">
             <Swiper
@@ -71,16 +74,16 @@ const Login = ({ setIsLogedIn, setIsUser, handleLogin }) => {
                   </p>
                   <img
                     className="animate-float duration-1000 absolute w-44 left-8 top-12"
-                    src="./images/ETH.png"
+                    src={ethImage}
                     alt="eth"
                   />
                   <img
-                    src="./images/StarAtlas.png"
+                    src={starAtlasImage}
                     alt="starAtlas"
                     className="animate-float [animation-delay:2000ms] duration-1000 absolute w-44 left-8 bottom-20"
                   />
                   <img
-                    src="./images/SOL.png"
+                    src={solImage}
                     alt="sol"
                     className="animate-float [animation-delay:1000ms] duration-1000 absolute w-44 right-4 bottom-0 delay-700"
                   />
@@ -96,7 +99,7 @@ const Login = ({ setIsLogedIn, setIsUser, handleLogin }) => {
                 </p>
                 <img
                   className="object-contain h-72 p-3"
-                  src="/images/ChatBot.png"
+                  src={ChatBotImage}
                   alt="chatBot"
                 />
               </SwiperSlide>
@@ -109,7 +112,7 @@ const Login = ({ setIsLogedIn, setIsUser, handleLogin }) => {
                   imkoniyatlarini oson filterlar bilan kuzating.
                 </p>
                 <img
-                  src="/images/Working.png"
+                  src={workingImage}
                   alt="working"
                   className="object-contain h-80 p-3"
                 />
