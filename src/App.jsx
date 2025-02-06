@@ -13,45 +13,8 @@ import axios from "axios";
 import { AnalysisContext } from "./context/Context";
 import CryptoJS from "crypto-js";
 import { loginAnalytics, openWebsite } from "./analytics/Analytics";
-// const analysisGet = collection(db, "analysis");
-        // const q = query(analysisGet, where("inactive", "==", false));
-        // const allAnalysis = await getDocs(q);
-        // const points = collection(db, "points");
-        // const allPoints = await getDocs(points);
+import useFetchScreeningTypes from "./services/getFilterCollection";
 
-        // const timeFrameData = collection(db, "timeframe");
-        // const timeFrameDataGet = await getDocs(timeFrameData);
-        // timeFrameDataGet.forEach((docs) => {
-        //   const data = docs.data();
-        //   forFilterTimeData.push(data);
-        // });
-
-        // const pointNew = [];
-
-        // const fetchedData = [];
-        // allPoints.forEach((docs) => {
-        //   const data = docs.data();
-        //   pointNew.push({ ...data });
-        // });
-
-        // allAnalysis.forEach((doc) => {
-        //   const analysisId = doc.id;
-        //   const analysisMain = doc.data();
-        //   const lines = pointNew.filter(
-        //     (state) => state.analysis_id === analysisId
-        //   );
-
-        //   const timeFrameNames = forFilterTimeData
-        //     .filter((item) => item.timeframe_id === analysisMain.timeframe_id)
-        //     .map((item) => item.name);
-
-        //   fetchedData.push({
-        //     lines,
-        //     ...analysisMain,
-        //     analysisId,
-        //     timeFrameNames,
-        //   });
-        // });
 const App = () => {
   const [selectValues, setSelectValues] = useState(null);
   const [selectValuesId, setSelectValuesId] = useState("");
@@ -80,72 +43,10 @@ const App = () => {
       "your-secret-key"
     ).toString();
   };
-  // useEffect(() => {
-    // let isMounted = true;
-    // setLoading(true);
-
-  //   const analysisFunction = async () => {
-  //     try {
-        
-  //       const usersRef = collection(db, "analysis");
-  //       const usersQuery = query(usersRef, where("inactive", "==", false)); // Faqat aktiv userlar
-  //       const usersSnapshot = await getDocs(usersQuery); // Firestore'dan hujjatlarni olish
-
-  //       // Aktiv userlarning ID larini olish va ularning ma'lumotlarini saqlash
-  //       const pointsRef = collection(db, "points");
-  //       const timeFrameData = collection(db, "timeframe");
-  //       const timeFrameDataGet = await getDocs(timeFrameData);
-  //       timeFrameDataGet.forEach((docs) => {
-  //         const data = docs.data();
-  //         forFilterTimeData.push(data);
-  //       });
-  //       const allState = [];
-
-  //       for (const doc of usersSnapshot.docs) {
-  //         const analysisId = doc.id;
-  //         const data = doc.data();
-  //         const lineQuery = query(
-  //           pointsRef,
-  //           where("analysis_id", "==", analysisId)
-  //         ); // Points hujjatlariga query yuborish
-  //         const linesSnapshot = await getDocs(lineQuery); // Points hujjatlarini olish
-  //         const lines = linesSnapshot.docs.map((lineDoc) => lineDoc.data()); // Linesni olish
-
-  //         const timeFrameNames = forFilterTimeData
-  //           .filter((item) => item.timeframe_id === data.timeframe_id)
-  //           .map((item) => item.name);
-
-  //         allState.push({
-  //           analysisId,
-  //           ...data,
-  //           timeFrameNames,
-  //           lines, // lines array sifatida
-  //         });
-  //       }
-
-  //       if (isMounted) {
-  //         console.log(allState);
-  //         setMains(allState.sort((a, b) => b.created_at - a.created_at));
-  //         setAnalysis(allState.sort((a, b) => b.created_at - a.created_at));
-  //       }
-  //     } catch (err) {
-  //       setLoading(false);
-  //     } finally {
-  //       setTimeout(() => {
-  //         setLoading(false);
-  //       }, 1000);
-  //     }
-  //   };
-  //   analysisFunction();
-  //   return () => {
-  //     isMounted = false;
-  //   };
-  // }, []);
 
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
-
     const analysisFunction = async () => {
       try {
         const usersRef = collection(db, "analysis");
@@ -209,7 +110,14 @@ const App = () => {
   
     
   }, [])
-  
+
+
+  const [forFilterData, setForFilterData] = useState([]);
+  const {filterData } = useFetchScreeningTypes();
+
+  useEffect(() => {
+    setForFilterData(filterData)  
+  }, [filterData])
 
   const handleLogin = async (inputValue) => {
     let foundUser = null;
@@ -407,6 +315,8 @@ const App = () => {
     openWebsite();
   }, []);
 
+
+
   return (
     <div className="app">
       {location.pathname.includes("/chart") ||
@@ -440,6 +350,7 @@ const App = () => {
             screeningTypeValueId={screeningTypeValueId}
             setScreeningTypeValueId={setScreeningTypeValueId}
             setTimeFrameId={setTimeFrameId}
+            forFilterData={forFilterData}
             timeFrameId={timeFrameId}
             isUser={isUser}
             setCurrentPage={setCurrentPage}
