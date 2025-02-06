@@ -125,10 +125,6 @@ const Main = memo(({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // currentChart.map((item) => {
-  //   console.log(item.active_card);
-  // })
-
   const filteredChart2 = currentChart.filter((item) => item.active_card === false);
   const filteredChart = currentChart.filter((item) => item.active_card === true && item.lastClosePrice !== undefined);
   activeCardFilter.length = 0;

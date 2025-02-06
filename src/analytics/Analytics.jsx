@@ -11,12 +11,11 @@ import { db } from "../firebase";
 import CryptoJS from "crypto-js";
 import Bowser from "bowser";
 
-const browserInfo = Bowser.getParser(window.navigator.userAgent);
-const browserName = browserInfo.getBrowserName();
 let osName = "";
-const deviceType = browserInfo.getPlatformType(); // 'mobile', 'tablet', 'desktop'
+const browserInfo = Bowser.getParser(window.navigator.userAgent);
+const deviceType = browserInfo.getPlatformType();
+const browserName = browserInfo.getBrowserName();
 
-// Android va iOS ni aniqlash uchun regex
 
 const isAndroid = /Android/i.test(navigator.userAgent);
 const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -27,15 +26,22 @@ if (isAndroid === true) {
 } else {
   osName = browserInfo.getOSName();
 }
+let randomSixDigitNumber = null;
+
+function getRandomSixDigitNumber() {
+  if (randomSixDigitNumber === null) {
+    randomSixDigitNumber = Math.floor(100000 + Math.random() * 900000);
+  }
+  return randomSixDigitNumber;
+}
 
 const decryptData = (data) => {
   if (!data) {
-    return "anonymous";
+    return "anonymous_" + getRandomSixDigitNumber();
   }
   const bytes = CryptoJS.AES.decrypt(data, "your-secret-key");
   return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 };
-
 
 const userDocId = async () => {
 
@@ -52,15 +58,13 @@ const userDocId = async () => {
     );
     const querySnapshot = await getDocs(user_query);
     for (const docs of querySnapshot.docs) {
-      return docs.id; // Birinchi hujjatning ID-sini qaytaradi
+      return docs.id;
     }
-    return "anonymous"; // Agar hujjat topilmasa, 'anonymous' qaytaradi
+    return "anonymous_" + getRandomSixDigitNumber();
   } catch (err) {
     console.error("Xatolik yuz berdi:", err);
-    return "anonymous";
   }
 };
-
 
 // Analytics uchun umumiy funksiya
 
@@ -71,6 +75,9 @@ const addAnalytics = async (action, param, paramValue,userIdValid) => {
   }
   try {
     const userId = userIdValid ? userIdValid : await userDocId(); // user_id-ni
+
+    console.log(userId);
+    
     await addDoc(collection(db, "analytics"), {
       action: action,
       param: param,
@@ -85,6 +92,7 @@ const addAnalytics = async (action, param, paramValue,userIdValid) => {
     console.error("Xatolik yuz berdi:", error);
   }
 };
+
 // openWebsite funksiyasi
 export const openWebsite = async () => {
   await addAnalytics("open", "enteredSite", "enteredWebsite");

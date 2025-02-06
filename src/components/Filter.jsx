@@ -3,8 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
 import { LuFilterX } from 'react-icons/lu';
 import Alert from './Alert';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../firebase';
 import { FaLock } from 'react-icons/fa6';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -30,7 +28,7 @@ const Filter = ({
   setSelectedTime,
   setCurrentPage,
   setSelectValuesId,
-  forFilterTimeData
+  forFilterTimeData,
 }) => {
   const video = useSelector((state) => state.video.video);
 
@@ -83,6 +81,8 @@ const Filter = ({
   const gridOptions = [6, 12, 24];
 
   useEffect(() => {
+    if (forFilterData) {
+      
     const foundPresetData = forFilterData.find((item) => item.data.name === selectedPreset);
     if (foundPresetData) {
       setSelectValues(foundPresetData.data.type_id);
@@ -97,7 +97,7 @@ const Filter = ({
     } else {
       setFoundTimeId(null);
     }
-  }, [selectedPreset, selectedTime, forFilterData, forTimeData]);
+  }}, [selectedPreset, selectedTime, forFilterData, forTimeData])
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -348,4 +348,5 @@ const Filter = ({
     </>
   );
 };
+
 export default Filter;

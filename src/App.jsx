@@ -5,6 +5,8 @@ import MainPage from "./pages/mainPage"
 const App = () => {
 
 
+
+
   return (
     <div className="app">
       <MainPage/>

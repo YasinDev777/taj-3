@@ -1,5 +1,3 @@
-// xozirchalik ishlamaydi.
-
 const fetchBitCoinData = ({analysisSymbols , timeFrameIdState , setCandlestickData}) => {
     const fetchBitCoinData = async () => {
         try {

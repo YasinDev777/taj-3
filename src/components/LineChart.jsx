@@ -263,7 +263,7 @@ const Chart = ({
         customTimeLabel.style.padding = '5px';
         customTimeLabel.style.borderRadius = '5px';
         customTimeLabel.style.fontSize = '12px';
-        customTimeLabel.style.display = 'none'; // Avval yashiringan
+        customTimeLabel.style.display = 'none';
         document.body.appendChild(customTimeLabel);
       }
 
@@ -298,11 +298,10 @@ const Chart = ({
               const timeforHours =
                 new Date(`${year}-${month}-${day} ${hours}:00:00`).getTime() /
                 1000;
-              const timeforDaily =
-                new Date(`${year}-${month}-${day}`).getTime() / 1000;
+              const timeforDaily = new Date(`${year}-${month}-${day}`).getTime() / 1000;
 
               return {
-                time: timeFrameIdState === "1h" ? timeforHours : timeforDaily, // Unix timestamp (lightweight-charts uchun)
+                time: timeFrameIdState === "1d" ? timeforDaily : timeforHours, // Unix timestamp (lightweight-charts uchun)
                 value: item.price, // Narx qiymati
               };
             })
