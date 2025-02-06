@@ -65,6 +65,7 @@ const userDocId = async () => {
 // Analytics uchun umumiy funksiya
 
 const addAnalytics = async (action, param, paramValue,userIdValid) => {
+  
   if (process.env.NODE_ENV !== 'production') {
     return;
   }

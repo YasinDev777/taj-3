@@ -51,9 +51,9 @@ const Login = ({ setIsLogedIn, setIsUser, handleLogin }) => {
       <div className="w-11/12 h-[90%] rounded-2xl bg-white overflow-hidden grid grid-cols-2 max-md:grid-cols-1">
         <div className="w-full h-full bg-main flex items-start justify-between flex-col max-md:hidden">
           <div className="text-white cursor-pointer pl-5 pt-5 text-3xl absolute z-10">
-            <a href="/" onClick={() => pageAnalytics("exitLoginPage")}>
+            <Link to="/" onClick={() => pageAnalytics("exitLoginPage")}>
               <BsArrowLeftCircle />
-            </a>
+            </Link>
           </div>
           <div className="w-full h-full mt-7">
             <Swiper
@@ -73,19 +73,19 @@ const Login = ({ setIsLogedIn, setIsUser, handleLogin }) => {
                     imkoniyatlarini kuzating.
                   </p>
                   <img
-                    className="animate-float duration-1000 absolute w-44 left-8 top-12"
+                    className="animate-float duration-1000 absolute w-44 left-8 top-0"
                     src={ethImage}
                     alt="eth"
                   />
                   <img
                     src={starAtlasImage}
                     alt="starAtlas"
-                    className="animate-float [animation-delay:2000ms] duration-1000 absolute w-44 left-8 bottom-20"
+                    className="animate-float [animation-delay:2000ms] duration-1000 absolute w-44 left-8 bottom-10"
                   />
                   <img
                     src={solImage}
                     alt="sol"
-                    className="animate-float [animation-delay:1000ms] duration-1000 absolute w-44 right-4 bottom-0 delay-700"
+                    className="animate-float [animation-delay:1000ms] duration-1000 absolute w-44 right-4 -bottom-5 delay-700"
                   />
                 </div>
               </SwiperSlide>
@@ -120,29 +120,29 @@ const Login = ({ setIsLogedIn, setIsUser, handleLogin }) => {
             </Swiper>
           </div>
         </div>
-        <div className="w-full h-full bg-white text-center flex flex-col justify-center relative">
+        <div className="w-full h-full bg-white text-center flex flex-col justify-center relative max-md:p-2">
           <div className="hidden text-text max-md:flex cursor-pointer pl-5 pt-5 text-3xl top-2 absolute z-10">
             <Link to="/" onClick={() => pageAnalytics("exitLoginPage")}>
               <BsArrowLeftCircle />
             </Link>
           </div>
           <h1 className="font-extrabold text-5xl text-text mt-10">AHSAN.</h1>
-          <div className="w-10/12 m-auto bg-alert border border-solid border-1 border-cardText flex justify-between items-start flex-col px-10 pb-16 pt-4 gap-5 mt-5 rounded-2xl">
+          <div className="w-10/12 m-auto bg-alert border border-solid border-1 border-cardText flex justify-between items-start flex-col px-10 pb-16 pt-4 gap-5 mt-5 rounded-2xl max-md:w-full max-md:px-3">
             <h3 className="font-bold text-text text-2xl">Log In</h3>
             <div className="w-full h-auto flex flex-col items-center gap-5">
               <div className="w-full">
                 <label className="block text-start mt-5">
                   Tokenni kiriting
                 </label>
-                <div className="w-full h-16 mt-3 flex items-center justify-between px-2 overflow-hidden rounded-xl border border-cardText bg-white text-text">
+                <div className="w-full h-16 mt-3 flex items-center justify-between px-2 overflow-hidden rounded-xl border border-cardText bg-white text-text max-md:h-12">
                   <input
                     type="text"
                     value={inputValue}
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
-                    className="w-full h-full outline-none text-2xl"
+                    className="w-full h-full outline-none text-2xl max-md:text-xl"
                   />
-                  <LuClipboardCopy onClick={handlePaste} className="text-3xl" />
+                  <LuClipboardCopy onClick={handlePaste} className="text-3xl max-md:text-xl" />
                 </div>
               </div>
               <button

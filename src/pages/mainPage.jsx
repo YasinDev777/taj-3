@@ -22,7 +22,6 @@ const MainPage = () => {
     const [alertShown, setAlertShown] = useState(false);
     const [mains, setMains] = useState([]);
     const [analysis, setAnalysis] = useState([]);
-    const [pointsState, setPointsState] = useState([]);
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [forFilterTimeData] = useState([]);
@@ -48,46 +47,49 @@ const MainPage = () => {
 
         const analysisFunction = async () => {
             try {
-                const analysisGet = collection(db, 'analysis');
-                const q = query(analysisGet, where('inactive', '==', false));
-                const allAnalysis = await getDocs(q);
-                const points = collection(db, 'points');
-                const allPoints = await getDocs(points);
-                const timeFrameData = collection(db, 'timeframe');
+                const usersRef = collection(db, "analysis");
+                const usersQuery = query(usersRef, where("inactive", "==", false)); // Faqat aktiv userlar
+                const usersSnapshot = await getDocs(usersQuery); // Firestore'dan hujjatlarni olish
+            
+                // Timeframe data ni faqat bir marta olish
+                const timeFrameData = collection(db, "timeframe");
                 const timeFrameDataGet = await getDocs(timeFrameData);
                 timeFrameDataGet.forEach((docs) => {
-                    const data = docs.data();
-                    forFilterTimeData.push(data);
+                  const data = docs.data();
+                  forFilterTimeData.push(data);
                 });
 
-                const pointNew = [];
-
-                const fetchedData = [];
-                allPoints.forEach((docs) => {
-                    const data = docs.data();
-                    pointNew.push({ ...data });
+                // Points collection queryini oldindan yaratish
+                const pointsRef = collection(db, "points");
+            
+                // Har bir foydalanuvchi uchun barcha operatsiyalarni parallel ravishda bajarish
+                const allStatePromises = usersSnapshot.docs.map(async (doc) => {
+                  const analysisId = doc.id;
+                  const data = doc.data();
+            
+                  // Points hujjatlarini olish
+                  const lineQuery = query(pointsRef, where("analysis_id", "==", analysisId));
+                  const linesSnapshot = await getDocs(lineQuery);
+                  const lines = linesSnapshot.docs.map((lineDoc) => lineDoc.data());
+            
+                  // TimeFrameNamesni olish
+                  const timeFrameNames = forFilterTimeData
+                    .filter((item) => item.timeframe_id === data.timeframe_id)
+                    .map((item) => item.name);
+            
+                  return {
+                    analysisId,
+                    ...data,
+                    timeFrameNames,
+                    lines,
+                  };
                 });
-
-                allAnalysis.forEach((doc) => {
-                    const analysisId = doc.id;
-                    const analysisMain = doc.data();
-                    const lines = pointNew.filter((state) => state.analysis_id === analysisId);
-
-                    const timeFrameNames = forFilterTimeData
-                        .filter((item) => item.timeframe_id === analysisMain.timeframe_id)
-                        .map((item) => item.name);
-
-                    fetchedData.push({
-                        lines,
-                        ...analysisMain,
-                        analysisId,
-                        timeFrameNames
-                    });
-                });
+            
+                // Barcha foydalanuvchilarni bir vaqtda olish
+                const allState = await Promise.all(allStatePromises);
                 if (isMounted) {
-                    setPointsState(pointNew);
-                    setMains(fetchedData.sort((a, b) => b.created_at - a.created_at));
-                    setAnalysis(fetchedData.sort((a, b) => b.created_at - a.created_at));
+                    setMains(allState.sort((a, b) => b.created_at - a.created_at));
+                    setAnalysis(allState.sort((a, b) => b.created_at - a.created_at));
                 }
             } catch (err) {
                 setLoading(false);
@@ -113,6 +115,7 @@ const MainPage = () => {
             } else {
                 userForm = inputValue;
             }
+            
             const usersCollection = collection(db, 'user');
             const user_query = await query(usersCollection, where('user_id', '==', userForm));
             const querySnapshot = await getDocs(user_query);
@@ -196,14 +199,14 @@ const MainPage = () => {
 
     return (
         <div className="app">
-            
+
             <AnalysisContext.Provider value={analysis}>
 
                 <Routes>
                     <Route path="/" element={<Home setAnalysis={setAnalysis} setLoading={setLoading} analysis={analysis} loading={loading} isLogedIn={isLogedIn} isAlert={isAlert} setIsAlert={setIsAlert} filterLimit={filterLimit} mains={mains} setAlertShown={setAlertShown} alertShown={alertShown} isUser={isUser} forFilterTimeData={forFilterTimeData} setIsLogedIn={setIsLogedIn} />} />
-                    <Route path="/chart/:id" element={<Chart setIsAlert={setIsAlert} isUser={isUser} isLogedIn={isLogedIn} pointsState={pointsState} analysis={analysis} forFilterTimeData={forFilterTimeData} />} />
+                    <Route path="/chart/:id" element={<Chart setIsAlert={setIsAlert} isUser={isUser} isLogedIn={isLogedIn} analysis={analysis} forFilterTimeData={forFilterTimeData} />} />
                     <Route path="/login" element={<Login setIsUser={setIsUser} setIsLogedIn={setIsLogedIn} handleLogin={handleLogin} />} />
-                    <Route path='/roadmap' element={<RoadMap/>} />
+                    <Route path='/roadmap' element={<RoadMap />} />
                 </Routes>
             </AnalysisContext.Provider>
             <Popup isAlert={isAlert} setIsAlert={setIsAlert} closeAlert={closeAlert} />

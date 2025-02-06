@@ -20,7 +20,6 @@ const Chart = ({
   isCard,
   isUser,
   isLogedIn,
-  // pointsState,
   setIsAlert,
   isAlert, 
   data,

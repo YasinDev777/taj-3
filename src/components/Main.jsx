@@ -22,10 +22,11 @@ const Main = memo(({
   currentPage,
   setCurrentPage,
   loading,
-  activeCardFilter
+  activeCardFilter,
+  analysis
 }) => {
 
-  const analysis = useContext(AnalysisContext);
+  // const analysis = useContext(AnalysisContext);
 
 
   const [chartsPerPage, setChartsPerPage] = useState(isGrid);

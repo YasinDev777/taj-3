@@ -96,24 +96,24 @@ const Filter = ({
     }
   }, [selectedPreset, selectedTime, forFilterData, forTimeData]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const dropdowns = document.querySelectorAll('.dropdown-content');
+      dropdowns.forEach(dropdown => {
+        if (!dropdown.contains(event.target) && !event.target.closest('.dropdown-trigger')) {
+          setOpen(false);
+          setOpen1(false);
+          setOpen2(false);
+          setOpen3(false);
+        }
+      });
+    };
 
-
-
-  // useEffect(() => {
-  //   const handleClickOutside = (event) => {
-  //     if (!open) {
-  //       setOpen(false);
-  //       setOpen1(false);
-  //       setOpen2(false);
-  //       setOpen3(false);
-  //     }
-  //   };
-
-  //   document.addEventListener('click', handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener('click', handleClickOutside);
-  //   };
-  // }, []);
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   const handleToDefault = () => {
     setOpen(false);
@@ -164,19 +164,19 @@ const Filter = ({
             <span className="text-border max-md-plus:hidden">Analaysis</span>
             <div className="relative">
               <div
-                className="flex items-center justify-between w-36 p-2 text-gray-700 bg-white border border-gray-300 rounded-md cursor-pointer hover:border-gray-400 max-sm:w-28"
+                className="dropdown-trigger flex items-center justify-between w-36 p-2 text-gray-700 bg-white border border-gray-300 rounded-md cursor-pointer hover:border-gray-400 max-sm:w-28"
                 onClick={() => {
                   setOpen(!open);
-                  setOpen1(open1 === true ? false : false);
-                  setOpen2(open2 === true ? false : false);
-                  setOpen3(open3 === true ? false : false);
+                  setOpen1(false);
+                  setOpen2(false);
+                  setOpen3(false);
                 }}
               >
                 <span className="text-base max-sm:text-sm">{selectedPreset}</span>
                 <FiChevronDown className="w-5 h-5 text-gray-400 max-sm:w-4" />
               </div>
               {open && !forFilterData.some((item) => item.data.length <= 0) && (
-                <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
+                <div className="dropdown-content absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
                   <div
                     className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer max-sm:px-2"
                     onClick={firstDropDownAll}
@@ -212,18 +212,18 @@ const Filter = ({
             <span className="text-sm text-gray-500 max-md-plus:hidden">{selectedPreset}</span>
             <div className="relative">
               <div
-                className={`flex items-center justify-between w-36 p-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:border-gray-400 max-sm:w-24  ${selectValues ? "cursor-pointer" : "cursor-not-allowed"}`}
+                className={`dropdown-trigger flex items-center justify-between w-36 p-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:border-gray-400 max-sm:w-24  ${selectValues ? "cursor-pointer" : "cursor-not-allowed"}`}
                 onClick={() => {
                   setOpen1(!open1);
-                  setOpen(open === true ? false : false);
-                  setOpen2(setOpen2 === true ? false : false);
-                  setOpen3(setOpen3 === true ? false : false);
+                  setOpen(false);
+                  setOpen2(false);
+                  setOpen3(false);
                 }}
               >
                 <span className="text-base max-sm:text-sm">{selectedTicker}</span>
                 <FiChevronDown className="w-5 h-5 text-gray-400 max-sm:w-4" />
               </div>
-              <div className={`absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg ${open1 === false || selectedPreset === 'All' || selectedPreset === 'Type' ? 'hidden' : 'block'}`}>
+              <div className={`dropdown-content absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg ${open1 === false || selectedPreset === 'All' || selectedPreset === 'Type' ? 'hidden' : 'block'}`}>
                 {selectValues && (
                   <div
                     className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer max-sm:px-2"
@@ -266,18 +266,18 @@ const Filter = ({
             <span className="text-sm text-gray-500 max-md-plus:hidden">Grid</span>
             <div className="relative">
               <div
-                className="flex items-center justify-between w-20 p-2 text-gray-700 bg-white border border-gray-300 rounded-md cursor-pointer hover:border-gray-400 max-sm:w-12"
+                className="dropdown-trigger flex items-center justify-between w-20 p-2 text-gray-700 bg-white border border-gray-300 rounded-md cursor-pointer hover:border-gray-400 max-sm:w-12"
                 onClick={() => {
                   setOpen2(!open2);
-                  setOpen(open === true ? false : false);
-                  setOpen1(open1 === true ? false : false);
-                  setOpen3(setOpen3 === true ? false : false);
+                  setOpen(false);
+                  setOpen1(false);
+                  setOpen3(false);
                 }}
               >
                 <span className="text-base max-sm:text-xs">{isGrid}</span>
                 <FiChevronDown className="w-5 h-5 text-gray-400 max-sm:w-4" />
               </div>
-              <div className={`absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg ${open2 ? 'block' : 'hidden'}`}>
+              <div className={`dropdown-content absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg ${open2 ? 'block' : 'hidden'}`}>
                 {gridOptions.map((item, index) => (
                   <div
                     key={index}
@@ -299,18 +299,18 @@ const Filter = ({
             <span className="text-sm text-gray-500 max-md-plus:hidden">Timeframe</span>
             <div className="relative">
               <div
-                className="flex items-center justify-between w-20 p-2 text-gray-700 bg-white border border-gray-300 rounded-md cursor-pointer hover:border-gray-400 max-sm:w-12"
+                className="dropdown-trigger flex items-center justify-between w-20 p-2 text-gray-700 bg-white border border-gray-300 rounded-md cursor-pointer hover:border-gray-400 max-sm:w-12"
                 onClick={() => {
                   setOpen3(!open3);
-                  setOpen(open === true ? false : false);
-                  setOpen1(open1 === true ? false : false);
-                  setOpen2(open2 === true ? false : false);
+                  setOpen(false);
+                  setOpen1(false);
+                  setOpen2(false);
                 }}
               >
                 <span className="text-base max-sm:text-xs">{selectedTime}</span>
                 <FiChevronDown className="w-5 h-5 text-gray-400 max-sm:w-4" />
               </div>
-              <div className={`absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg ${open3 === false || forFilterTimeData.some((item) => item.length <= 0) ? 'hidden' : 'block'}`}>
+              <div className={`dropdown-content absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg ${open3 === false || forFilterTimeData.some((item) => item.length <= 0) ? 'hidden' : 'block'}`}>
                 <div
                   className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer max-sm:py-2 max-sm:px-1"
                   onClick={() => {

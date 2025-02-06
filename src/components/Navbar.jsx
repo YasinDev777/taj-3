@@ -32,7 +32,7 @@ const Navbar = ({ setIsAlert, isUser, isLogedIn }) => {
   // }
 
   const handleLoginClick = () => {  
-    dispatch({ type: 'IsVideo' });
+    // dispatch({ type: 'IsVideo' });
     pageAnalytics('toLoginPage');
   };
 
@@ -88,14 +88,11 @@ const Navbar = ({ setIsAlert, isUser, isLogedIn }) => {
             <img className="w-7 max-md-plus:w-5" src={logoIcon} alt="" />
           </Link>
           {isLogedIn === false ? (
-              <a onClick={handleLoginClick} href="/login">
-              <button
-              onClick={() => setIsAlert(false)}
+              <Link onClick={handleLoginClick} to="/login"
                 className="flex items-center gap-2 bg-black text-white rounded-full text-2xl px-5 py-1 max-md-plus:gap-1 max-md-plus:text-xs px"
               >
                 Kirish <FiArrowRightCircle />
-              </button>
-            </a>
+            </Link>
           ) : (
             <h3 className="text-3xl font-semibold max-sm:text-xl ">{isUser}</h3>
           )}
@@ -105,3 +102,5 @@ const Navbar = ({ setIsAlert, isUser, isLogedIn }) => {
   )
 }
 export default Navbar;
+ {/* <button
+              onClick={() => setIsAlert(false)} */}
