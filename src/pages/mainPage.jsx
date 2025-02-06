@@ -200,8 +200,7 @@ const MainPage = () => {
     return (
         <div className="app">
 
-            <AnalysisContext.Provider value={analysis}>
-
+            <AnalysisContext.Provider value={analysis}  >
                 <Routes>
                     <Route path="/" element={<Home setAnalysis={setAnalysis} setLoading={setLoading} analysis={analysis} loading={loading} isLogedIn={isLogedIn} isAlert={isAlert} setIsAlert={setIsAlert} filterLimit={filterLimit} mains={mains} setAlertShown={setAlertShown} alertShown={alertShown} isUser={isUser} forFilterTimeData={forFilterTimeData} setIsLogedIn={setIsLogedIn} />} />
                     <Route path="/chart/:id" element={<Chart setIsAlert={setIsAlert} isUser={isUser} isLogedIn={isLogedIn} analysis={analysis} forFilterTimeData={forFilterTimeData} />} />

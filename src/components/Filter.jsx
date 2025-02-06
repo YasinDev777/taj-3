@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
 import { LuFilterX } from 'react-icons/lu';
-import { RxVideo } from 'react-icons/rx';
 import Alert from './Alert';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -43,9 +42,13 @@ const Filter = ({
   const [forFilterData, setForFilterData] = useState([]);
   const [forTimeData] = useState([]);
 
+  
+
+
   useEffect(() => {
     const fetchs = async () => {
-      try {
+      try {        
+        getScreeningData()
         const screeningTypes = collection(db, 'screening_type');
         const screeningTypesGet = await getDocs(screeningTypes);
 
