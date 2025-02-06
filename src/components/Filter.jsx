@@ -7,10 +7,10 @@ import Alert from './Alert';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import { FaLock } from 'react-icons/fa6';
+import { useSelector, useDispatch } from 'react-redux';
+
 import { FilterAnalaysisAnalytics, FilterAnalaysisTypeAnalytics, FilterClearAnalytics, FilterGridAnalytics, FilterTimeFrameAnalytics, VideoAnalytics } from '../analytics/Analytics';
 const Filter = ({
-  setIsVideo,
-  isVideo,
   isUser,
   alertShown,
   isLogedIn,
@@ -33,9 +33,16 @@ const Filter = ({
   setSelectValuesId,
   forFilterTimeData
 }) => {
+  const video = useSelector((state) => state.video.video);
+
+  const dispatch = useDispatch();
+
+  const handleVideoChange = () => {
+    dispatch({ type: 'IsVideo' });
+  };
   const [forFilterData, setForFilterData] = useState([]);
   const [forTimeData] = useState([]);
- 
+
   useEffect(() => {
     const fetchs = async () => {
       try {
@@ -44,7 +51,7 @@ const Filter = ({
 
         const screeningTypesValue = collection(db, 'screening_type_value');
         const screeningTypesValueGet = await getDocs(screeningTypesValue);
-       
+
         const screeningTypesValueGetMain = [];
         screeningTypesValueGet.forEach((docs) => {
           const data = docs.data();
@@ -58,9 +65,6 @@ const Filter = ({
           screeningTypesGetMain.push({ data, addScreenTypeAndValue });
           setForFilterData(screeningTypesGetMain);
         });
-
-        // const timeframeGetMain = [];
-       
       } catch (error) {
         console.log(error);
       }
@@ -92,23 +96,26 @@ const Filter = ({
     }
   }, [selectedPreset, selectedTime, forFilterData, forTimeData]);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (!event.target.closest('.options-div')) {
-        setOpen(false);
-        setOpen1(false);
-        setOpen2(false);
-        setOpen3(false);
-      }
-    };
 
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
 
-  const handleToDefoult = () => {
+
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (!open) {
+  //       setOpen(false);
+  //       setOpen1(false);
+  //       setOpen2(false);
+  //       setOpen3(false);
+  //     }
+  //   };
+
+  //   document.addEventListener('click', handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener('click', handleClickOutside);
+  //   };
+  // }, []);
+
+  const handleToDefault = () => {
     setOpen(false);
     setOpen1(false);
     setOpen2(false);
@@ -123,215 +130,217 @@ const Filter = ({
     setIsGrid(6);
     FilterClearAnalytics();
   };
+  const firstDropDownAll = () => {
+    setOpen(!open);
+    setScreeningTypeValueId(null);
+    setSelectValuesId(null)
+    setSelectedPreset('All');
+    setSelectValues(null);
+    setSelectedTicker('All');
+    FilterAnalaysisAnalytics('All');
+  }
   return (
     <>
       <Alert alertShown={alertShown} isLogedIn={isLogedIn} isUser={isUser} setAlertShown={setAlertShown} setIsLogedIn={setIsLogedIn} />
-      <div className="nav-bar">
-        <div className="texsss">
-          <div className="tex">
-            <h1>Texnik analizlar</h1>
-            <p>Chart patterns</p>
+      <div className="flex w-[98%] m-auto mt-5 bg-white justify-between items-center relative p-8 rounded-t-3xl max-lg:block max-sm:p-3">
+        <div className="max-lg:w-full max-lg:flex max-lg:justify-between max-lg:items-center">
+          <div>
+            <h1 className="text-3xl max-xl:text-2xl max-xs:text-sm">Texnik analizlar</h1>
+            <p className='text-lg'>Chart patterns</p>
           </div>
           <button
-            className="video-btn2"
+            // style={video === true ? { display: 'none' } : { display: 'flex' }}
+            className="hidden max-lg:flex text-base underline"
             onClick={() => {
-              setIsVideo(!isVideo);
+              handleVideoChange()
               VideoAnalytics('open');
             }}
-            style={isVideo === true ? { display: 'none' } : { display: 'flex' }}
           >
-            <RxVideo /> Foydalanish videosi
+            Foydalanish videosi
           </button>
         </div>
-        <nav>
-          <div className="fixed-div">
-            <div className="options-div">
-              <div className="main-select">
-                <span className="name">Analaysis</span>
-                <div className="option">
-                  <div
-                    className="selected-option select-one"
-                    onClick={() => {
-                      setOpen(!open);
-                      setOpen1(open1 === true ? false : false);
-                      setOpen2(open2 === true ? false : false);
-                      setOpen3(open3 === true ? false : false);
-                    }}
-                  >
-                    <span>{selectedPreset}</span>
-                    <FiChevronDown />
-                  </div>
-                  <div className="select-options" style={open === false || forFilterData.some((item) => item.data.length <= 0) ? { display: 'none' } : { display: 'flex' }}>
-                    <div
-                      className="opt"
-                      onClick={() => {
-                        setOpen(!open);
-                        setScreeningTypeValueId(null);
-                        setSelectValuesId(null)
-                        setSelectedPreset('All');
-                        setSelectValues(null);
-                        setSelectedTicker('All');
-                        FilterAnalaysisAnalytics('All');
-                      }}
-                    >
-                      <span>All</span>
-                    </div>
-                    {forFilterData &&
-                      forFilterData.map((item, index) => (
-                        <div
-                          key={index}
-                          className={`opt ${item.data.is_locked === true ? 'opt-lock' : ''} `}
-                          onClick={() => {
-                            setOpen(!open);
-                            setSelectedPreset(item.data.name);
-                            setSelectValues(item.data.type_id);
-                            setSelectedTicker('All');
-                            setScreeningTypeValueId(null);
-                            setSelectValuesId(item.data.type_id)
-                            FilterAnalaysisAnalytics(item.data.type_id);
-                          }}
-                        >
-                          <span>{item.data.name}</span>
-                          {item.data.is_locked === true ? <FaLock /> : null}
-                        </div>
-                      ))}
-                  </div>
-                </div>
+        <div className="flex shadow-[0_0_5px_5px_#0000000D] rounded-xl w-4/5 items-center justify-between p-4 max-xl:w-full max-xl:my-4 max-xs:shadow-none max-xs:p-0 max-xs:py-1">
+          <div className="flex gap-3 items-center">
+            <span className="text-border max-md-plus:hidden">Analaysis</span>
+            <div className="relative">
+              <div
+                className="flex items-center justify-between w-36 p-2 text-gray-700 bg-white border border-gray-300 rounded-md cursor-pointer hover:border-gray-400 max-sm:w-28"
+                onClick={() => {
+                  setOpen(!open);
+                  setOpen1(open1 === true ? false : false);
+                  setOpen2(open2 === true ? false : false);
+                  setOpen3(open3 === true ? false : false);
+                }}
+              >
+                <span className="text-base max-sm:text-sm">{selectedPreset}</span>
+                <FiChevronDown className="w-5 h-5 text-gray-400 max-sm:w-4" />
               </div>
-
-              <div className="main-select">
-                <span className="name">{selectedPreset}</span>
-                <div className="option">
+              {open && !forFilterData.some((item) => item.data.length <= 0) && (
+                <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
                   <div
-                    className="selected-option select-two"
-                    onClick={() => {
-                      setOpen1(!open1);
-                      setOpen(open === true ? false : false);
-                      setOpen2(setOpen2 === true ? false : false);
-                      setOpen3(setOpen3 === true ? false : false);
-                    }}
+                    className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer max-sm:px-2"
+                    onClick={firstDropDownAll}
                   >
-                    <span>{selectedTicker}</span>
-                    <FiChevronDown />
+                    <span>All</span>
                   </div>
-                  <div className="select-options" style={open1 === false || selectedPreset === 'All' || selectedPreset === 'Type' ? { display: 'none' } : { display: 'flex' }}>
-                    {selectValues && (
-                      <div
-                        className="opt"
-                        onClick={() => {
-                          setOpen1(!open1);
-                          setSelectedTicker('All');
-                          setScreeningTypeValueId(null);
-                          FilterAnalaysisTypeAnalytics(selectValues, 'All');
-                        }}
-                      >
-                        <span>All</span>
-                      </div>
-                    )}
-                    {forFilterData &&
-                      forFilterData.map((item) =>
-                        item.addScreenTypeAndValue
-                          .filter((item) => item.screening_type_id === selectValues)
-                          .map((item, idx) => (
-                            <div
-                              key={`${item.name}-${idx}`}
-                              className={`opt ${item.is_locked === true ? 'opt-lock' : ''}`}
-                              onClick={() => {
-                                setOpen1(!open1);
-                                setSelectedTicker(item.name);
-                                setScreeningTypeValueId(item.value_id);
-                                FilterAnalaysisTypeAnalytics(selectValues, item.value_id);
-                              }}
-                            >
-                              <span>{item.name}</span>
-                              {item.is_locked === true ? <FaLock /> : null}
-                            </div>
-                          )),
-                      )}
-                  </div>
-                </div>
-              </div>
-              <div className="main-select">
-                <span className="name">Grid</span>
-                <div className="option">
-                  <div
-                    className="selected-option select-three"
-                    onClick={() => {
-                      setOpen2(!open2);
-                      setOpen(open === true ? false : false);
-                      setOpen1(open1 === true ? false : false);
-                      setOpen3(setOpen3 === true ? false : false);
-                    }}
-                  >
-                    <span>{isGrid}</span>
-                    <FiChevronDown />
-                  </div>
-                  <div className="select-options" style={open2 === false ? { display: 'none' } : { display: 'flex' }}>
-                    {gridOptions.map((item, index) => (
+                  {forFilterData &&
+                    forFilterData.map((item, index) => (
                       <div
                         key={index}
-                        className="opt"
+                        className={`px-4 py-2 text-sm border-t-2 hover:bg-gray-100 cursor-pointer max-sm:px-2 ${item.data.is_locked ? 'text-gray-400 pointer-events-none' : 'text-gray-700'}`}
                         onClick={() => {
-                          setOpen2(!open2);
-                          setIsGrid(item);
-                          FilterGridAnalytics(item);
-                          setCurrentPage(1);
+                          setOpen(!open);
+                          setSelectedPreset(item.data.name);
+                          setSelectValues(item.data.type_id);
+                          setSelectedTicker('All');
+                          setScreeningTypeValueId(null);
+                          setSelectValuesId(item.data.type_id)
+                          FilterAnalaysisAnalytics(item.data.type_id);
                         }}
                       >
-                        <span>{item}</span>
+                        <div className="flex items-center justify-between">
+                          <span>{item.data.name}</span>
+                          {item.data.is_locked && <FaLock className="w-3 h-3" />}
+                        </div>
                       </div>
                     ))}
-                  </div>
                 </div>
-              </div>
-              <div className="main-select">
-                <span className="name">Timeframe</span>
-                <div className="option">
-                  <div
-                    className="selected-option select-four"
-                    onClick={() => {
-                      setOpen3(!open3);
-                      setOpen(open === true ? false : false);
-                      setOpen1(open1 === true ? false : false);
-                      setOpen2(open2 === true ? false : false);
-                    }}
-                  >
-                    <span>{selectedTime}</span>
-                    <FiChevronDown />
-                  </div>
-                  <div className="select-options" style={open3 === false || forFilterTimeData.some((item) => item.length <= 0) ? { display: 'none' } : { display: 'flex' }}>
-                    <div
-                      className="opt"
-                      onClick={() => {
-                        setOpen3(!open3);
-                        setSelectedTime('All');
-                        setTimeFrameId(null);
-                        FilterTimeFrameAnalytics('All');
-                      }}
-                    >
-                      <span>All</span>
-                    </div>
-                    {forFilterTimeData.map((item, index) => (
-                      <div
-                        key={`${item.name}-${index}`}
-                        className="opt"
-                        onClick={() => {
-                          setOpen3(!open3);
-                          setSelectedTime(item.name);
-                          setTimeFrameId(item.timeframe_id);
-                          FilterTimeFrameAnalytics(item.timeframe_id);
-                        }}
-                      >
-                        <span>{item.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <LuFilterX className="filter-svg" onClick={handleToDefoult} />
+              )}
             </div>
           </div>
-        </nav>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-gray-500 max-md-plus:hidden">{selectedPreset}</span>
+            <div className="relative">
+              <div
+                className={`flex items-center justify-between w-36 p-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:border-gray-400 max-sm:w-24  ${selectValues ? "cursor-pointer" : "cursor-not-allowed"}`}
+                onClick={() => {
+                  setOpen1(!open1);
+                  setOpen(open === true ? false : false);
+                  setOpen2(setOpen2 === true ? false : false);
+                  setOpen3(setOpen3 === true ? false : false);
+                }}
+              >
+                <span className="text-base max-sm:text-sm">{selectedTicker}</span>
+                <FiChevronDown className="w-5 h-5 text-gray-400 max-sm:w-4" />
+              </div>
+              <div className={`absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg ${open1 === false || selectedPreset === 'All' || selectedPreset === 'Type' ? 'hidden' : 'block'}`}>
+                {selectValues && (
+                  <div
+                    className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer max-sm:px-2"
+                    onClick={() => {
+                      setOpen1(!open1);
+                      setSelectedTicker('All');
+                      setScreeningTypeValueId(null);
+                      FilterAnalaysisTypeAnalytics(selectValues, 'All');
+                    }}
+                  >
+                    <span>All</span>
+                  </div>
+                )}
+                {forFilterData &&
+                  forFilterData.map((item) =>
+                    item.addScreenTypeAndValue
+                      .filter((item) => item.screening_type_id === selectValues)
+                      .map((item, idx) => (
+                        <div
+                          key={`${item.name}-${idx}`}
+                          className={`px-4 py-2 text-sm border-t-2 hover:bg-gray-100 cursor-pointer max-sm:px-2 ${item.is_locked ? 'text-gray-400 pointer-events-none' : 'text-gray-700'}`}
+                          onClick={() => {
+                            setOpen1(!open1);
+                            setSelectedTicker(item.name);
+                            setScreeningTypeValueId(item.value_id);
+                            FilterAnalaysisTypeAnalytics(selectValues, item.value_id);
+                          }}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span>{item.name}</span>
+                            {item.is_locked && <FaLock className="w-3 h-3" />}
+                          </div>
+                        </div>
+                      )),
+                  )}
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-gray-500 max-md-plus:hidden">Grid</span>
+            <div className="relative">
+              <div
+                className="flex items-center justify-between w-20 p-2 text-gray-700 bg-white border border-gray-300 rounded-md cursor-pointer hover:border-gray-400 max-sm:w-12"
+                onClick={() => {
+                  setOpen2(!open2);
+                  setOpen(open === true ? false : false);
+                  setOpen1(open1 === true ? false : false);
+                  setOpen3(setOpen3 === true ? false : false);
+                }}
+              >
+                <span className="text-base max-sm:text-xs">{isGrid}</span>
+                <FiChevronDown className="w-5 h-5 text-gray-400 max-sm:w-4" />
+              </div>
+              <div className={`absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg ${open2 ? 'block' : 'hidden'}`}>
+                {gridOptions.map((item, index) => (
+                  <div
+                    key={index}
+                    className="px-4 py-2 text-sm border-t text-gray-700 hover:bg-gray-100 cursor-pointer max-sm:py-2 max-sm:px-2"
+                    onClick={() => {
+                      setOpen2(!open2);
+                      setIsGrid(item);
+                      FilterGridAnalytics(item);
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-gray-500 max-md-plus:hidden">Timeframe</span>
+            <div className="relative">
+              <div
+                className="flex items-center justify-between w-20 p-2 text-gray-700 bg-white border border-gray-300 rounded-md cursor-pointer hover:border-gray-400 max-sm:w-12"
+                onClick={() => {
+                  setOpen3(!open3);
+                  setOpen(open === true ? false : false);
+                  setOpen1(open1 === true ? false : false);
+                  setOpen2(open2 === true ? false : false);
+                }}
+              >
+                <span className="text-base max-sm:text-xs">{selectedTime}</span>
+                <FiChevronDown className="w-5 h-5 text-gray-400 max-sm:w-4" />
+              </div>
+              <div className={`absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg ${open3 === false || forFilterTimeData.some((item) => item.length <= 0) ? 'hidden' : 'block'}`}>
+                <div
+                  className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer max-sm:py-2 max-sm:px-1"
+                  onClick={() => {
+                    setOpen3(!open3);
+                    setSelectedTime('All');
+                    setTimeFrameId(null);
+                    FilterTimeFrameAnalytics('All');
+                  }}
+                >
+                  <span>All</span>
+                </div>
+                {forFilterTimeData.map((item, index) => (
+                  <div
+                    key={`${item.name}-${index}`}
+                    className="px-4 py-2 border-t text-sm text-gray-700 hover:bg-gray-100 cursor-pointer max-sm:p-2 max-sm:px-1"
+                    onClick={() => {
+                      setOpen3(!open3);
+                      setSelectedTime(item.name);
+                      setTimeFrameId(item.timeframe_id);
+                      FilterTimeFrameAnalytics(item.timeframe_id);
+                    }}
+                  >
+                    <span>{item.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <LuFilterX className="text-xl hover:text-gray-600 transition-all max-sm:text-base cursor-pointer" onClick={handleToDefault} />
+        </div>
       </div>
     </>
   );

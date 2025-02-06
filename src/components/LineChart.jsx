@@ -14,12 +14,15 @@ import {
   pageAnalytics,
 } from "../analytics/Analytics";
 import { darkMode, lightMode } from "./ChartLines/UIMode";
+import Navbar from "./Navbar";
 
 const Chart = ({
   isCard,
   isUser,
   isLogedIn,
   // pointsState,
+  setIsAlert,
+  isAlert, 
   data,
   line,
   foundedTimeframe,
@@ -44,7 +47,7 @@ const Chart = ({
 
   useEffect(() => {
     const fetchAnalysisData = async () => {
-      if (!data && analysis && !line  && id) {
+      if (!data && analysis && !line && id) {
         const filteredItems = analysis.filter((item) => item.analysisId === id);
         if (filteredItems.length > 0) {
           // console.log(f);
@@ -65,7 +68,7 @@ const Chart = ({
       }
     };
     fetchAnalysisData();
-  }, [ data, line]);
+  }, [data, line]);
 
   useEffect(() => {
     const fetchBitCoinData = async () => {
@@ -125,7 +128,6 @@ const Chart = ({
                 close: NaN,
               });
             }
-
             setCandlestickData(extendedData);
           }
         }
@@ -137,7 +139,7 @@ const Chart = ({
     if (analysisSymbols) {
       fetchBitCoinData();
     }
-  }, [ id, data, analysisSymbols]);
+  }, [id, data, analysisSymbols]);
 
   useEffect(() => {
     function defaultTickMarkFormatter(timePoint, tickMarkType, locale) {
@@ -170,12 +172,12 @@ const Chart = ({
         timePoint.businessDay === undefined
           ? new Date(timePoint.timestamp * 1000)
           : new Date(
-              Date.UTC(
-                timePoint.businessDay.year,
-                timePoint.businessDay.month - 1,
-                timePoint.businessDay.day
-              )
-            );
+            Date.UTC(
+              timePoint.businessDay.year,
+              timePoint.businessDay.month - 1,
+              timePoint.businessDay.day
+            )
+          );
 
       const localDateFromUtc = new Date(
         date.getUTCFullYear(),
@@ -266,7 +268,7 @@ const Chart = ({
         customTimeLabel.style.fontSize = '12px';
         customTimeLabel.style.display = 'none';
         document.body.appendChild(customTimeLabel);
-        }
+      }
 
       const candlestickSeries = chart.addCandlestickSeries({
         upColor: isDarkMode ? "#27a691" : "#4caf50",
@@ -419,47 +421,18 @@ const Chart = ({
 
   return (
     <div>
-      <div
-        className="nav"
-        id="nav"
-        style={isCard === false ? { display: "none" } : { display: "flex" }}
-      >
-        <div className="logo-name">
-          <Link to="/" onClick={logoAnalytics}>
-            AHSAN LABS
-          </Link>
-        </div>
-        <div className="options">
-          <Link
-            to="https://t.me/ahsanlabs_admin"
-            onClick={() => ConatactAnalytics("contactAdminIcon")}
-            target="blank"
-          >
-            <PiHeadsetBold />
-          </Link>
-          {isLogedIn === false ? (
-            <Link to="/login" onClick={() => pageAnalytics("openLoginPage")}>
-              <button>
-                Kirish <FiArrowRightCircle />
-              </button>
-            </Link>
-          ) : (
-            <h3>{isUser}</h3>
-          )}
-        </div>
-      </div>
+      {isCard===undefined && <Navbar setIsAlert={setIsAlert} isAlert={isAlert} isUser={isUser} isLogedIn={isLogedIn} />}
       <div
         ref={chartContainerRef}
-        className={`chart-container ${
-          isCard === false ? "" : "chart-container-mobile"
-        }`}
+        className={`chart-container ${isCard === false ? "" : "chart-container-mobile"
+          }`}
         style={
           isCard === false
             ? {
-                width: "calc(var(--index)*30)",
-                height: "calc(var(--index)*15.5)",
-                transform: "translateY(0px)",
-              }
+              width: "calc(var(--index)*30)",
+              height: "calc(var(--index)*15.5)",
+              transform: "translateY(0px)",
+            }
             : { width: "100%", height: "77dvh", cursor }
         }
         onMouseDown={handleMouseDown}
