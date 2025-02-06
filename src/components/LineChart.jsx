@@ -44,7 +44,7 @@ const Chart = ({
 
   useEffect(() => {
     const fetchAnalysisData = async () => {
-      if (!data && analysis && !line  && id) {
+      if (!data && analysis && !line && id) {
         const filteredItems = analysis.filter((item) => item.analysisId === id);
         if (filteredItems.length > 0) {
           // console.log(f);
@@ -65,7 +65,7 @@ const Chart = ({
       }
     };
     fetchAnalysisData();
-  }, [ data, line]);
+  }, [data, line]);
 
   useEffect(() => {
     const fetchBitCoinData = async () => {
@@ -137,7 +137,7 @@ const Chart = ({
     if (analysisSymbols) {
       fetchBitCoinData();
     }
-  }, [ id, data, analysisSymbols]);
+  }, [id, data, analysisSymbols]);
 
   useEffect(() => {
     function defaultTickMarkFormatter(timePoint, tickMarkType, locale) {
@@ -170,12 +170,12 @@ const Chart = ({
         timePoint.businessDay === undefined
           ? new Date(timePoint.timestamp * 1000)
           : new Date(
-              Date.UTC(
-                timePoint.businessDay.year,
-                timePoint.businessDay.month - 1,
-                timePoint.businessDay.day
-              )
-            );
+            Date.UTC(
+              timePoint.businessDay.year,
+              timePoint.businessDay.month - 1,
+              timePoint.businessDay.day
+            )
+          );
 
       const localDateFromUtc = new Date(
         date.getUTCFullYear(),
@@ -249,12 +249,10 @@ const Chart = ({
           const chartRect = document
             .querySelector("canvas")
             .getBoundingClientRect();
-          customTimeLabel.style.left = `${
-            chartRect.left + param.point.x - 55
-          }px`; // X koordinatasi
-          customTimeLabel.style.top = `${
-            chartRect.top + chartRect.height - 30
-          }px`;
+          customTimeLabel.style.left = `${chartRect.left + param.point.x - 55
+            }px`; // X koordinatasi
+          customTimeLabel.style.top = `${chartRect.top + chartRect.height - 30
+            }px`;
         });
 
         const customTimeLabel = document.createElement('div');
@@ -266,7 +264,7 @@ const Chart = ({
         customTimeLabel.style.fontSize = '12px';
         customTimeLabel.style.display = 'none';
         document.body.appendChild(customTimeLabel);
-        }
+      }
 
       const candlestickSeries = chart.addCandlestickSeries({
         upColor: isDarkMode ? "#27a691" : "#4caf50",
@@ -299,11 +297,10 @@ const Chart = ({
               const timeforHours =
                 new Date(`${year}-${month}-${day} ${hours}:00:00`).getTime() /
                 1000;
-              const timeforDaily =
-                new Date(`${year}-${month}-${day}`).getTime() / 1000;
+              const timeforDaily = new Date(`${year}-${month}-${day}`).getTime() / 1000;
 
               return {
-                time: timeFrameIdState === "1h" ? timeforHours : timeforDaily, // Unix timestamp (lightweight-charts uchun)
+                time: timeFrameIdState === "1d" ? timeforDaily : timeforHours, // Unix timestamp (lightweight-charts uchun)
                 value: item.price, // Narx qiymati
               };
             })
@@ -450,16 +447,15 @@ const Chart = ({
       </div>
       <div
         ref={chartContainerRef}
-        className={`chart-container ${
-          isCard === false ? "" : "chart-container-mobile"
-        }`}
+        className={`chart-container ${isCard === false ? "" : "chart-container-mobile"
+          }`}
         style={
           isCard === false
             ? {
-                width: "calc(var(--index)*30)",
-                height: "calc(var(--index)*15.5)",
-                transform: "translateY(0px)",
-              }
+              width: "calc(var(--index)*30)",
+              height: "calc(var(--index)*15.5)",
+              transform: "translateY(0px)",
+            }
             : { width: "100%", height: "77dvh", cursor }
         }
         onMouseDown={handleMouseDown}
