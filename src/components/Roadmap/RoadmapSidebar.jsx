@@ -63,8 +63,8 @@ const RoadmapSidebar = () => {
   };
 
   return (
-    <div className='w-full min-h-screen absolute left-0 top-0 z-{100} backdrop-blur-lg flex items-center justify-end overflow-hidden'>
-      <div className="w-1/2 flex justify-start h-screen overflow-y-scroll p-2 shadow-2xl bg-white flex-col max-md-plus:w-full max-md-plus:bg-[#FCFCFC] overflow-x-hidden relative">
+    <div className='w-full min-h-screen absolute left-0 top-0 z-{100} backdrop-blur-lg flex items-center justify-end overflow-hidden' onClick={handleSwitchBar}>
+      <div className="w-1/2 flex justify-start h-screen overflow-y-scroll p-2 shadow-2xl bg-white flex-col max-md-plus:w-full max-md-plus:bg-[#FCFCFC] overflow-x-hidden relative" onClick={(e) => e.stopPropagation()}>
         <ToastContainer />
         <div className="w-full p-4">
           <BsArrowLeftCircle className='text-3xl cursor-pointer' onClick={handleSwitchBar} />
