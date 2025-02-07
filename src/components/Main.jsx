@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect, memo } from 'react';
 import { Link } from 'react-router-dom';
 import Chart from '../components/LineChart';
@@ -21,40 +20,44 @@ const Main = memo(({
   currentPage,
   setCurrentPage,
   loading,
-  forFilterTimeData,
   activeCardFilter
 }) => {
   const [chartsPerPage, setChartsPerPage] = useState(isGrid);
   const [currentChart, setCurrentChart] = useState([]);
 
+  const [totallength, setTotallength] = useState("")
+
   useEffect(() => {
+
+
     if (analysis && data) {
-      // Создаем массив с объединением данных анализа и данных цен
+      // `analysis` ichidagi elementlarni `data` obyektidan tekshiramiz
       const updatedData = analysis
-        .map((item,) => {
-          const value = data[item.symbol]?.lastClosePrice;
-          const active_card = data[item.symbol]?.active_card;
-          return value !== undefined
-            ? { ...item,  lastClosePrice: value, active_card: active_card }
-            : null;
-        })
-        .filter(Boolean);
+          .map((item) => {
+              const matchedData = data[item.symbol]; // Objektdan `symbol` bo‘yicha ma’lumot olish
+              if (matchedData) {
+                  return {
+                      ...item,
+                      lastClosePrice: matchedData.lastClosePrice,
+                      active_card: matchedData.active_card
+                  };
+              }
+              return null;
+          })  
+          .filter(Boolean); // `null` qiymatlarni olib tashlaymiz
 
-      // Удаляем элементы, где active_card === false через splice
-      const filteredData = []; // Янги массив яратиш
-      let index = 0; // Индексни бошлаш
-
-      for (let i = 0; i < updatedData.length; i++) {
-        if (updatedData[i].active_card === true) {
-          const newItem = { ...updatedData[i], index: index++ }; // Индекс қўшиш
-          filteredData.push(newItem); // filteredData массивига қўшиш
-        }
-      }
-
+          // `active_card === true` bo'lganlarni qoldiramiz va indeks qo'shamiz
+          const filteredData = updatedData
+          .filter(item => item.active_card === true)
+          .map((item, index) => ({ ...item, index }));
+          
+          // Paginatsiya hisoblash
+          setTotallength(filteredData.length);
       const lastChartIndex = currentPage * chartsPerPage;
       const firstChartIndex = lastChartIndex - chartsPerPage;
       setCurrentChart(filteredData.slice(firstChartIndex, lastChartIndex));
-    }
+  }
+  
   }, [data, currentPage, chartsPerPage]);
 
 
@@ -101,16 +104,12 @@ const Main = memo(({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // currentChart.map((item) => {
-  //   console.log(item.active_card);
-  // })
-
   const filteredChart2 = currentChart.filter((item) => item.active_card === false);
   const filteredChart = currentChart.filter((item) => item.active_card === true && item.lastClosePrice !== undefined);
   activeCardFilter.length = 0;
   activeCardFilter.push(...filteredChart2);
 
-  const totalPages = Math.ceil(analysis.length / chartsPerPage);
+  const totalPages = Math.ceil(totallength / chartsPerPage);
 
   return (
     <div className="main1">
@@ -150,8 +149,8 @@ const Main = memo(({
                       analysis={analysis}
                       data={item.symbol}
                       line={item.lines}
-                      forFilterTimeData={forFilterTimeData}
                       foundedTimeframe={item.timeFrameNames.toString()}
+                      screeningTypeValue={item.screening_type_value_id}
                     />
                   </div>
                   <div className="texx">

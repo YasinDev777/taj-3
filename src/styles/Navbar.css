@@ -115,11 +115,56 @@ nav {
 }
 
 .logo-name {
-  font-size: calc(var(--index) * 1.2);
-  font-weight: 900;
+  display: flex;
+  gap: calc(var(--index) * 0.4);
+  align-items: center;
 }
 
+.logo-name .betaButton {
+  position: relative; 
+  cursor: pointer;
+}
+.logo-name .betaButton:hover .betaButtonTooltip {
+  opacity: 1;
+}
+.logo-name .betaButton h1 {
+  color: white;
+  font-size: calc(var(--index) * 0.5);
+  border-radius: 20px;
+  padding: 4px 18px;
+  background: linear-gradient(180deg, #180F0F 20%, #3F3B3E 60%, #2C2B34 100%);
+}
+.logo-name .betaButton .betaButtonTooltip {
+  position: absolute;
+  opacity: 0;
+  transition: 0.3s;
+  pointer-events: none;
+  /* box-shadow: 0px 0px 5px 5px #0000000D; */
+  border: 1px solid #E5E7EB;
+  background: white;
+  font-size: calc(var(--index) * 0.7);
+  top: 45px;
+  padding: 10px;
+  left: calc(var(--index) * -2.5);
+  border-radius: 8px;
+  text-align: center;
+  width: calc(var(--index) * 8);
+}
+.logo-name .betaButton .betaButtonTooltip::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-left: 1px solid #E5E7EB;
+  border-top: 1px solid #E5E7EB;
+  left: calc(50% - 10px);
+  top: -11px;
+  transform: rotate(45deg);
+  background: white;
+}
 .logo-name a {
+  font-weight: 900;
+  font-size: calc(var(--index) * 1.2);
   color: var(--text-color);
 }
 
@@ -342,6 +387,10 @@ nav {
   }
   .war-options > svg {
     color: var(--text-color);
+  }
+  .logo-name .betaButton .betaButtonTooltip {
+    left: calc(var(--index) * -1.7);
+    top: 37px;
   }
 }
 

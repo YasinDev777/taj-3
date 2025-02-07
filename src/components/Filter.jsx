@@ -4,8 +4,6 @@ import { FiChevronDown } from 'react-icons/fi';
 import { LuFilterX } from 'react-icons/lu';
 import { RxVideo } from 'react-icons/rx';
 import Alert from './Alert';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../firebase';
 import { FaLock } from 'react-icons/fa6';
 import { FilterAnalaysisAnalytics, FilterAnalaysisTypeAnalytics, FilterClearAnalytics, FilterGridAnalytics, FilterTimeFrameAnalytics, VideoAnalytics } from '../analytics/Analytics';
 const Filter = ({
@@ -31,42 +29,15 @@ const Filter = ({
   setSelectedTime,
   setCurrentPage,
   setSelectValuesId,
-  forFilterTimeData
+  forFilterTimeData,
+  forFilterData
 }) => {
-  const [forFilterData, setForFilterData] = useState([]);
   const [forTimeData] = useState([]);
- 
-  useEffect(() => {
-    const fetchs = async () => {
-      try {
-        const screeningTypes = collection(db, 'screening_type');
-        const screeningTypesGet = await getDocs(screeningTypes);
 
-        const screeningTypesValue = collection(db, 'screening_type_value');
-        const screeningTypesValueGet = await getDocs(screeningTypesValue);
-       
-        const screeningTypesValueGetMain = [];
-        screeningTypesValueGet.forEach((docs) => {
-          const data = docs.data();
-          screeningTypesValueGetMain.push(data);
-        });
 
-        const screeningTypesGetMain = [];
-        screeningTypesGet.forEach((docs) => {
-          const data = docs.data();
-          let addScreenTypeAndValue = screeningTypesValueGetMain && screeningTypesValueGetMain.filter((item) => item.screening_type_id === data.type_id);
-          screeningTypesGetMain.push({ data, addScreenTypeAndValue });
-          setForFilterData(screeningTypesGetMain);
-        });
 
-        // const timeframeGetMain = [];
-       
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchs();
-  }, []);
+  
+
 
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
@@ -76,6 +47,8 @@ const Filter = ({
   const gridOptions = [6, 12, 24];
 
   useEffect(() => {
+    if (forFilterData) {
+      
     const foundPresetData = forFilterData.find((item) => item.data.name === selectedPreset);
     if (foundPresetData) {
       setSelectValues(foundPresetData.data.type_id);
@@ -90,6 +63,8 @@ const Filter = ({
     } else {
       setFoundTimeId(null);
     }
+  }
+  
   }, [selectedPreset, selectedTime, forFilterData, forTimeData]);
 
   useEffect(() => {
@@ -336,4 +311,5 @@ const Filter = ({
     </>
   );
 };
+
 export default Filter;

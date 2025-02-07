@@ -19,10 +19,11 @@ const Chart = ({
   isCard,
   isUser,
   isLogedIn,
-  pointsState,
+  // pointsState,
   data,
   line,
   foundedTimeframe,
+  screeningTypeValue,
 }) => {
   const [analysisData, setAnalysisData] = useState([]);
   const [analysisSymbols, setAnalysisSymbols] = useState("");
@@ -40,31 +41,33 @@ const Chart = ({
   const [isMouseDown] = useState(false);
   const [isDarkMode] = useState(true);
 
+
   useEffect(() => {
     const fetchAnalysisData = async () => {
-      if (!line && pointsState && id) {
-        const lines = pointsState.filter((state) => state.analysis_id === id);
-        setAnalysisData(lines);
+      if (!data && analysis && !line && id) {
+        const filteredItems = analysis.filter((item) => item.analysisId === id);
+        if (filteredItems.length > 0) {
+          // console.log(f);
+          setAnalysisData({
+            line: filteredItems[0].lines,
+            screeningTypeValue: filteredItems[0].screening_type_value_id,
+          });
+          setTimeFrameIdState(filteredItems[0].timeFrameNames.toString());
+          setAnalysisSymbols(filteredItems[0].symbol);
+        }
       } else {
-        setAnalysisData(line);
+        setAnalysisSymbols(data.toString());
+        setTimeFrameIdState(foundedTimeframe);
+        setAnalysisData({
+          line: line,
+          screeningTypeValue: screeningTypeValue,
+        });
       }
     };
     fetchAnalysisData();
-  }, [pointsState, data, line]);
+  }, [data, line]);
 
   useEffect(() => {
-    if (!data && analysis) {
-      const filteredItems = analysis.filter((item) => item.analysisId === id);
-      if (filteredItems.length > 0) {
-        // console.log(filteredItems[0].screening_type_value_id);
-        setTimeFrameIdState(filteredItems[0].timeFrameNames.toString());
-        setAnalysisSymbols(filteredItems[0].symbol);
-      }
-    } else {
-      setAnalysisSymbols(data.toString());
-      setTimeFrameIdState(foundedTimeframe);
-    }
-
     const fetchBitCoinData = async () => {
       try {
         const response = await axios.get(
@@ -134,7 +137,7 @@ const Chart = ({
     if (analysisSymbols) {
       fetchBitCoinData();
     }
-  }, [pointsState, id, data, analysisSymbols]);
+  }, [id, data, analysisSymbols]);
 
   useEffect(() => {
     function defaultTickMarkFormatter(timePoint, tickMarkType, locale) {
@@ -167,12 +170,12 @@ const Chart = ({
         timePoint.businessDay === undefined
           ? new Date(timePoint.timestamp * 1000)
           : new Date(
-              Date.UTC(
-                timePoint.businessDay.year,
-                timePoint.businessDay.month - 1,
-                timePoint.businessDay.day
-              )
-            );
+            Date.UTC(
+              timePoint.businessDay.year,
+              timePoint.businessDay.month - 1,
+              timePoint.businessDay.day
+            )
+          );
 
       const localDateFromUtc = new Date(
         date.getUTCFullYear(),
@@ -246,12 +249,10 @@ const Chart = ({
           const chartRect = document
             .querySelector("canvas")
             .getBoundingClientRect();
-          customTimeLabel.style.left = `${
-            chartRect.left + param.point.x - 55
-          }px`; // X koordinatasi
-          customTimeLabel.style.top = `${
-            chartRect.top + chartRect.height - 30
-          }px`; // Y koordinatasi
+          customTimeLabel.style.left = `${chartRect.left + param.point.x - 55
+            }px`; // X koordinatasi
+          customTimeLabel.style.top = `${chartRect.top + chartRect.height - 30
+            }px`;
         });
 
         const customTimeLabel = document.createElement('div');
@@ -261,9 +262,9 @@ const Chart = ({
         customTimeLabel.style.padding = '5px';
         customTimeLabel.style.borderRadius = '5px';
         customTimeLabel.style.fontSize = '12px';
-        customTimeLabel.style.display = 'none'; // Avval yashiringan
+        customTimeLabel.style.display = 'none';
         document.body.appendChild(customTimeLabel);
-        }
+      }
 
       const candlestickSeries = chart.addCandlestickSeries({
         upColor: isDarkMode ? "#27a691" : "#4caf50",
@@ -283,97 +284,90 @@ const Chart = ({
         axisLabelVisible: false,
       });
 
-      lineSeries1.setData(
-        analysisData
-          .filter(
-            (item) => item.position === "lower" || item.position === "upper"
-          )
-          .map((item) => {
-            // console.log(item);
-            const date = new Date(item.date.seconds * 1000); // Firebase timestampni UTC asosida o'qish
-            // date.setHours(date.getHours() + 5); // 5 soatni qo'shish
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, "0"); // Oyni 2 xonali qilib formatlash
-            const day = String(date.getDate()).padStart(2, "0"); // Sanani 2 xonali qilib formatlash
-            const hours = String(date.getHours()).padStart(2, "0"); // Soatni 2 xonali qilib formatlash
-            const timeforHours =
-              new Date(`${year}-${month}-${day} ${hours}:00:00`).getTime() /
-              1000;
-            const timeforDaily =
-              new Date(`${year}-${month}-${day}`).getTime() / 1000;
+      if (analysisData.screeningTypeValue === "trendline") {
+        lineSeries1.setData(
+          analysisData.line
+            .map((item) => {
+              const date = new Date(item.date.seconds * 1000); // Firebase timestampni UTC asosida o'qish
+              // date.setHours(date.getHours() + 5); // 5 soatni qo'shish
+              const year = date.getFullYear();
+              const month = String(date.getMonth() + 1).padStart(2, "0"); // Oyni 2 xonali qilib formatlash
+              const day = String(date.getDate()).padStart(2, "0"); // Sanani 2 xonali qilib formatlash
+              const hours = String(date.getHours()).padStart(2, "0"); // Soatni 2 xonali qilib formatlash
+              const timeforHours =
+                new Date(`${year}-${month}-${day} ${hours}:00:00`).getTime() /
+                1000;
+              const timeforDaily = new Date(`${year}-${month}-${day}`).getTime() / 1000;
 
-            return {
-              time: timeFrameIdState === "1h" ? timeforHours : timeforDaily, // Unix timestamp (lightweight-charts uchun)
-              value: item.price, // Narx qiymati
-            };
-          })
-          .sort((a, b) => a.time - b.time) // Unix timestamp bo'yicha tartiblash
-      );
-
-      // // Fibonacci darajalari
-      // // Fibonacci sonlarini hisoblash uchun massiv
-      // const fibonacciNumbers = [0, 0.236, 0.382, 0.5, 0.618, 1];
-
-      // // `times` va `values` massivlari bitta arraydan kelmoqda
-      // const data = [
-      //   // { time: "2025-01-20", value: 100000 },
-      //   { time: "2025-01-10", value: 120000 },
-      //   { time: "2025-02-12", value: 100000 },
-      // ];
-
-      // // Har bir Fibonacci darajasi uchun qiymatlarni hisoblash
-      // const fibonacciLevels = fibonacciNumbers.map((level) => ({
-      //   value:
-      //     data[0].value + (data[data.length - 1].value - data[0].value) * level,
-      // }));
-
-      // // Har bir daraja uchun chiziq va markerlar yaratish
-      // fibonacciLevels.forEach((level, index) => {
-      //   const line = chart.addLineSeries({
-      //     priceLineVisible: false,
-      //     // lastValueVisible: false,
-      //     axisLabelVisible: false,
-      //     color: "#FF0000",
-      //     lineWidth: 1,
-      //   });
-
-      //   // Chiziq uchun ma'lumotlarni yaratish
-      //   const lineData = data.map((entry) => ({
-      //     time: entry.time,
-      //     value: level.value, // Fibonacci daraja qiymati
-      //   }));
-
-      //   line.setData(lineData);
-
-      //   // Markerlarni yaratish
-      //   const marker = {
-      //     time: data[data.length - 1].time, // Markerning vaqt nuqtasi (2025-02-12)
-      //     position: "aboveBar",
-      //     color: "black",
-      //     size: 0,
-      //     text: `${fibonacciNumbers[index]}`, // Fibonacci soni matni
-      //   };
-
-      //   // Markerlarni o'rnatish
-      //   line.setMarkers([marker]);
-      // });
-
-
-      
-
-      const singleData = analysisData
-        .filter((item) => item.position === "single")
-        .map((item) => ({
+              return {
+                time: timeFrameIdState === "1d" ? timeforDaily : timeforHours, // Unix timestamp (lightweight-charts uchun)
+                value: item.price, // Narx qiymati
+              };
+            })
+            .sort((a, b) => a.time - b.time) // Unix timestamp bo'yicha tartiblash
+        );
+      } else if (analysisData.screeningTypeValue === "support" || analysisData.screeningTypeValue === "resistance") {
+        const singleData = analysisData.line.map((item) => ({
           value: item.price,
         }));
 
-      candlestickSeries.createPriceLine({
-        price: singleData.length > 0 ? singleData[0].value : NaN,
-        color: "rgba(255, 0, 0, 0.8)",
-        lineWidth: 2,
-        lineStyle: 0,
-        axisLabelVisible: true,
-      });
+        candlestickSeries.createPriceLine({
+          price: singleData.length > 0 ? singleData[0].value : NaN,
+          color: "rgba(255, 0, 0, 0.8)",
+          lineWidth: 2,
+          lineStyle: 0,
+          axisLabelVisible: true,
+        });
+      } else if (analysisData.screeningTypeValue === "fibonacci") {
+        // Fibonacci darajalari
+        // Fibonacci sonlarini hisoblash uchun massiv
+        const fibonacciNumbers = [0, 0.236, 0.382, 0.5, 0.618, 1];
+
+        // `times` va `values` massivlari bitta arraydan kelmoqda
+        const data = [
+          // { time: "2025-01-20", value: 100000 },
+          { time: "2025-01-10", value: 120000 },
+          { time: "2025-02-12", value: 100000 },
+        ];
+
+        // Har bir Fibonacci darajasi uchun qiymatlarni hisoblash
+        const fibonacciLevels = fibonacciNumbers.map((level) => ({
+          value:
+            data[0].value +
+            (data[data.length - 1].value - data[0].value) * level,
+        }));
+
+        // Har bir daraja uchun chiziq va markerlar yaratish
+        fibonacciLevels.forEach((level, index) => {
+          const line = chart.addLineSeries({
+            priceLineVisible: false,
+            // lastValueVisible: false,
+            axisLabelVisible: false,
+            color: "#FF0000",
+            lineWidth: 1,
+          });
+
+          // Chiziq uchun ma'lumotlarni yaratish
+          const lineData = data.map((entry) => ({
+            time: entry.time,
+            value: level.value, // Fibonacci daraja qiymati
+          }));
+
+          line.setData(lineData);
+
+          // Markerlarni yaratish
+          const marker = {
+            time: data[data.length - 1].time, // Markerning vaqt nuqtasi (2025-02-12)
+            position: "aboveBar",
+            color: "black",
+            size: 0,
+            text: `${fibonacciNumbers[index]}`, // Fibonacci soni matni
+          };
+
+          // Markerlarni o'rnatish
+          line.setMarkers([marker]);
+        });
+      }
 
       // Crosshair vaqt labeli uchun element yaratish
 
@@ -453,16 +447,15 @@ const Chart = ({
       </div>
       <div
         ref={chartContainerRef}
-        className={`chart-container ${
-          isCard === false ? "" : "chart-container-mobile"
-        }`}
+        className={`chart-container ${isCard === false ? "" : "chart-container-mobile"
+          }`}
         style={
           isCard === false
             ? {
-                width: "calc(var(--index)*30)",
-                height: "calc(var(--index)*15.5)",
-                transform: "translateY(0px)",
-              }
+              width: "calc(var(--index)*30)",
+              height: "calc(var(--index)*15.5)",
+              transform: "translateY(0px)",
+            }
             : { width: "100%", height: "77dvh", cursor }
         }
         onMouseDown={handleMouseDown}

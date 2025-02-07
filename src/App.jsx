@@ -1,152 +1,177 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Main from './components/Main';
-import Chart from './components/LineChart';
-import './styles/App.css';
-import Popup from './components/Popup';
-import Login from './pages/Login';
-import Filter from './components/Filter';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from './firebase';
-import axios from 'axios';
-import { AnalysisContext } from './context/Context';
-import CryptoJS from 'crypto-js';
-import { loginAnalytics, openWebsite } from './analytics/Analytics';
+import React, { useState, useEffect } from "react";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Main from "./components/Main";
+import Chart from "./components/LineChart";
+import "./styles/App.css";
+import Popup from "./components/Popup";
+import Login from "./pages/Login";
+import Filter from "./components/Filter";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "./firebase";
+import axios from "axios";
+import { AnalysisContext } from "./context/Context";
+import CryptoJS from "crypto-js";
+import { loginAnalytics, openWebsite } from "./analytics/Analytics";
+import useFetchScreeningTypes from "./services/getFilterCollection";
 
 const App = () => {
   const [selectValues, setSelectValues] = useState(null);
   const [selectValuesId, setSelectValuesId] = useState("");
   const [screeningTypeValueId, setScreeningTypeValueId] = useState("");
   const [timeFrameId, setTimeFrameId] = useState("");
-  const [foundTimeId, setFoundTimeId] = useState('');
+  const [foundTimeId, setFoundTimeId] = useState("");
   const [isGrid, setIsGrid] = useState(6);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isCard, setIsCard] = useState(false);
+  const [isCard] = useState(false);
   const [isAlert, setIsAlert] = useState(false);
   const [isVideo, setIsVideo] = useState(false);
-  const [isUser, setIsUser] = useState('');
+  const [isUser, setIsUser] = useState("");
   const [isLogedIn, setIsLogedIn] = useState(false);
   const [filterLimit, setFilterLimit] = useState(1);
   const [alertShown, setAlertShown] = useState(false);
   const [mains, setMains] = useState([]);
   const [analysis, setAnalysis] = useState([]);
-  const [pointsState, setPointsState] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [forFilterTimeData] = useState([]);
-  const [activeCardFilter] = useState([])
+  const [activeCardFilter] = useState([]);
   const encryptData = (data) => {
-    return CryptoJS.AES.encrypt(JSON.stringify(data), 'your-secret-key').toString();
+    return CryptoJS.AES.encrypt(
+      JSON.stringify(data),
+      "your-secret-key"
+    ).toString();
   };
 
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
-
     const analysisFunction = async () => {
       try {
-        const analysisGet = collection(db, 'analysis');
-        const q = query(analysisGet, where('inactive', '==', false));
-        const allAnalysis = await getDocs(q);
-        const points = collection(db, 'points');
-        const allPoints = await getDocs(points);
-        const timeFrameData = collection(db, 'timeframe');
+        const usersRef = collection(db, "analysis");
+        const usersQuery = query(usersRef, where("inactive", "==", false)); // Faqat aktiv userlar
+        const usersSnapshot = await getDocs(usersQuery); // Firestore'dan hujjatlarni olish
+    
+        // Timeframe data ni faqat bir marta olish
+          const timeFrameData = collection(db, "timeframe");
         const timeFrameDataGet = await getDocs(timeFrameData);
         timeFrameDataGet.forEach((docs) => {
           const data = docs.data();
           forFilterTimeData.push(data);
         });
-
-        const pointNew = [];
-
-        const fetchedData = [];
-        allPoints.forEach((docs) => {
-          const data = docs.data();
-          pointNew.push({ ...data });
-        });
-
-        allAnalysis.forEach((doc) => {
+        // Points collection queryini oldindan yaratish
+        const pointsRef = collection(db, "points");
+    
+        // Har bir foydalanuvchi uchun barcha operatsiyalarni parallel ravishda bajarish
+        const allStatePromises = usersSnapshot.docs.map(async (doc) => {
           const analysisId = doc.id;
-          const analysisMain = doc.data();
-          const lines = pointNew.filter((state) => state.analysis_id === analysisId);
-
+          const data = doc.data();
+    
+          // Points hujjatlarini olish
+          const lineQuery = query(pointsRef, where("analysis_id", "==", analysisId));
+          const linesSnapshot = await getDocs(lineQuery);
+          const lines = linesSnapshot.docs.map((lineDoc) => lineDoc.data());
+    
+          // TimeFrameNamesni olish
           const timeFrameNames = forFilterTimeData
-            .filter((item) => item.timeframe_id === analysisMain.timeframe_id)
+            .filter((item) => item.timeframe_id === data.timeframe_id)
             .map((item) => item.name);
-
-          fetchedData.push({
-            lines,
-            ...analysisMain,
+    
+          return {
             analysisId,
-            timeFrameNames
-          });
+            ...data,
+            timeFrameNames,
+            lines,
+          };
         });
+    
+        // Barcha foydalanuvchilarni bir vaqtda olish
+        const allState = await Promise.all(allStatePromises);
+    
         if (isMounted) {
-          setPointsState(pointNew);
-          setMains(fetchedData.sort((a, b) => b.created_at - a.created_at));
-          setAnalysis(fetchedData.sort((a, b) => b.created_at - a.created_at));
+          setMains(allState.sort((a, b) => b.created_at - a.created_at));
+          setAnalysis(allState.sort((a, b) => b.created_at - a.created_at));
         }
       } catch (err) {
         setLoading(false);
       } finally {
         setTimeout(() => {
           setLoading(false);
-        }, 1500);
+        }, 1000);
       }
     };
+    
     analysisFunction();
     return () => {
       isMounted = false;
     };
-  }, []);
+    
+  
+    
+  }, [])
+
+
+  const [forFilterData, setForFilterData] = useState([]);
+  const {filterData } = useFetchScreeningTypes();
+
+  useEffect(() => {
+    setForFilterData(filterData)  
+  }, [filterData])
 
   const handleLogin = async (inputValue) => {
     let foundUser = null;
     try {
-      const User = localStorage.getItem('subscriptionType');
-      let userForm = '';
+      const User = localStorage.getItem("subscriptionType");
+      let userForm = "";
       if (User) {
         userForm = decryptData(User);
       } else {
         userForm = inputValue;
       }
-      const usersCollection = collection(db, 'user');
-      const user_query = await query(usersCollection, where('user_id', '==', userForm));
+      const usersCollection = collection(db, "user");
+      const user_query = await query(
+        usersCollection,
+        where("user_id", "==", userForm)
+      );
       const querySnapshot = await getDocs(user_query);
       if (querySnapshot.empty) {
         alert("Bunday ma'lumotga ega foydalanuvchi afsuski topilmadi!");
-        loginAnalytics('login', 'authentication','invalid');
+        loginAnalytics("login", "authentication", "invalid");
         localStorage.clear();
         return;
       } else {
         querySnapshot.forEach((docs) => {
           const userData = docs.data();
           if (userData.is_blocked === true || querySnapshot.empty) {
-            alert(`Hurmatli foydalanuvchi siz bloklangansiz iltimos admin bilan bog'laning`);
-            setIsLogedIn(false)
-            loginAnalytics('login', 'authentication','userBlock');
+            alert(
+              `Hurmatli foydalanuvchi siz bloklangansiz iltimos admin bilan bog'laning`
+            );
+            setIsLogedIn(false);
+            loginAnalytics("login", "authentication", "userBlock");
             localStorage.clear();
             window.location.reload();
           } else {
             foundUser = userData;
             setIsLogedIn(true);
-            localStorage.setItem('userName', foundUser.name);
-            localStorage.setItem('isLogedIn', 'true');
-            localStorage.setItem('subscriptionType', encryptData(foundUser.user_id));
+            localStorage.setItem("userName", foundUser.name);
+            localStorage.setItem("isLogedIn", "true");
+            localStorage.setItem(
+              "subscriptionType",
+              encryptData(foundUser.user_id)
+            );
             if (inputValue) {
-              loginAnalytics('login', 'authentication','valid',docs.id);
+              loginAnalytics("login", "authentication", "valid", docs.id);
             }
-            navigate('/');
+            navigate("/");
             switch (userData.subscription_type) {
-              case 'pro':
+              case "pro":
                 setFilterLimit(Infinity);
                 break;
-              case 'basic':
+              case "basic":
                 setFilterLimit(5);
                 break;
-              case 'free':
+              case "free":
                 setFilterLimit(3);
                 break;
               default:
@@ -155,7 +180,6 @@ const App = () => {
           }
         });
       }
-
     } catch (error) {
       console.error();
     }
@@ -165,20 +189,29 @@ const App = () => {
     if (!data) {
       return null;
     }
-    const bytes = CryptoJS.AES.decrypt(data, 'your-secret-key');
+    const bytes = CryptoJS.AES.decrypt(data, "your-secret-key");
     return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
   };
 
   useEffect(() => {
     const main = [...mains];
-    if (selectValuesId || selectValuesId === null || screeningTypeValueId || timeFrameId || timeFrameId === null) {
-
+    if (
+      selectValuesId ||
+      selectValuesId === null ||
+      screeningTypeValueId ||
+      timeFrameId ||
+      timeFrameId === null
+    ) {
       const selectFilter = () => {
         setCurrentPage(1);
         const filtered = main.filter((item) => {
-          const isTypeMatch = !selectValuesId || item.screening_type_id === selectValuesId;
-          const isValueMatch = !screeningTypeValueId || item.screening_type_value_id === screeningTypeValueId;
-          const forTimeFrameId = !timeFrameId || item.timeframe_id === timeFrameId;
+          const isTypeMatch =
+            !selectValuesId || item.screening_type_id === selectValuesId;
+          const isValueMatch =
+            !screeningTypeValueId ||
+            item.screening_type_value_id === screeningTypeValueId;
+          const forTimeFrameId =
+            !timeFrameId || item.timeframe_id === timeFrameId;
           return isTypeMatch && isValueMatch && forTimeFrameId;
         });
         setLoading(true); // Загрузкани бошлаш
@@ -189,7 +222,6 @@ const App = () => {
       };
       selectFilter();
     }
-
   }, [selectValuesId, screeningTypeValueId, timeFrameId]);
 
   const [data, setData] = useState({});
@@ -199,19 +231,24 @@ const App = () => {
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
     const sevenDaysInMilliseconds = 7 * 24 * 60 * 60 * 1000;
-    const oneDayAndFiveHoursInMilliseconds = (1 * 24 * 60 * 60 * 1000) + (5 * 60 * 60 * 1000);
-    const newDate = new Date(currentDate.getTime() - sevenDaysInMilliseconds + oneDayAndFiveHoursInMilliseconds);
+    const oneDayAndFiveHoursInMilliseconds =
+      1 * 24 * 60 * 60 * 1000 + 5 * 60 * 60 * 1000;
+    const newDate = new Date(
+      currentDate.getTime() -
+        sevenDaysInMilliseconds +
+        oneDayAndFiveHoursInMilliseconds
+    );
     const getTime = newDate.getTime();
 
     try {
       const response = await axios.get(API_URL, {
         params: {
           symbol: symbol,
-          interval: '1d',
+          interval: "1d",
           limit: 1000,
         },
       });
-      let lastClosePrice = '';
+      let lastClosePrice = "";
       if (response.data) {
         const formattedData = response.data.map((item) => ({
           time: item[0] / 1000,
@@ -221,15 +258,19 @@ const App = () => {
           close: parseFloat(item[4]),
         }));
 
-        if (formattedData.length > 0 ) {
+        if (formattedData.length > 0) {
           lastClosePrice = formattedData[formattedData.length - 1].close;
           if (symbol) {
             setData((prevData) => ({
               ...prevData,
-                [symbol]: {
-                  data: response.data,
-                  lastClosePrice: lastClosePrice,
-                  active_card: formattedData[formattedData.length - 7].time === (getTime / 1000) ? true : false,
+              [symbol]: {
+                data: response.data,
+                lastClosePrice: lastClosePrice,
+                active_card:
+                  formattedData[formattedData.length - 7].time ===
+                  getTime / 1000
+                    ? true
+                    : false,
               },
             }));
           }
@@ -247,9 +288,9 @@ const App = () => {
 
   useEffect(() => {
     handleLogin();
-    const storedLogin = localStorage.getItem('isLogedIn');
-    const storedUser = localStorage.getItem('userName');
-    if (storedLogin === 'true' && storedUser) {
+    const storedLogin = localStorage.getItem("isLogedIn");
+    const storedUser = localStorage.getItem("userName");
+    if (storedLogin === "true" && storedUser) {
       setIsLogedIn(true);
       setIsUser(storedUser);
     }
@@ -257,26 +298,38 @@ const App = () => {
 
   const closeAlert = () => {
     setAlertShown(false);
-    localStorage.setItem('alertShown', 'false');
+    localStorage.setItem("alertShown", "false");
   };
 
   useEffect(() => {
-    document.body.style.overflow = isAlert || isVideo ? 'hidden' : 'auto';
+    document.body.style.overflow = isAlert || isVideo ? "hidden" : "auto";
   }, [isAlert, isVideo]);
 
-  const [selectedPreset, setSelectedPreset] = useState(selectValues || 'Type');
-  const [selectedTicker, setSelectedTicker] = useState(screeningTypeValueId || 'Type');
-  const [selectedTime, setSelectedTime] = useState(timeFrameId || 'All');
+  const [selectedPreset, setSelectedPreset] = useState(selectValues || "Type");
+  const [selectedTicker, setSelectedTicker] = useState(
+    screeningTypeValueId || "Type"
+  );
+  const [selectedTime, setSelectedTime] = useState(timeFrameId || "All");
 
   useEffect(() => {
     openWebsite();
   }, []);
 
+
+
   return (
     <div className="app">
-      {location.pathname.includes('/chart') || location.pathname === '/login' ? null : (
+      {location.pathname.includes("/chart") ||
+      location.pathname === "/login" ? null : (
         <>
-          <Navbar isVideo={isVideo} setIsVideo={setIsVideo} setIsAlert={setIsAlert} isAlert={isAlert} isUser={isUser} isLogedIn={isLogedIn} />
+          <Navbar
+            isVideo={isVideo}
+            setIsVideo={setIsVideo}
+            setIsAlert={setIsAlert}
+            isAlert={isAlert}
+            isUser={isUser}
+            isLogedIn={isLogedIn}
+          />
           <Filter
             setSelectedPreset={setSelectedPreset}
             selectedPreset={selectedPreset}
@@ -297,6 +350,7 @@ const App = () => {
             screeningTypeValueId={screeningTypeValueId}
             setScreeningTypeValueId={setScreeningTypeValueId}
             setTimeFrameId={setTimeFrameId}
+            forFilterData={forFilterData}
             timeFrameId={timeFrameId}
             isUser={isUser}
             setCurrentPage={setCurrentPage}
@@ -313,13 +367,11 @@ const App = () => {
             element={
               <Main
                 isCard={isCard}
-                setIsCard={setIsCard}
                 isGrid={isGrid}
                 isAlert={isAlert}
                 setIsAlert={setIsAlert}
                 isLogedIn={isLogedIn}
                 filterLimit={filterLimit}
-                pointsState={pointsState}
                 isUser={isUser}
                 data={data}
                 analysis={analysis}
@@ -330,16 +382,40 @@ const App = () => {
                 selectedTime={selectedTime}
                 loading={loading}
                 setLoading={setLoading}
-                forFilterTimeData={forFilterTimeData}
                 activeCardFilter={activeCardFilter}
               />
             }
           />
-          <Route path="/chart/:id" element={<Chart isUser={isUser} isLogedIn={isLogedIn} pointsState={pointsState} analysis={analysis} forFilterTimeData={forFilterTimeData} />} />
-          <Route path="/login" element={<Login setIsUser={setIsUser} setIsLogedIn={setIsLogedIn} handleLogin={handleLogin} />} />
+          <Route
+            path="/chart/:id"
+            element={
+              <Chart
+                isUser={isUser}
+                isLogedIn={isLogedIn}
+                // pointsState={pointsState}
+                analysis={analysis}
+              />
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <Login
+                setIsUser={setIsUser}
+                setIsLogedIn={setIsLogedIn}
+                handleLogin={handleLogin}
+              />
+            }
+          />
         </Routes>
       </AnalysisContext.Provider>
-      <Popup isAlert={isAlert} setIsAlert={setIsAlert} isVideo={isVideo} setIsVideo={setIsVideo} closeAlert={closeAlert} />
+      <Popup
+        isAlert={isAlert}
+        setIsAlert={setIsAlert}
+        isVideo={isVideo}
+        setIsVideo={setIsVideo}
+        closeAlert={closeAlert}
+      />
     </div>
   );
 };

@@ -64,3 +64,4 @@ export const lightMode = {
     horzLine: { color: "#2ecc71", width: 1, style: 3, visible: true },
   },
 };
+// bular LineChartda light va dark mode bo'lsa ishlatiladi 
