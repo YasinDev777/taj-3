@@ -71,11 +71,6 @@ const Main = memo(({
           
           // Paginatsiya hisoblash
           setTotallength(filteredData.length);
-      setTotallength(updatedData.length);
-      // `active_card === true` bo'lganlarni qoldiramiz va indeks qo'shamiz
-      const filteredData = updatedData
-        .filter(item => item.active_card === true)
-        .map((item, index) => ({ ...item, index }));
 
       // Paginatsiya hisoblash
       const lastChartIndex = currentPage * chartsPerPage;
