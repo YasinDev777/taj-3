@@ -16,6 +16,7 @@ const browserInfo = Bowser.getParser(window.navigator.userAgent);
 const deviceType = browserInfo.getPlatformType();
 const browserName = browserInfo.getBrowserName();
 
+
 const isAndroid = /Android/i.test(navigator.userAgent);
 const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 if (isAndroid === true) {
@@ -25,22 +26,34 @@ if (isAndroid === true) {
 } else {
   osName = browserInfo.getOSName();
 }
+let randomSixDigitNumber = null;
+
+function getRandomSixDigitNumber() {
+  if (randomSixDigitNumber === null) {
+    randomSixDigitNumber = Math.floor(100000 + Math.random() * 900000);
+  }
+  return randomSixDigitNumber;
+}
 
 const decryptData = (data) => {
   if (!data) {
-    return "anonymous";
+    return "anonymous_" + getRandomSixDigitNumber();
   }
   const bytes = CryptoJS.AES.decrypt(data, "your-secret-key");
   return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 };
 
 const userDocId = async () => {
+<<<<<<< HEAD
 
   const userId = localStorage.getItem('subscriptionType');
 
   if (process.env.NODE_ENV !== 'production') {
     return 'anonymous';
   }
+=======
+  const userId = localStorage.getItem("subscriptionType");
+>>>>>>> origin
   try {
     const usersCollection = collection(db, "user");
     const user_query = query(
@@ -51,20 +64,27 @@ const userDocId = async () => {
     for (const docs of querySnapshot.docs) {
       return docs.id;
     }
-    return "anonymous";
+    return "anonymous_" + getRandomSixDigitNumber();
   } catch (err) {
     console.error("Xatolik yuz berdi:", err);
-    return "anonymous";
   }
 };
+
 // Analytics uchun umumiy funksiya
+<<<<<<< HEAD
 
 const addAnalytics = async (action, param, paramValue,userIdValid) => {
+=======
+const addAnalytics = async (action, param, paramValue, userIdValid) => {
+>>>>>>> origin
   if (process.env.NODE_ENV !== 'production') {
     return;
   }
   try {
     const userId = userIdValid ? userIdValid : await userDocId(); // user_id-ni
+
+    console.log(userId);
+    
     await addDoc(collection(db, "analytics"), {
       action: action,
       param: param,
@@ -79,6 +99,7 @@ const addAnalytics = async (action, param, paramValue,userIdValid) => {
     console.error("Xatolik yuz berdi:", error);
   }
 };
+
 // openWebsite funksiyasi
 export const openWebsite = async () => {
   await addAnalytics("open", "enteredSite", "enteredWebsite");
