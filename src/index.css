@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.swiper-pagination-bullet {
+  background-color: var(--main-color);
+  border: calc(var(--index) * 0.1) solid #fff;
+  padding: calc(var(--index) * 0.2);
+}
+
+.swiper-pagination-bullet.swiper-pagination-bullet-active {
+  background-color: #fff;
+}

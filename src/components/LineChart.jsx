@@ -14,12 +14,14 @@ import {
   pageAnalytics,
 } from "../analytics/Analytics";
 import { darkMode, lightMode } from "./ChartLines/UIMode";
+import Navbar from "./Navbar";
 
 const Chart = ({
   isCard,
   isUser,
   isLogedIn,
-  // pointsState,
+  setIsAlert,
+  isAlert, 
   data,
   line,
   foundedTimeframe,
@@ -125,7 +127,6 @@ const Chart = ({
                 close: NaN,
               });
             }
-
             setCandlestickData(extendedData);
           }
         }
@@ -252,7 +253,7 @@ const Chart = ({
           customTimeLabel.style.left = `${chartRect.left + param.point.x - 55
             }px`; // X koordinatasi
           customTimeLabel.style.top = `${chartRect.top + chartRect.height - 30
-            }px`;
+            }px`; // Y koordinatasi
         });
 
         const customTimeLabel = document.createElement('div');
@@ -416,35 +417,7 @@ const Chart = ({
 
   return (
     <div>
-      <div
-        className="nav"
-        id="nav"
-        style={isCard === false ? { display: "none" } : { display: "flex" }}
-      >
-        <div className="logo-name">
-          <Link to="/" onClick={logoAnalytics}>
-            AHSAN LABS
-          </Link>
-        </div>
-        <div className="options">
-          <Link
-            to="https://t.me/ahsanlabs_admin"
-            onClick={() => ConatactAnalytics("contactAdminIcon")}
-            target="blank"
-          >
-            <PiHeadsetBold />
-          </Link>
-          {isLogedIn === false ? (
-            <Link to="/login" onClick={() => pageAnalytics("openLoginPage")}>
-              <button>
-                Kirish <FiArrowRightCircle />
-              </button>
-            </Link>
-          ) : (
-            <h3>{isUser}</h3>
-          )}
-        </div>
-      </div>
+      {isCard===undefined && <Navbar setIsAlert={setIsAlert} isAlert={isAlert} isUser={isUser} isLogedIn={isLogedIn} />}
       <div
         ref={chartContainerRef}
         className={`chart-container ${isCard === false ? "" : "chart-container-mobile"

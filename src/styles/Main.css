@@ -6,7 +6,7 @@
   align-items: flex-end;
   margin: 0 auto;
   overflow: hidden;
-  border-radius: 0 calc(var(--index) * 0.5) calc(var(--index) * 0.5);
+  border-radius: 0 0 calc(var(--index) * 0.5)  calc(var(--index) * 0.5);
 }
 
 .main {
@@ -176,7 +176,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 99;
+  z-index: 10;
   -webkit-backdrop-filter: calc(var(--index) * 0.5);
   -moz-backdrop-filter: calc(var(--index) * 0.5);
   -o-backdrop-filter: calc(var(--index) * 0.5);
