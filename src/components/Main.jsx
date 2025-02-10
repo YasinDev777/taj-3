@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect, memo, useRef, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Chart from '../components/LineChart';
@@ -26,14 +25,12 @@ const Main = memo(({
   analysis
 }) => {
 
-  // const analysis = useContext(AnalysisContext);
-
-
   const [chartsPerPage, setChartsPerPage] = useState(isGrid);
   const [currentChart, setCurrentChart] = useState([]);
 
   const [totallength, setTotallength] = useState("")
 
+  // const analysis = useContext(AnalysisContext)
   /////
   const dispatch = useDispatch();
   const prevAnalysisRef = useRef(analysis);
@@ -65,20 +62,19 @@ const Main = memo(({
         })
         .filter(Boolean); // `null` qiymatlarni olib tashlaymiz
 
-      setTotallength(updatedData.length);
-      // `active_card === true` bo'lganlarni qoldiramiz va indeks qo'shamiz
-      const filteredData = updatedData
-        .filter(item => item.active_card === true)
-        .map((item, index) => ({ ...item, index }));
 
-      // Paginatsiya hisoblash
+          // `active_card === true` bo'lganlarni qoldiramiz va indeks qo'shamiz
+          const filteredData = updatedData
+          .filter(item => item.active_card === true)
+          .map((item, index) => ({ ...item, index }));
+          
+          // Paginatsiya hisoblash
+          setTotallength(filteredData.length);
       const lastChartIndex = currentPage * chartsPerPage;
       const firstChartIndex = lastChartIndex - chartsPerPage;
       setCurrentChart(filteredData.slice(firstChartIndex, lastChartIndex));
     }
   }, [data, currentPage, chartsPerPage]);
-
-
 
 
 
@@ -108,6 +104,7 @@ const Main = memo(({
     return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
   };
   const paginate = (number) => setCurrentPage(number);
+
 
   const nextPage = () => {
     if (currentPage < totalPages) {
@@ -216,7 +213,8 @@ const Main = memo(({
                       Aniqlandi:
                       <span>{calculateTimeDifference(item.created_at)}</span>
                     </p>
-                  </div>
+
+                    </div>
                 </div>
               );
             })}

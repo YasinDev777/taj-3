@@ -25,6 +25,9 @@ const MainPage = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [forFilterTimeData] = useState([]);
+    const [selectedPreset, setSelectedPreset] = useState("Type");
+    const [selectedTicker, setSelectedTicker] = useState("Type");
+    const [selectedTime, setSelectedTime] = useState("All");
     const encryptData = (data) => {
         return CryptoJS.AES.encrypt(JSON.stringify(data), 'your-secret-key').toString();
     };
@@ -202,7 +205,13 @@ const MainPage = () => {
 
             <AnalysisContext.Provider value={analysis}  >
                 <Routes>
-                    <Route path="/" element={<Home setAnalysis={setAnalysis} setLoading={setLoading} analysis={analysis} loading={loading} isLogedIn={isLogedIn} isAlert={isAlert} setIsAlert={setIsAlert} filterLimit={filterLimit} mains={mains} setAlertShown={setAlertShown} alertShown={alertShown} isUser={isUser} forFilterTimeData={forFilterTimeData} setIsLogedIn={setIsLogedIn} />} />
+                    <Route path="/" element={<Home setAnalysis={setAnalysis} setLoading={setLoading} analysis={analysis} loading={loading} isLogedIn={isLogedIn} isAlert={isAlert} setIsAlert={setIsAlert} filterLimit={filterLimit} mains={mains} setAlertShown={setAlertShown} alertShown={alertShown} isUser={isUser} forFilterTimeData={forFilterTimeData} setIsLogedIn={setIsLogedIn}  
+                    setSelectedTime={setSelectedTime}
+                    selectedTime={selectedTime}
+                    setSelectedTicker={setSelectedTicker}
+                    setSelectedPreset={setSelectedPreset}
+                    selectedPreset={selectedPreset}
+                    selectedTicker={selectedTicker} />} />
                     <Route path="/chart/:id" element={<Chart setIsAlert={setIsAlert} isUser={isUser} isLogedIn={isLogedIn} analysis={analysis} forFilterTimeData={forFilterTimeData} />} />
                     <Route path="/login" element={<Login setIsUser={setIsUser} setIsLogedIn={setIsLogedIn} handleLogin={handleLogin} />} />
                     <Route path='/roadmap' element={<RoadMap />} />
