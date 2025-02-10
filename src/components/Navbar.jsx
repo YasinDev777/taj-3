@@ -23,8 +23,8 @@ const Navbar = ({ setIsAlert, isUser, isLogedIn }) => {
   // const handleVideoClick = ()=> {
   //   setIsVideo(prevState => !prevState);
   // }
-  const handleLoginClick = () => {
-    dispatch({ type: 'IsVideo' });
+  const handleLoginClick = () => {  
+    // dispatch({ type: 'IsVideo' });
     pageAnalytics('toLoginPage');
   };
   const location = useLocation();
@@ -72,8 +72,13 @@ const Navbar = ({ setIsAlert, isUser, isLogedIn }) => {
             <img className="w-7 max-md-plus:w-5" src={logoIcon} alt="" />
           </Link>
           {isLogedIn === false ? (
+              // <Link onClick={handleLoginClick} to="/login"
+              //   className="flex items-center gap-2 bg-black text-white rounded-full text-2xl px-5 py-1 max-md-plus:gap-1 max-md-plus:text-xs px"
+              // >
+              //   Kirish <FiArrowRightCircle />
+
             <Link to="/login" className="hidden md:flex items-center space-x-2 transition duration-300 ease-in-out hover:bg-white hover:text-black hover:border border bg-black text-white px-4 py-2 rounded-lg">
-              <span onClick={() => setIsAlert(false)}>Kirish</span>
+              <span onClick={() => {setIsAlert(false); handleLoginClick()}}>Kirish</span>
             </Link>
           ) : (
             <h3 className="text-3xl font-semibold max-sm:text-xl ">{isUser}</h3>
@@ -121,3 +126,5 @@ const Navbar = ({ setIsAlert, isUser, isLogedIn }) => {
   )
 }
 export default Navbar;
+ {/* <button
+              onClick={() => setIsAlert(false)} */}

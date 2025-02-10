@@ -20,7 +20,6 @@ const Chart = ({
   isCard,
   isUser,
   isLogedIn,
-  // pointsState,
   setIsAlert,
   isAlert, 
   data,
@@ -254,7 +253,7 @@ const Chart = ({
           customTimeLabel.style.left = `${chartRect.left + param.point.x - 55
             }px`; // X koordinatasi
           customTimeLabel.style.top = `${chartRect.top + chartRect.height - 30
-            }px`;
+            }px`; // Y koordinatasi
         });
 
         const customTimeLabel = document.createElement('div');

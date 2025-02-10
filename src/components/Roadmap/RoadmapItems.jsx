@@ -9,7 +9,6 @@ export default function RoadmapItems() {
   const dispatch = useDispatch()
   const handleSwitchBar = () => {
     dispatch({ type: 'active' })
-    console.log(stateBar);
   }
 
   return (

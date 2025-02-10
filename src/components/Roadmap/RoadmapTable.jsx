@@ -11,9 +11,9 @@ const columns = [
 
 const tasks = [
   { id: 1, title: "Bildirishnomalar qo'shish", status: "Ko'rib chiqilmoqda" },
-  { id: 1, title: "Bildirishnomalar qo'shish", status: "Ko'rib chiqilmoqda" },
-  { id: 1, title: "Bildirishnomalar qo'shish", status: "Ko'rib chiqilmoqda" },
-  { id: 1, title: "Bildirishnomalar qo'shish", status: "Ko'rib chiqilmoqda" },
+  { id: 2, title: "Bildirishnomalar qo'shish", status: "Ko'rib chiqilmoqda" },
+  { id: 3, title: "Bildirishnomalar qo'shish", status: "Ko'rib chiqilmoqda" },
+  { id: 4, title: "Bildirishnomalar qo'shish", status: "Ko'rib chiqilmoqda" },
   { id: 1, title: "Bildirishnomalar qo'shish", status: "Ko'rib chiqilmoqda" },
   { id: 2, title: "Bildirishnomalar qo'shish", status: "Rejalashtirilgan" },
   { id: 2, title: "Bildirishnomalar qo'shish", status: "Rejalashtirilgan" },
@@ -50,7 +50,7 @@ export default function RoadMap() {
               {tasks
                 .filter((task) => task.status === column.title)
                 .map((task,id) => (
-                  <div key={task.id} className="border transition duration-300 ease-in-out p-3 rounded-lg shadow-sm hover:shadow-2xl">
+                  <div key={id} className="border transition duration-300 ease-in-out p-3 rounded-lg shadow-sm hover:shadow-2xl">
                     <div className="flex justify-between">
                       <h3 className="font-medium">{task.title}</h3>
                       <h5>#{id+1}</h5>

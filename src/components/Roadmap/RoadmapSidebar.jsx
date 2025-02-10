@@ -4,9 +4,22 @@ import { BsArrowLeftCircle } from "react-icons/bs";
 import { FiSend } from "react-icons/fi";
 import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from "react-toastify";
-import { setData } from '../../services/UserRequires';
+import { setData } from '../../services/RoadMapData';
+import { getRandomSixDigitNumber } from '../randomNumber'
+import CryptoJS from 'crypto-js';
 import "react-toastify/dist/ReactToastify.css";
 
+const decryptData = (data) => {
+  if (!data) {
+    return "anonymous_" + getRandomSixDigitNumber();
+  }
+  const bytes = CryptoJS.AES.decrypt(data, "your-secret-key");
+  return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+};
+
+const userId = decryptData(localStorage.getItem('subscriptionType'))
+
+console.log(userId);
 const RoadmapSidebar = () => {
   const stateBar = useSelector((state) => state.stateSiteBar.currentState);
   const dispatch = useDispatch();
@@ -14,6 +27,7 @@ const RoadmapSidebar = () => {
     dispatch({ type: 'active' });
     console.log(stateBar);
   };
+
 
   const showToast = (message, type = "error") => {
     toast[type](message, {
@@ -29,7 +43,8 @@ const RoadmapSidebar = () => {
   const [userData, setUserData] = useState({
     title: "",
     telegramUsername: "",
-    learnMore: ""
+    learnMore: "",
+    user_id: userId ? userId : "anonymous_" + getRandomSixDigitNumber()
   });
 
   const [inputState, setInputState] = useState(false);
@@ -58,7 +73,8 @@ const RoadmapSidebar = () => {
     setUserData({
       title: "",
       telegramUsername: "",
-      learnMore: ""
+      learnMore: "",
+      user_id: userId ? userId : "anonymous_" + getRandomSixDigitNumber()
     });
   };
 

@@ -44,16 +44,12 @@ const decryptData = (data) => {
 };
 
 const userDocId = async () => {
-<<<<<<< HEAD
 
   const userId = localStorage.getItem('subscriptionType');
 
   if (process.env.NODE_ENV !== 'production') {
     return 'anonymous';
   }
-=======
-  const userId = localStorage.getItem("subscriptionType");
->>>>>>> origin
   try {
     const usersCollection = collection(db, "user");
     const user_query = query(
@@ -70,13 +66,8 @@ const userDocId = async () => {
   }
 };
 
-// Analytics uchun umumiy funksiya
-<<<<<<< HEAD
-
 const addAnalytics = async (action, param, paramValue,userIdValid) => {
-=======
-const addAnalytics = async (action, param, paramValue, userIdValid) => {
->>>>>>> origin
+
   if (process.env.NODE_ENV !== 'production') {
     return;
   }
