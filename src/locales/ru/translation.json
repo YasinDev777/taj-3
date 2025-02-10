@@ -1,0 +1,43 @@
+{
+    "home":{
+        "videoOpeningText": "",
+        "videoGuide": "",
+        "video":"",
+        "foundText": "",
+        "minutesAgo":"",
+        "hoursAgo":"",
+        "hour":"",
+        "day":"",
+        "dayAgo":"",
+        "analysis":"",
+        "open":"",
+        "getCloseChartButton":"",
+        "alertTitle":"",
+        "alertTitleContinue":"",
+        "alertTitleDesc":"",
+        "close":"",
+        "connection":""
+    },
+    "login":{
+        "firstCarouselTitle":"",
+        "firstCarouselDesc":"",
+        "secondCarouselTitle":"",
+        "secondCarouselDesc":"Ahsan Labs orqali eng yangi tahlillar bilan ish boshlab daromadingizni oshiring!",
+        "thirdCarouselTitle":"Biz bilan vaqtingizni tejang",
+        "thirdCarouselDesc":"Ahsan Labs orqali eng yangi tahlillar va halol kripto imkoniyatlarini oson filterlar bilan kuzating.",
+        "inputTitle":"Tokenni kiriting",
+        "open":"Kirish",
+        "inputDesc":"bilan bog'laning va",
+        "inputDescContinue":"tokeninginzni oling."
+    },
+    "alert":{
+        "invalidAlert":"Bunday ma'lumotga ega foydalanuvchi afsuski topilmadi!",
+        "blockUserAlert":"Hurmatli foydalanuvchi siz bloklangansiz iltimos admin bilan bog'laning",
+        "note":"Eslatma:",
+        "dearText":"Hurmatli",
+        "note1Week":"1 haftadan so’ng obunangiz bekor qilinadi. Iltimos, admin bilan bog’laning!",
+        "note1Day":"1 kundan so’ng obunangiz bekor qilinadi. Iltimos, admin bilan bog’laning!",
+        "headText":"Diqqat:",
+        "buy":"Sotib olish"
+    }
+}

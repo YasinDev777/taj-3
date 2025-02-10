@@ -6,17 +6,16 @@ import {
   query,
   where,
 } from "firebase/firestore";
-
+import { getRandomSixDigitNumber } from "../components/randomNumber";
 import { db } from "../firebase";
 import CryptoJS from "crypto-js";
 import Bowser from "bowser";
 
-const browserInfo = Bowser.getParser(window.navigator.userAgent);
-const browserName = browserInfo.getBrowserName();
 let osName = "";
-const deviceType = browserInfo.getPlatformType(); // 'mobile', 'tablet', 'desktop'
+const browserInfo = Bowser.getParser(window.navigator.userAgent);
+const deviceType = browserInfo.getPlatformType();
+const browserName = browserInfo.getBrowserName();
 
-// Android va iOS ni aniqlash uchun regex
 
 const isAndroid = /Android/i.test(navigator.userAgent);
 const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -28,22 +27,17 @@ if (isAndroid === true) {
   osName = browserInfo.getOSName();
 }
 
+
 const decryptData = (data) => {
   if (!data) {
-    return "anonymous";
+    return "anonymous_" + getRandomSixDigitNumber();
   }
   const bytes = CryptoJS.AES.decrypt(data, "your-secret-key");
   return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 };
 
-
 const userDocId = async () => {
-
-  const userId = localStorage.getItem('subscriptionType');
-
-  if (process.env.NODE_ENV !== 'production') {
-    return 'anonymous';
-  }
+  const userId = localStorage.getItem("subscriptionType");
   try {
     const usersCollection = collection(db, "user");
     const user_query = query(
@@ -52,25 +46,22 @@ const userDocId = async () => {
     );
     const querySnapshot = await getDocs(user_query);
     for (const docs of querySnapshot.docs) {
-      return docs.id; // Birinchi hujjatning ID-sini qaytaradi
+      return docs.id;
     }
-    return "anonymous"; // Agar hujjat topilmasa, 'anonymous' qaytaradi
+    return "anonymous_" + getRandomSixDigitNumber();
   } catch (err) {
     console.error("Xatolik yuz berdi:", err);
-    return "anonymous";
   }
 };
 
-
 // Analytics uchun umumiy funksiya
-
-const addAnalytics = async (action, param, paramValue,userIdValid) => {
-  
+const addAnalytics = async (action, param, paramValue, userIdValid) => {
   if (process.env.NODE_ENV !== 'production') {
     return;
   }
+  // console.log(action, param, paramValue);
   try {
-    const userId = userIdValid ? userIdValid : await userDocId(); // user_id-ni
+    const userId = userIdValid ? userIdValid : await userDocId(); // user_id-ni    
     await addDoc(collection(db, "analytics"), {
       action: action,
       param: param,
@@ -85,6 +76,7 @@ const addAnalytics = async (action, param, paramValue,userIdValid) => {
     console.error("Xatolik yuz berdi:", error);
   }
 };
+
 // openWebsite funksiyasi
 export const openWebsite = async () => {
   await addAnalytics("open", "enteredSite", "enteredWebsite");
@@ -163,3 +155,29 @@ export const ConatactAnalytics = async (action) => {
 export const logoAnalytics = async () => {
   await addAnalytics("logo", "navbarLogo", "clicked");
 };
+
+
+
+
+
+export const roadmapVideosAnalytics = async (actionType,action) => {
+  await addAnalytics("roadmapVideoPlayAlert", actionType, action);
+}
+
+// export const pageAnalytics = async (action) => {
+//   await addAnalytics("page", "page", {"analizlar","roadmap"});
+// };
+
+export const burgerMenuAnalytics = async (action) => {
+  await addAnalytics("burger_menu_toggled", "burger_menu", action);
+};
+
+export const switchpageAnalytics = async (action) => {
+  await addAnalytics("switch_roadmap", "switch", action);
+}
+export const requestOpinionAnalytics = async (action) => {
+  await addAnalytics("request_opinion", "request_opinion", action);  // action is open and close
+}
+export const opinionAnalytics = async (action) => {
+  await addAnalytics("opinion", "opinionSidebar", action); 
+}

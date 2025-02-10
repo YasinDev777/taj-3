@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const fetchKlines = createAsyncThunk(
     "klines/fetchKlines",
-    async (symbol,   { rejectWithValue }) => {
+    async (symbol, { rejectWithValue }) => {
         const API_URL = `https://api.binance.com/api/v3/klines`;
         const currentDate = new Date();
         currentDate.setHours(0, 0, 0, 0);
@@ -35,11 +35,7 @@ export const fetchKlines = createAsyncThunk(
                     symbol,
                     data: response.data,
                     lastClosePrice,
-                    active_card:
-                        formattedData.length > 7 &&
-                        formattedData[formattedData.length - 7].time === getTime / 1000
-                            ? true
-                            : false,
+                    active_card: formattedData.length > 7 && formattedData[formattedData.length - 7].time === getTime / 1000 ? true : false,
                 };
             }
         } catch (err) {

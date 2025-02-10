@@ -3,8 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
 import { LuFilterX } from 'react-icons/lu';
 import Alert from './Alert';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../firebase';
 import { FaLock } from 'react-icons/fa6';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -12,6 +10,7 @@ import { FilterAnalaysisAnalytics, FilterAnalaysisTypeAnalytics, FilterClearAnal
 const Filter = ({
   isUser,
   alertShown,
+  forFilterData,
   isLogedIn,
   setIsLogedIn,
   setAlertShown,
@@ -39,41 +38,40 @@ const Filter = ({
   const handleVideoChange = () => {
     dispatch({ type: 'IsVideo' });
   };
-  const [forFilterData, setForFilterData] = useState([]);
   const [forTimeData] = useState([]);
 
-  
 
 
-  useEffect(() => {
-    const fetchs = async () => {
-      try {        
-        getScreeningData()
-        const screeningTypes = collection(db, 'screening_type');
-        const screeningTypesGet = await getDocs(screeningTypes);
 
-        const screeningTypesValue = collection(db, 'screening_type_value');
-        const screeningTypesValueGet = await getDocs(screeningTypesValue);
+  // useEffect(() => {
+  //   const fetchs = async () => {
+  //     try {        
+  //       getScreeningData()
+  //       const screeningTypes = collection(db, 'screening_type');
+  //       const screeningTypesGet = await getDocs(screeningTypes);
 
-        const screeningTypesValueGetMain = [];
-        screeningTypesValueGet.forEach((docs) => {
-          const data = docs.data();
-          screeningTypesValueGetMain.push(data);
-        });
+  //       const screeningTypesValue = collection(db, 'screening_type_value');
+  //       const screeningTypesValueGet = await getDocs(screeningTypesValue);
 
-        const screeningTypesGetMain = [];
-        screeningTypesGet.forEach((docs) => {
-          const data = docs.data();
-          let addScreenTypeAndValue = screeningTypesValueGetMain && screeningTypesValueGetMain.filter((item) => item.screening_type_id === data.type_id);
-          screeningTypesGetMain.push({ data, addScreenTypeAndValue });
-          setForFilterData(screeningTypesGetMain);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchs();
-  }, []);
+  //       const screeningTypesValueGetMain = [];
+  //       screeningTypesValueGet.forEach((docs) => {
+  //         const data = docs.data();
+  //         screeningTypesValueGetMain.push(data);
+  //       });
+
+  //       const screeningTypesGetMain = [];
+  //       screeningTypesGet.forEach((docs) => {
+  //         const data = docs.data();
+  //         let addScreenTypeAndValue = screeningTypesValueGetMain && screeningTypesValueGetMain.filter((item) => item.screening_type_id === data.type_id);
+  //         screeningTypesGetMain.push({ data, addScreenTypeAndValue });
+  //         setForFilterData(screeningTypesGetMain);
+  //       });
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchs();
+  // }, []);
 
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
@@ -83,19 +81,22 @@ const Filter = ({
   const gridOptions = [6, 12, 24];
 
   useEffect(() => {
-    const foundPresetData = forFilterData.find((item) => item.data.name === selectedPreset);
-    if (foundPresetData) {
-      setSelectValues(foundPresetData.data.type_id);
-    } else {
-      setSelectValues(null);
-    }
+    if (forFilterData) {
 
-    const foundTimeData = forTimeData.find((item) => item.addAnalsisAndTimeframe.name === selectedTime);
-    if (foundTimeData) {
-      const foundTypeIdTime = foundTimeData.addAnalsisAndTimeframe.id;
-      setFoundTimeId(foundTypeIdTime);
-    } else {
-      setFoundTimeId(null);
+      const foundPresetData = forFilterData.find((item) => item.data.name === selectedPreset);
+      if (foundPresetData) {
+        setSelectValues(foundPresetData.data.type_id);
+      } else {
+        setSelectValues(null);
+      }
+
+      const foundTimeData = forTimeData.find((item) => item.addAnalsisAndTimeframe.name === selectedTime);
+      if (foundTimeData) {
+        const foundTypeIdTime = foundTimeData.addAnalsisAndTimeframe.id;
+        setFoundTimeId(foundTypeIdTime);
+      } else {
+        setFoundTimeId(null);
+      }
     }
   }, [selectedPreset, selectedTime, forFilterData, forTimeData]);
 
@@ -151,16 +152,6 @@ const Filter = ({
             <h1 className="text-3xl max-xl:text-2xl max-xs:text-sm">Texnik analizlar</h1>
             <p className='text-lg'>Chart patterns</p>
           </div>
-          <button
-            // style={video === true ? { display: 'none' } : { display: 'flex' }}
-            className="hidden max-lg:flex text-base underline"
-            onClick={() => {
-              handleVideoChange()
-              VideoAnalytics('open');
-            }}
-          >
-            Foydalanish videosi
-          </button>
         </div>
         <div className="flex shadow-[0_0_5px_5px_#0000000D] rounded-xl w-4/5 items-center justify-between p-4 max-xl:w-full max-xl:my-4 max-xs:shadow-none max-xs:p-0 max-xs:py-1">
           <div className="flex gap-3 items-center">
@@ -187,7 +178,9 @@ const Filter = ({
                     <span>All</span>
                   </div>
                   {forFilterData &&
-                    forFilterData.map((item, index) => (
+                    forFilterData
+                    .sort((a, b) => a.is_locked - b.is_locked) // true bo'lganlarni oldinga chiqarish
+                    .map((item, index) => (
                       <div
                         key={index}
                         className={`px-4 py-2 text-sm border-t-2 hover:bg-gray-100 cursor-pointer max-sm:px-2 ${item.data.is_locked ? 'text-gray-400 pointer-events-none' : 'text-gray-700'}`}
@@ -244,6 +237,7 @@ const Filter = ({
                   forFilterData.map((item) =>
                     item.addScreenTypeAndValue
                       .filter((item) => item.screening_type_id === selectValues)
+                      .sort((a, b) => a.is_locked - b.is_locked) // true bo'lganlarni oldinga chiqarish
                       .map((item, idx) => (
                         <div
                           key={`${item.name}-${idx}`}
@@ -315,7 +309,7 @@ const Filter = ({
               </div>
               <div className={`dropdown-content absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg ${open3 === false || forFilterTimeData.some((item) => item.length <= 0) ? 'hidden' : 'block'}`}>
                 <div
-                  className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer max-sm:py-2 max-sm:px-1"
+                  className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer max-sm:py-2 max-sm:px-1"
                   onClick={() => {
                     setOpen3(!open3);
                     setSelectedTime('All');
@@ -325,10 +319,10 @@ const Filter = ({
                 >
                   <span>All</span>
                 </div>
-                {forFilterTimeData.map((item, index) => (
+                {forFilterTimeData.sort((a, b) => a.is_locked - b.is_locked).map((item, index) => (
                   <div
                     key={`${item.name}-${index}`}
-                    className="px-4 py-2 border-t text-sm text-gray-700 hover:bg-gray-100 cursor-pointer max-sm:p-2 max-sm:px-1"
+                    className={`px-2 py-2 border-t flex items-center justify-between text-sm hover:bg-gray-100 cursor-pointer max-sm:p-2 max-sm:px-1 ${item.is_locked ? 'text-gray-400 pointer-events-none' : 'text-gray-700'}`}
                     onClick={() => {
                       setOpen3(!open3);
                       setSelectedTime(item.name);
@@ -337,6 +331,7 @@ const Filter = ({
                     }}
                   >
                     <span>{item.name}</span>
+                    {item.is_locked && <FaLock className="w-3 h-3" />}
                   </div>
                 ))}
               </div>
@@ -348,4 +343,5 @@ const Filter = ({
     </>
   );
 };
+
 export default Filter;
