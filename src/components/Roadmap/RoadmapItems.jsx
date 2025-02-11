@@ -84,7 +84,7 @@ export default function RoadmapItems() {
                 }}
                 icon={<span>{item.due_date}</span>}
               >
-                <div className="bg-gray-800 p-5 rounded-2xl">
+                <div className="bg-gray-800 p-5 rounded-2xl hover:scale-110 transition-transform">
                   <div className="text-right">
                     <span
                       className="px-3 py-1 text-sm text-white rounded-full"

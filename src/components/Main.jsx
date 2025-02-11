@@ -28,8 +28,6 @@ const Main = memo(({
 
   const [totallength, setTotallength] = useState("")
 
-  // const analysis = useContext(AnalysisContext)
-  /////
   const dispatch = useDispatch();
   const prevAnalysisRef = useRef(analysis);
   useEffect(() => {
