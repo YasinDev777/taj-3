@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Chart from '../components/LineChart';
 import '../styles/App.css';
 import Popup from '../components/Popup';
@@ -9,7 +9,6 @@ import { db } from '../firebase';
 import { AnalysisContext } from '../context/Context';
 import CryptoJS from 'crypto-js';
 import { loginAnalytics, openWebsite } from '../analytics/Analytics';
-import { useDispatch } from "react-redux";
 import Home from './Home';
 import RoadMap from './RoadMap';
 
@@ -25,25 +24,10 @@ const MainPage = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [forFilterTimeData] = useState([]);
-    const [selectedPreset, setSelectedPreset] = useState("Type");
-    const [selectedTicker, setSelectedTicker] = useState("Type");
-    const [selectedTime, setSelectedTime] = useState("All");
     const encryptData = (data) => {
         return CryptoJS.AES.encrypt(JSON.stringify(data), 'your-secret-key').toString();
     };
-    //////
-    const dispatch = useDispatch();
-    const updateData = () => {
-        dispatch({
-            type: "SET_DATA",
-            payload: ["olma", "nok", "banan"], // Yangi data
-        });
-    };
 
-    useEffect(() => {
-        updateData()
-    }, [])
-    //////
     useEffect(() => {
         let isMounted = true;
         setLoading(true);
@@ -61,7 +45,6 @@ const MainPage = () => {
                   const data = docs.data();
                   forFilterTimeData.push(data);
                 });
-
                 // Points collection queryini oldindan yaratish
                 const pointsRef = collection(db, "points");
             
@@ -200,21 +183,19 @@ const MainPage = () => {
         openWebsite();
     }, []);
 
+    const [selectedPreset, setSelectedPreset] = useState("Type");
+    const [selectedTicker, setSelectedTicker] = useState("Type");
+    const [selectedTime, setSelectedTime] = useState("All");
+
     return (
         <div className="app">
 
-            <AnalysisContext.Provider value={analysis}  >
+            <AnalysisContext.Provider value={analysis}>
                 <Routes>
-                    <Route path="/" element={<Home setAnalysis={setAnalysis} setLoading={setLoading} analysis={analysis} loading={loading} isLogedIn={isLogedIn} isAlert={isAlert} setIsAlert={setIsAlert} filterLimit={filterLimit} mains={mains} setAlertShown={setAlertShown} alertShown={alertShown} isUser={isUser} forFilterTimeData={forFilterTimeData} setIsLogedIn={setIsLogedIn}  
-                    setSelectedTime={setSelectedTime}
-                    selectedTime={selectedTime}
-                    setSelectedTicker={setSelectedTicker}
-                    setSelectedPreset={setSelectedPreset}
-                    selectedPreset={selectedPreset}
-                    selectedTicker={selectedTicker} />} />
+                    <Route path="/" element={<Home setSelectedTime={setSelectedTime} selectedTime={selectedTime} setSelectedTicker={setSelectedTicker} selectedTicker={selectedTicker} selectedPreset={selectedPreset} setSelectedPreset={setSelectedPreset} setAnalysis={setAnalysis} setLoading={setLoading} analysis={analysis} loading={loading} isLogedIn={isLogedIn} isAlert={isAlert} setIsAlert={setIsAlert} filterLimit={filterLimit} mains={mains} setAlertShown={setAlertShown} alertShown={alertShown} isUser={isUser} forFilterTimeData={forFilterTimeData} setIsLogedIn={setIsLogedIn} />} />
                     <Route path="/chart/:id" element={<Chart setIsAlert={setIsAlert} isUser={isUser} isLogedIn={isLogedIn} analysis={analysis} forFilterTimeData={forFilterTimeData} />} />
                     <Route path="/login" element={<Login setIsUser={setIsUser} setIsLogedIn={setIsLogedIn} handleLogin={handleLogin} />} />
-                    <Route path='/roadmap' element={<RoadMap />} />
+                    <Route path='/roadmap' element={<RoadMap setIsAlert={setIsAlert} isAlert={isAlert} isUser={isUser} isLogedIn={isLogedIn}  />} />
                 </Routes>
             </AnalysisContext.Provider>
             <Popup isAlert={isAlert} setIsAlert={setIsAlert} closeAlert={closeAlert} />

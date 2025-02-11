@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+/* swiper style */
 .swiper-pagination-bullet {
   background-color: var(--main-color);
   border: calc(var(--index) * 0.1) solid #fff;
@@ -11,3 +11,90 @@
 .swiper-pagination-bullet.swiper-pagination-bullet-active {
   background-color: #fff;
 }
+/* swiper style */
+
+/* verticaltimeline style */
+.vertical-timeline-element-icon {
+  border-radius: 10px !important;
+  width: 110px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
+  height: 35px !important;
+}
+.vertical-timeline-element-icon.shadow-size-small {
+  box-shadow: none !important;
+}
+.vertical-timeline-element-content {
+  transform: translateX(25px);
+  width: 40% !important;
+  box-shadow: none !important;
+}
+.vertical-timeline::before {
+  content: "";
+  height: 100%;
+  left: calc(52% - 2px) !important;
+  position: absolute;
+  background: linear-gradient(
+    #2b2d4a 0%,
+    #e55d0e 25%,
+    #25abd7 50%,
+    #2b2d4a 100%
+  );
+  width: 1px;
+}
+.vertical-timeline::after {
+  content: "";
+  position: absolute;
+  left: calc(52% - 5px);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: black;
+  top: 0px;
+}
+@media screen and (max-width: 1170px) {
+  .vertical-timeline::after {
+    left: -2px;
+  }
+  .vertical-timeline::before {
+    left: 0px !important;
+  }
+  .vertical-timeline-element-content {
+    transform: translateX(80px);
+    width: 85% !important ;
+  }
+  .vertical-timeline-element-icon {
+    margin-left: 10px;
+  }
+}
+@media screen and (max-width: 768px) {
+  .vertical-timeline-element-content {
+    width: 80% !important ;
+    transform: translateX(40px);
+  }
+  .vertical-timeline-element-icon {
+    font-size: 12px;
+    width: 80px !important;
+    position: absolute;
+    left: -20px;
+  }
+  .vertical-timeline::before {
+    left: 25px !important;
+  }
+  .vertical-timeline::after {
+    left: 24px;
+  }
+}
+@media screen and (max-width: 480px) {
+  .vertical-timeline-element-content {
+    width: 75% !important ;
+    transform: translateX(30px);
+  }
+  .vertical-timeline-element-icon {
+    font-size: 10px;
+    width: 70px !important;
+  }
+}
+/* verticaltimeline style */

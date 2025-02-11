@@ -1,17 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { createChart } from "lightweight-charts";
-import { PiHeadsetBold } from "react-icons/pi";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { FiArrowRightCircle } from "react-icons/fi";
+import { useNavigate, useParams } from "react-router-dom";
 import { BsArrowLeftCircle } from "react-icons/bs";
 import axios from "axios";
 import { AnalysisContext } from "../context/Context";
 import {
   chartAnalyticsClose,
-  ConatactAnalytics,
-  logoAnalytics,
-  pageAnalytics,
 } from "../analytics/Analytics";
 import { darkMode, lightMode } from "./ChartLines/UIMode";
 import Navbar from "./Navbar";
@@ -21,7 +16,7 @@ const Chart = ({
   isUser,
   isLogedIn,
   setIsAlert,
-  isAlert, 
+  isAlert,
   data,
   line,
   foundedTimeframe,
@@ -325,11 +320,25 @@ const Chart = ({
         const fibonacciNumbers = [0, 0.236, 0.382, 0.5, 0.618, 1];
 
         // `times` va `values` massivlari bitta arraydan kelmoqda
-        const data = [
-          // { time: "2025-01-20", value: 100000 },
-          { time: "2025-01-10", value: 120000 },
-          { time: "2025-02-12", value: 100000 },
-        ];
+        const data = analysisData.line.map((item) => {
+          const date = new Date(item.date.seconds * 1000); // Firebase timestampni UTC asosida o'qish
+          // date.setHours(date.getHours() + 5); // 5 soatni qo'shish
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, "0"); // Oyni 2 xonali qilib formatlash
+          const day = String(date.getDate()).padStart(2, "0"); // Sanani 2 xonali qilib formatlash
+          const hours = String(date.getHours()).padStart(2, "0"); // Soatni 2 xonali qilib formatlash
+          const timeforHours =
+            new Date(`${year}-${month}-${day} ${hours}:00:00`).getTime() /
+            1000;
+          const timeforDaily =
+            new Date(`${year}-${month}-${day}`).getTime() / 1000;
+
+          return {
+            time: timeFrameIdState === "1d" ? timeforDaily : timeforHours, // Unix timestamp (lightweight-charts uchun)
+            value: item.price, // Narx qiymati
+          };
+        })
+        .sort((a, b) => a.time - b.time) 
 
         // Har bir Fibonacci darajasi uchun qiymatlarni hisoblash
         const fibonacciLevels = fibonacciNumbers.map((level) => ({
@@ -417,7 +426,7 @@ const Chart = ({
 
   return (
     <div>
-      {isCard===undefined && <Navbar setIsAlert={setIsAlert} isAlert={isAlert} isUser={isUser} isLogedIn={isLogedIn} />}
+      {isCard === undefined && <Navbar setIsAlert={setIsAlert} isAlert={isAlert} isUser={isUser} isLogedIn={isLogedIn} />}
       <div
         ref={chartContainerRef}
         className={`chart-container ${isCard === false ? "" : "chart-container-mobile"
