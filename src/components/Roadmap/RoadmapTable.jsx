@@ -36,26 +36,23 @@ export default function RoadmapTable() {
         Ahsan Labs jadvali – bu innovatsion g'oyalar, samarali vositalar va <br />
         foydalanuvchilarga qulay xizmatlarni yaratishga qaratilgan muhim bosqichlarni <br /> aks ettiradi.
       </p>
-      {!loading ? <div className="grid grid-cols-1 md:grid-cols-4 gap-4 border p-1 py-3">
+      {!loading ? <div className="grid grid-cols-1 md:grid-cols-4 gap-4 border p-3">
         {columns.map((column) => (
           <div key={column.title} className="bg-white p-4 rounded-lg shadow-md ">
             <h2 className="text-lg font-semibold text-center pb-1" style={{borderBottom: `2px solid ${column.color}`}}>
               {column.icon} <span>{column.title}</span>
             </h2>
             <h2 className={`text-lg font-semibold flex items-center space-x-2 relative pb-2 after:content-[''] after:block after:w-full after:h-[2px] after:bg-${column.color}-500 after:mt-2`}></h2>
-            <div className="mt-4 space-y-4 md:overflow-hidden md:max-h-max  overflow-y-auto max-h-[400px]">
+            <div className="mt-4">
               {roadmapTable
                 .filter((task) => task.status.toLowerCase() === column.status.toLowerCase())
                 .map((task, id) => (
-                  <div key={id} className="border transition duration-300 ease-in-out p-3 rounded-lg shadow-sm hover:shadow-2xl">
+                  <div key={id} className="border transition-all ease-in-out p-3 rounded-lg hover:shadow-md">
                     <div className="flex justify-between capitalize">
                       <h3 className="font-medium">{task.title}</h3>
                       <h5>#{id + 1}</h5>
                     </div>
                     <p className="text-sm text-gray-500">{task.description}</p>
-                    {/* <div className={task.select ? 'hidden' : 'flex justify-end'}>
-                      <button className="mt-2 text-sm bg-red-500 text-white px-3 py-1 rounded-md text-end">Tanlab olinmadi</button>
-                    </div> */}
                   </div>
                 ))}
             </div>

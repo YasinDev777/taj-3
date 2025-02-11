@@ -22,7 +22,6 @@ import {
 import { CiYoutube } from "react-icons/ci";
 const Navbar = ({ setIsAlert, isUser, isLogedIn }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  // const video = useSelector((state) => state.video.video);
   const dispatch = useDispatch();
   const handleVideoChange = () => {
     dispatch({ type: "IsVideo" });
@@ -104,13 +103,9 @@ const Navbar = ({ setIsAlert, isUser, isLogedIn }) => {
             onClick={() => ConatactAnalytics("contactAdminIcon")}
             target="blank"
           >
-            <img className="w-7 max-md-plus:w-5" src={logoIcon} alt="" />
+            <img className="w-7 max-md-plus:w-5 hover:drop-shadow-xl" src={logoIcon} alt="" />
           </Link>
           {isLogedIn === false ? (
-            // <Link onClick={handleLoginClick} to="/login"
-            //   className="flex items-center gap-2 bg-black text-white rounded-full text-2xl px-5 py-1 max-md-plus:gap-1 max-md-plus:text-xs px"
-            // >
-            //   Kirish <FiArrowRightCircle />
 
             <Link
               to="/login"
