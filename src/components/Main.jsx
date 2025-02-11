@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo, useRef, useContext } from 'react';
+import React, { useState, useEffect, memo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Chart from '../components/LineChart';
 import { BiLockOpen } from 'react-icons/bi';
@@ -9,7 +9,6 @@ import { BlockChartAnalytics, chartAnalyticsOpen, PaginationAnalytics } from '..
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchKlines } from '../redux/slices/BinanceApi';
 import imageBlur from "../assets/chartimg.jpg";
-import { AnalysisContext } from '../context/Context';
 const Main = memo(({
   isCard,
   isGrid,
@@ -21,7 +20,6 @@ const Main = memo(({
   currentPage,
   setCurrentPage,
   loading,
-  activeCardFilter,
   analysis
 }) => {
 
@@ -67,6 +65,7 @@ const Main = memo(({
           const filteredData = updatedData
           .filter(item => item.active_card === true)
           .map((item, index) => ({ ...item, index }));
+          
           
           // Paginatsiya hisoblash
           setTotallength(filteredData.length);
@@ -122,10 +121,10 @@ const Main = memo(({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const filteredChart2 = currentChart.filter((item) => item.active_card === false);
+  // const filteredChart2 = currentChart.filter((item) => item.active_card === false);
   const filteredChart = currentChart.filter((item) => item.active_card === true && item.lastClosePrice !== undefined);
-  activeCardFilter.length = 0;
-  activeCardFilter.push(...filteredChart2);
+  // activeCardFilter.length = 0;
+  // activeCardFilter.push(...filteredChart2);
 
   const totalPages = Math.ceil(totallength / chartsPerPage);
 
