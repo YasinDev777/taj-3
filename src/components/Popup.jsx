@@ -1,6 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
-/* eslint-disable react/prop-types */
-import React from 'react';
 import { BiX } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { BlockChartAnalytics, VideoAnalytics } from '../analytics/Analytics';
