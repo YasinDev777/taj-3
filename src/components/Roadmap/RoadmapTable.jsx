@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRoadmapTable } from "../../redux/reducers/roadmapTable";
 import Loader from "../Loader";
@@ -20,9 +20,7 @@ export default function RoadmapTable() {
   useEffect(() => {
     if (roadmapTable.length === 0) {
       dispatch(fetchRoadmapTable()); // Ma’lumot faqat bir marta yuklanadi
-    }
-    console.log(roadmapTable);
-    
+    }    
   }, [dispatch, roadmapTable]);
 
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Chart from '../components/LineChart';
 import '../styles/App.css';
 import Popup from '../components/Popup';
@@ -9,7 +9,6 @@ import { db } from '../firebase';
 import { AnalysisContext } from '../context/Context';
 import CryptoJS from 'crypto-js';
 import { loginAnalytics, openWebsite } from '../analytics/Analytics';
-import { useDispatch } from "react-redux";
 import Home from './Home';
 import RoadMap from './RoadMap';
 

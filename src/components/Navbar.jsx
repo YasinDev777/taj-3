@@ -8,9 +8,9 @@ import {
   VideoAnalytics,
 } from "../analytics/Analytics";
 import React, { useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import logoIcon from "../assets/telegramIcon.svg";
 import {
   FiAlignJustify,
@@ -22,7 +22,7 @@ import {
 import { CiYoutube } from "react-icons/ci";
 const Navbar = ({ setIsAlert, isUser, isLogedIn }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const video = useSelector((state) => state.video.video);
+  // const video = useSelector((state) => state.video.video);
   const dispatch = useDispatch();
   const handleVideoChange = () => {
     dispatch({ type: "IsVideo" });
@@ -31,7 +31,6 @@ const Navbar = ({ setIsAlert, isUser, isLogedIn }) => {
     pageAnalytics("toLoginPage");
     setIsAlert(false);
   };
-  const location = useLocation();
   return (
     <>
       <nav className="w-full flex justify-between items-center p-4 bg-white">

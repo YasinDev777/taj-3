@@ -4,9 +4,22 @@ import RoadmapItems from "../components/Roadmap/RoadmapItems";
 import RoadmapTable from "../components/Roadmap/RoadmapTable";
 import Navbar from "../components/Navbar";
 import { requestOpinionAnalytics, switchpageAnalytics } from "../analytics/Analytics";
+import RoadmapSidebar from "../components/Roadmap/RoadmapSidebar";
 
 const RoadMap = ({setIsAlert,isUser,isLogedIn}) => {
   const [activeTab, setActiveTab] = useState("map");
+  const [sidebarShow, setSidebarShow] = useState(false)
+
+  const openSidebar = ()=>{
+    window.scrollTo(0, 0);
+    setSidebarShow(true);
+    document.body.style.overflow = "hidden";
+  }
+  const closeSidebar = ()=>{
+    setSidebarShow(false);
+    requestOpinionAnalytics("close")
+    document.body.style.overflow = "auto";
+  }
   return (
     <div>
       <Navbar
@@ -23,8 +36,8 @@ const RoadMap = ({setIsAlert,isUser,isLogedIn}) => {
                   ? "bg-black text-white"
                   : "bg-white text-gray-900 hover:bg-slate-100"
               }`}
-              onClick={() => {setActiveTab("map"); switchpageAnalytics("roadmap")}}
-            >
+              onClick={() => {setActiveTab("map"); switchpageAnalytics("roadmap")}}>
+
               Xarita
             </button>
             <button
@@ -38,13 +51,15 @@ const RoadMap = ({setIsAlert,isUser,isLogedIn}) => {
               Jadval
             </button>
           </div>
-          {activeTab && <button onClick={()=>requestOpinionAnalytics("open")} className="flex items-center gap-3 bg-slate-100 rounded-xl p-3 font-medium text-lg transition-colors hover:bg-slate-200 max-xs:text-base max-xs:px-3">G'oya taklif etish <RiShareForwardLine /></button>}
+          <button onClick={()=>{requestOpinionAnalytics("open"); openSidebar()}} className="flex items-center gap-3 bg-slate-100 rounded-xl p-3 font-medium text-lg transition-colors hover:bg-slate-200 max-xs:text-base max-xs:px-3">G'oya taklif etish <RiShareForwardLine /></button>
+         
         </div>
 
         <div className="">
           {activeTab === "map" ? <RoadmapItems /> : <RoadmapTable />}
         </div>
       </div>
+      {sidebarShow ? <div><RoadmapSidebar closeSidebar={closeSidebar} /></div> : null}
     </div>
   );
 };

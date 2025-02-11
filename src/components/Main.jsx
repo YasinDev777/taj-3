@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo, useRef, useContext } from 'react';
+import React, { useState, useEffect, memo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Chart from '../components/LineChart';
 import { BiLockOpen } from 'react-icons/bi';
@@ -9,7 +9,6 @@ import { BlockChartAnalytics, chartAnalyticsOpen, PaginationAnalytics } from '..
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchKlines } from '../redux/slices/BinanceApi';
 import imageBlur from "../assets/chartimg.jpg";
-import { AnalysisContext } from '../context/Context';
 const Main = memo(({
   isCard,
   isGrid,
@@ -46,7 +45,7 @@ const Main = memo(({
   const { data } = useSelector((state) => state.klines);
 
   useEffect(() => {
-    if (analysis && data) {      
+    if (analysis && data) {
       const updatedData = analysis
         .map((item) => {
           const matchedData = data[item.symbol]; // Objektdan `symbol` bo‘yicha ma’lumot olish
@@ -104,6 +103,7 @@ const Main = memo(({
     return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
   };
   const paginate = (number) => setCurrentPage(number);
+
 
   const nextPage = () => {
     if (currentPage < totalPages) {
@@ -212,7 +212,8 @@ const Main = memo(({
                       Aniqlandi:
                       <span>{calculateTimeDifference(item.created_at)}</span>
                     </p>
-                  </div>
+
+                    </div>
                 </div>
               );
             })}

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   VerticalTimeline,
   VerticalTimelineElement,
@@ -102,8 +102,8 @@ export default function RoadmapItems() {
                   <p className="text-gray-300">Ahsan Labs sizga:</p>
                   <ul className="text-gray-300 text-sm">
                     {item.topics.map((desc, i) => (
-                      <div className="line-clamp-2">
-                        <li key={i} className="list-disc ml-3">
+                      <div key={i} className="line-clamp-2">
+                        <li className="list-disc ml-3">
                           {desc}
                         </li>
                       </div>
@@ -143,9 +143,9 @@ export default function RoadmapItems() {
             </div>
             <div className="aspect-w-16 mt-6">
               <iframe
-                id="video-iframe" // ID qo‘shdik, API ishlashi uchun
+                id="video-iframe" 
                 className="w-full h-96 max-sm:h-64"
-                src={selectedVideo} // JS API-ni yoqish uchun `enablejsapi=1`
+                src={selectedVideo} 
                 title="YouTube video"
                 frameBorder="0"
                 allowFullScreen
@@ -155,5 +155,4 @@ export default function RoadmapItems() {
         </div>
       )}
     </div>
-  );
-}
+)}

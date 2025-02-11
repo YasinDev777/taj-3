@@ -27,7 +27,6 @@ if (isAndroid === true) {
   osName = browserInfo.getOSName();
 }
 
-
 const decryptData = (data) => {
   if (!data) {
     return "anonymous_" + getRandomSixDigitNumber();
@@ -38,6 +37,9 @@ const decryptData = (data) => {
 
 const userDocId = async () => {
   const userId = localStorage.getItem("subscriptionType");
+  if (process.env.NODE_ENV === "production") {
+    return "anonymous";
+  }
   try {
     const usersCollection = collection(db, "user");
     const user_query = query(
@@ -53,15 +55,14 @@ const userDocId = async () => {
     console.error("Xatolik yuz berdi:", err);
   }
 };
-
 // Analytics uchun umumiy funksiya
-const addAnalytics = async (action, param, paramValue, userIdValid) => {
+
+const addAnalytics = async (action, param, paramValue,userIdValid) => {
   if (process.env.NODE_ENV !== 'production') {
     return;
   }
-  // console.log(action, param, paramValue);
   try {
-    const userId = userIdValid ? userIdValid : await userDocId(); // user_id-ni    
+    const userId = userIdValid ? userIdValid : await userDocId(); // user_id-ni
     await addDoc(collection(db, "analytics"), {
       action: action,
       param: param,
@@ -84,7 +85,7 @@ export const openWebsite = async () => {
 
 // Filter funksiyalari
 export const FilterAnalaysisAnalytics = async (actionTypeValue) => {
-  await addAnalytics("filter", "Analysis", actionTypeValue);
+  await addAnalytics("filter", "analysis", actionTypeValue);
 };
 
 export const FilterAnalaysisTypeAnalytics = async (
@@ -150,14 +151,11 @@ export const BlockChartAnalytics = async (action) => {
 };
 
 export const ConatactAnalytics = async (action) => {
-  await addAnalytics("contact", "conatctAdmin", action);
+  await addAnalytics("contact", "contactAdmin", action);
 };
 export const logoAnalytics = async () => {
   await addAnalytics("logo", "navbarLogo", "clicked");
 };
-
-
-
 
 
 export const roadmapVideosAnalytics = async (actionType,action) => {
@@ -169,14 +167,14 @@ export const roadmapVideosAnalytics = async (actionType,action) => {
 // };
 
 export const burgerMenuAnalytics = async (action) => {
-  await addAnalytics("burger_menu_toggled", "burger_menu", action);
+  await addAnalytics("burger_menu", "burger_menu_toggled", action);
 };
 
 export const switchpageAnalytics = async (action) => {
   await addAnalytics("switch_roadmap", "switch", action);
 }
 export const requestOpinionAnalytics = async (action) => {
-  await addAnalytics("request_opinion", "request_opinion", action);  // action is open and close
+  await addAnalytics("request_opinion", "opinion_button", action);  // action is open and close
 }
 export const opinionAnalytics = async (action) => {
   await addAnalytics("opinion", "opinionSidebar", action); 

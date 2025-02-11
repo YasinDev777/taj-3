@@ -5,6 +5,8 @@ import isVidoes from './reducers/isVideos';
 import data from './reducers/data';
 import roadmapReducer from "./reducers/roadmap"
 import roadmapTableReducer from "./reducers/roadmapTable";
+import activeReducer from "./reducers/sideBar";
+
 const store = configureStore({
     reducer: {
         video: isVidoes,
@@ -12,6 +14,7 @@ const store = configureStore({
         klines: klinesReducer,
         roadmap: roadmapReducer,
         roadmapTable: roadmapTableReducer,
+        stateSiteBar: activeReducer
     },
 });
 
